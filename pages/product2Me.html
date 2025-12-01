@@ -540,42 +540,41 @@
   /**
    * دالة حذف المنتج
    */
-  function deleteProduct(productId) {
-    const product = myProducts.find((p) => p.id === productId);
-    if (!product) {
-      console.error(
-        "%c[Products] Product not found:",
-        "color: red;",
-        productId
-      );
-      return;
-    }
-
-    console.log("%c[Products] Deleting product:", "color: red;", product);
-
-    Swal.fire({
-      title: "هل أنت متأكد؟",
-      text: `سيتم حذف المنتج "${product.productName}" بشكل دائم`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#e74c3c",
-      cancelButtonColor: "#3498db",
-      confirmButtonText: "نعم، احذف",
-      cancelButtonText: "إلغاء",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // حذف الصور من السحابة أولاً
+  async function deleteProduct( productId) {
+      const product = myProducts.find((p) => p.id === productId);
+      console.log("%c[Products] Deleting product:", "color: red;", product);
+  Swal.fire({
+    title: 'هل أنت متأكد؟',
+    text: `سيتم حذف المنتج "${product.productName}" بشكل نهائي. لا يمكن التراجع عن هذا الإجراء.`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'نعم، احذفه!',
+    cancelButtonText: 'إلغاء',
+    showLoaderOnConfirm: true,
+    preConfirm: async () => {
+      try {
         if (product.ImageName) {
-          const imageNames = product.ImageName.split(",");
-          imageNames.forEach((name) => {
-            if (name.trim()) {
-              console.log(`[Products] Deleting image: ${name}`);
-              // استدعاء دالة حذف الصور من السحابة
-              // deleteFile2cf(name.trim(), (msg) => console.log('[CloudflareDelete]', msg));
-            }
-          });
+          const imageNames = product.ImageName.split(',').filter(name => name);
+          if (imageNames.length > 0) {
+            await Promise.all(imageNames.map(name =>
+              deleteFile2cf(name).catch(err => console.error(`[Delete] Failed to delete image ${name}:`, err))
+            ));
+          }
         }
-
+        const dbResult = await deleteProduct_(product.product_key);
+        console.log("%c[Products] Deleting product:", "color: red;", dbResult);
+        if (dbResult && dbResult.error) throw new Error(dbResult.error);
+        return true;
+      } catch (error) {
+        Swal.showValidationMessage(`فشل الحذف: ${error.message}`);
+        return false;
+      }
+    },
+    allowOutsideClick: () => !Swal.isLoading()
+  }).then((result) => {
+    if (result.isConfirmed) {
         // حذف المنتج من البيانات
         const index = myProducts.findIndex((p) => p.id === productId);
         if (index > -1) {
@@ -586,10 +585,10 @@
         loadProducts();
 
         Swal.fire("تم الحذف!", "تم حذف المنتج بنجاح", "success");
-      }
-    });
-  }
-
+    
+    }
+  });
+}
   /**
    * دالة البحث والتصفية
    */

@@ -43,7 +43,7 @@ async function updateProduct(productData) {
  * @returns {Promise<Object>} - وعد (Promise) يحتوي على كائن الاستجابة من الخادم.
  * @see apiFetch
  */
-async function deleteProduct(productKey) {
+async function deleteProduct_(productKey) {
   return await apiFetch(`/api/products?product_key=${productKey}`, {
     method: 'DELETE',
   });

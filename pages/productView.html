@@ -6,11 +6,11 @@
     */
 
 
-    /* تطبيق الحركات على العناصر */
+
     .productView_modal_content {
         padding: 20px;
         max-width: 700px;
-        margin: auto;
+        
         animation: productView_fadeInScaleUp 0.4s ease-out forwards;
     }
 
@@ -482,10 +482,8 @@
     function productView_setupAddToCart(productData) {
         try {
             productView_domElements.addToCartBtn.onclick = async () => {
-                // التحقق مما إذا كان المستخدم قد سجل دخوله (getCurrentUser و addToCart مُعرفتان خارج هذا النطاق)
-                const loggedInUser = getCurrentUser(); // مُعرفة خارجياً
 
-                if (loggedInUser && !loggedInUser.is_guest) {
+                if (Number(userSession.is_seller)>-1) {
                     console.log("[productView_] المستخدم مسجل، جاري الإضافة للسلة...");
                     const quantity = parseInt(productView_domElements.selectedQuantityInput.value, 10);
 
@@ -604,7 +602,7 @@
     try {
         console.log("Initializing product view module with received state:", productSession);
         // productSession[0] هو بيانات المنتج، productSession[1] هو خيار showAddToCart
-        productView_viewDetails(productSession[0], { showAddToCart: productSession[1] });
+        productView_viewDetails(productSession[0],  productSession[1] );
     } catch (error) {
         console.error("خطأ أثناء تهيئة نافذة عرض المنتج:", error);
     }

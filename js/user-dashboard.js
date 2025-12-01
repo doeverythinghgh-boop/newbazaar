@@ -191,7 +191,7 @@ function updateViewForLoggedInUser() {
         console.log(myProducts);
         mainLoader(
           "pages/product2Me.html",
-          "index-product-container",
+          "index-myProducts-container",
           0,
           undefined,
           "showHomeIcon",
@@ -210,12 +210,10 @@ function updateViewForLoggedInUser() {
  */
 async function showAddProductModal() {
   try {
-    console.log('0000000000000000');
 
     const result = await CategoryModal.show();
     if (result.status === 'success') {
       console.log('تم الاختيار:', result.mainId, result.subId);
-    
     mainCategorySelectToAdd = result.mainId; //الفئه الرئيسية المختارة عند اضافة منتج
     subCategorySelectToAdd = result.subId; //الفئه الفرعية المختارة عند اضافة منتج
     productAddLayout();

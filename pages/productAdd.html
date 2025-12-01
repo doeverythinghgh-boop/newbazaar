@@ -1,7 +1,5 @@
 
-    <!-- Cloudflare File Manager -->
-    <script src="/js/cloudFileManager.js"></script>
-    
+
     <style>
         /* أنماط CSS من الكود الأصلي */
         
@@ -329,7 +327,7 @@
                         <!-- تم تغيير btn-primary إلى btn-ghost لتوحيد التصميم -->
                         <button type="button" class="btn btn-ghost btn-icon" id="pick-files-btn" title="اختر صورًا"><i class="fas fa-folder-open"></i></button>
                         <button type="button" class="btn btn-ghost btn-icon" id="take-photo-btn" title="التقاط من الكاميرا"><i class="fas fa-camera"></i></button>
-                        <button type="button" class="btn btn-ghost btn-icon" id="clear-all-btn" title="مسح الكل"><i class="fas fa-trash-alt"></i></button>
+                        
                     </div>
 
                     <div class="add-product-modal__hint">المطلوب: صورة واحدة على الأقل. الدعم: jpg, png, webp. </div>
@@ -427,7 +425,6 @@
             const fileInput = document.getElementById('file-input');
             const pickFilesBtn = document.getElementById('pick-files-btn');
             const takePhotoBtn = document.getElementById('take-photo-btn');
-            const clearAllBtn = document.getElementById('clear-all-btn');
             const previewsEl = document.getElementById('previews');
             const uploaderEl = document.getElementById('image-uploader');
             const form = document.getElementById('add-product-form');
@@ -604,31 +601,7 @@
                 });
             }
 
-            // --- إعادة تعيين الكل ---
-            function clearAll() {
-                console.log('[ImageUploader] Attempting to clear all images.');
-                if (images.length === 0) return; // لا تفعل شيئًا إذا لم تكن هناك صور
-
-                Swal.fire({
-                    title: 'هل أنت متأكد؟',
-                    text: "سيتم حذف جميع الصور المضافة!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#e74c3c',
-                    cancelButtonColor: '#3498db',
-                    confirmButtonText: 'نعم، احذف الكل!',
-                    cancelButtonText: 'إلغاء'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // حذف العناصر من الواجهة
-                        previewsEl.innerHTML = '';
-                        console.log('[ImageUploader] All images cleared.');
-                        // إفراغ مصفوفة الصور
-                        images.length = 0;
-                    }
-                });
-            }
-
+        
             // --- معالجة ملفات عند اختيارها أو إفلاتها ---
             async function handleNewFiles(fileList){
                 // إخفاء رسالة الخطأ الخاصة بالصور بمجرد محاولة إضافة صور جديدة
@@ -704,7 +677,6 @@
                 fileInput.removeAttribute('capture');
                 fileInput.click();
             });
-            clearAllBtn.addEventListener('click', ()=> clearAll());
 
             // جديد: عداد الحروف وإخفاء الخطأ لاسم المنتج
             productNameInput.addEventListener('input', () => {

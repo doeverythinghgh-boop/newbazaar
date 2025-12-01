@@ -1,323 +1,321 @@
 
-    <style>
-    
+<style>
+    .edit-product-modal {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 800px;
+        padding: 30px;
+        position: relative;
+    }
+
+    .edit-product-modal__title {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        border-bottom: 2px solid #f8f9fa;
+        padding-bottom: 15px;
+    }
+
+    .edit-product-modal__title i {
+        color: #e67e22;
+        margin-left: 10px;
+    }
+
+    .edit-product-modal__form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .edit-product-modal__form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .edit-product-modal__label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #34495e;
+        font-size: 16px;
+    }
+
+    .edit-product-modal__label i {
+        color: #e67e22;
+        margin-left: 8px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .edit-product-modal__input,
+    .edit-product-modal__textarea,
+    .edit-product-modal__select {
+        padding: 12px 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background-color: #f8f9fa;
+    }
+
+    .edit-product-modal__input:focus,
+    .edit-product-modal__textarea:focus,
+    .edit-product-modal__select:focus {
+        outline: none;
+        border-color: #e67e22;
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
+    }
+
+    .edit-product-modal__textarea {
+        resize: vertical;
+        min-height: 120px;
+        font-family: inherit;
+    }
+
+    .edit-product-modal__char-counter {
+        text-align: left;
+        font-size: 12px;
+        color: #7f8c8d;
+        margin-top: 5px;
+    }
+
+    .edit-product-modal__form-row {
+        display: flex;
+        gap: 15px;
+    }
+
+    .edit-product-modal__form-row .edit-product-modal__form-group {
+        flex: 1;
+    }
+
+    /* أنماط رفع الصور */
+    .edit-product-modal__image-uploader {
+        border: 2px dashed #bdc3c7;
+        border-radius: 10px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+
+    .edit-product-modal__image-uploader:hover {
+        border-color: #e67e22;
+        background-color: #fef5e7;
+    }
+
+    .edit-product-modal__uploader-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-warning {
+        background-color: #e67e22;
+        color: white;
+    }
+
+    .btn-warning:hover {
+        background-color: #d35400;
+        transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+        background-color: transparent;
+        border: 1px solid #bdc3c7;
+        color: #34495e;
+    }
+
+    .btn-ghost:hover {
+        background-color: #ecf0f1;
+        border-color: #e67e22;
+        color: #e67e22;
+    }
+
+    .btn-icon {
+        padding: 8px 12px;
+    }
+
+    .edit-product-modal__hint {
+        font-size: 14px;
+        color: #7f8c8d;
+        margin-bottom: 15px;
+    }
+
+    .edit-product-modal__previews {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 15px;
+    }
+
+    .edit-product-modal__preview {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        aspect-ratio: 1;
+    }
+
+    .edit-product-modal__preview:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .edit-product-modal__preview--selected {
+        border: 3px solid #e67e22;
+    }
+
+    .edit-product-modal__preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .edit-product-modal__preview-remove {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background: rgba(231, 76, 60, 0.9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .edit-product-modal__preview:hover .edit-product-modal__preview-remove {
+        opacity: 1;
+    }
+
+    .edit-product-modal__preview-meta {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px;
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .edit-product-modal__submit-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .edit-product-modal__submit-container .btn {
+        padding: 12px 30px;
+        font-size: 18px;
+        border-radius: 30px;
+    }
+
+    .edit-product-modal__error-message {
+        color: #e74c3c;
+        font-size: 14px;
+        margin-top: 5px;
+        text-align: right;
+    }
+
+    .edit-product-modal__hidden-file {
+        display: none;
+    }
+
+    .edit-product-modal__loading {
+        text-align: center;
+        padding: 20px;
+        color: #7f8c8d;
+    }
+
+    .edit-product-modal__loading i {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #e67e22;
+    }
+
+    /* كاميرا سطح المكتب */
+    .camera-modal-content {
+        position: relative;
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        max-width: 500px;
+        width: 90%;
+    }
+
+    .camera-modal-content video {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .camera-controls {
+        text-align: center;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #7f8c8d;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    .close-button:hover {
+        color: #e74c3c;
+    }
+
+    /* التجاوب مع الأجهزة المختلفة */
+    @media (max-width: 768px) {
+        .edit-product-modal__form-row {
+            flex-direction: column;
+            gap: 15px;
+        }
 
         .edit-product-modal {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 800px;
-            padding: 30px;
-            position: relative;
+            padding: 20px;
         }
 
         .edit-product-modal__title {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 28px;
-            border-bottom: 2px solid #f8f9fa;
-            padding-bottom: 15px;
+            font-size: 24px;
         }
+    }
 
-        .edit-product-modal__title i {
-            color: #e67e22;
-            margin-left: 10px;
-        }
-
-        .edit-product-modal__form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .edit-product-modal__form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .edit-product-modal__label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #34495e;
-            font-size: 16px;
-        }
-
-        .edit-product-modal__label i {
-            color: #e67e22;
-            margin-left: 8px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .edit-product-modal__input,
-        .edit-product-modal__textarea,
-        .edit-product-modal__select {
-            padding: 12px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background-color: #f8f9fa;
-        }
-
-        .edit-product-modal__input:focus,
-        .edit-product-modal__textarea:focus,
-        .edit-product-modal__select:focus {
-            outline: none;
-            border-color: #e67e22;
-            background-color: white;
-            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
-        }
-
-        .edit-product-modal__textarea {
-            resize: vertical;
-            min-height: 120px;
-            font-family: inherit;
-        }
-
-        .edit-product-modal__char-counter {
-            text-align: left;
-            font-size: 12px;
-            color: #7f8c8d;
-            margin-top: 5px;
-        }
-
-        .edit-product-modal__form-row {
-            display: flex;
-            gap: 15px;
-        }
-
-        .edit-product-modal__form-row .edit-product-modal__form-group {
-            flex: 1;
-        }
-
-        /* أنماط رفع الصور */
-        .edit-product-modal__image-uploader {
-            border: 2px dashed #bdc3c7;
-            border-radius: 10px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            transition: all 0.3s ease;
-        }
-
-        .edit-product-modal__image-uploader:hover {
-            border-color: #e67e22;
-            background-color: #fef5e7;
-        }
-
+    @media (max-width: 480px) {
         .edit-product-modal__uploader-actions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-warning {
-            background-color: #e67e22;
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background-color: #d35400;
-            transform: translateY(-2px);
-        }
-
-        .btn-ghost {
-            background-color: transparent;
-            border: 1px solid #bdc3c7;
-            color: #34495e;
-        }
-
-        .btn-ghost:hover {
-            background-color: #ecf0f1;
-            border-color: #e67e22;
-            color: #e67e22;
-        }
-
-        .btn-icon {
-            padding: 8px 12px;
-        }
-
-        .edit-product-modal__hint {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin-bottom: 15px;
+            justify-content: center;
         }
 
         .edit-product-modal__previews {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         }
-
-        .edit-product-modal__preview {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            aspect-ratio: 1;
-        }
-
-        .edit-product-modal__preview:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .edit-product-modal__preview--selected {
-            border: 3px solid #e67e22;
-        }
-
-        .edit-product-modal__preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .edit-product-modal__preview-remove {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            background: rgba(231, 76, 60, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .edit-product-modal__preview:hover .edit-product-modal__preview-remove {
-            opacity: 1;
-        }
-
-        .edit-product-modal__preview-meta {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px;
-            font-size: 12px;
-            text-align: center;
-        }
-
-        .edit-product-modal__submit-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .edit-product-modal__submit-container .btn {
-            padding: 12px 30px;
-            font-size: 18px;
-            border-radius: 30px;
-        }
-
-        .edit-product-modal__error-message {
-            color: #e74c3c;
-            font-size: 14px;
-            margin-top: 5px;
-            text-align: right;
-        }
-
-        .edit-product-modal__hidden-file {
-            display: none;
-        }
-
-        .edit-product-modal__loading {
-            text-align: center;
-            padding: 20px;
-            color: #7f8c8d;
-        }
-
-        .edit-product-modal__loading i {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #e67e22;
-        }
-
-        /* كاميرا سطح المكتب */
-        .camera-modal-content {
-            position: relative;
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            max-width: 500px;
-            width: 90%;
-        }
-
-        .camera-modal-content video {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .camera-controls {
-            text-align: center;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: #7f8c8d;
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        .close-button:hover {
-            color: #e74c3c;
-        }
-
-        /* التجاوب مع الأجهزة المختلفة */
-        @media (max-width: 768px) {
-            .edit-product-modal__form-row {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .edit-product-modal {
-                padding: 20px;
-            }
-            
-            .edit-product-modal__title {
-                font-size: 24px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .edit-product-modal__uploader-actions {
-                justify-content: center;
-            }
-            
-            .edit-product-modal__previews {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-        }
-    </style>
+    }
+</style>
 
 <body>
     <div class="edit-product-modal" role="dialog" aria-modal="true" aria-labelledby="editProductTitle">
@@ -326,16 +324,21 @@
         <form class="edit-product-modal__form" id="edit-product-form" novalidate>
             <!-- موديول رفع الصور -->
             <section class="edit-product-modal__form-group" aria-labelledby="imagesHeading">
-                <label id="imagesHeading" class="edit-product-modal__label"><i class="fas fa-images"></i> صور المنتج</label>
+                <label id="imagesHeading" class="edit-product-modal__label"><i class="fas fa-images"></i> صور
+                    المنتج</label>
 
-                <div class="edit-product-modal__image-uploader" id="image-uploader" tabindex="0" role="group" aria-label="منطقة رفع الصور">
+                <div class="edit-product-modal__image-uploader" id="image-uploader" tabindex="0" role="group"
+                    aria-label="منطقة رفع الصور">
                     <div class="edit-product-modal__uploader-actions">
                         <!-- input مع capture لتفعيل الكاميرا على الأجهزة المحمولة -->
-                        <input class="edit-product-modal__hidden-file" id="file-input" type="file" accept="image/*" multiple aria-hidden="true">
+                        <input class="edit-product-modal__hidden-file" id="file-input" type="file" accept="image/*"
+                            multiple aria-hidden="true">
 
-                        <button type="button" class="btn btn-ghost btn-icon" id="pick-files-btn" title="اختر صورًا"><i class="fas fa-folder-open"></i></button>
-                        <button type="button" class="btn btn-ghost btn-icon" id="take-photo-btn" title="التقاط من الكاميرا"><i class="fas fa-camera"></i></button>
-                        <button type="button" class="btn btn-ghost btn-icon" id="clear-all-btn" title="مسح الكل"><i class="fas fa-trash-alt"></i></button>
+                        <button type="button" class="btn btn-ghost btn-icon" id="pick-files-btn" title="اختر صورًا"><i
+                                class="fas fa-folder-open"></i></button>
+                        <button type="button" class="btn btn-ghost btn-icon" id="take-photo-btn"
+                            title="التقاط من الكاميرا"><i class="fas fa-camera"></i></button>
+                        
                     </div>
 
                     <div class="edit-product-modal__hint">المطلوب: صورة واحدة على الأقل. الدعم: jpg, png, webp. </div>
@@ -351,29 +354,37 @@
 
             <!-- حقل اسم المنتج -->
             <div class="edit-product-modal__form-group">
-                <label for="product-name" class="edit-product-modal__label"><i class="fas fa-signature"></i> اسم المنتج</label>
-                <input type="text" id="product-name" name="product-name" class="edit-product-modal__input" maxlength="100" placeholder="اكتب اسمًا واضحًا للمنتج..." required>
+                <label for="product-name" class="edit-product-modal__label"><i class="fas fa-signature"></i> اسم
+                    المنتج</label>
+                <input type="text" id="product-name" name="product-name" class="edit-product-modal__input"
+                    maxlength="100" placeholder="اكتب اسمًا واضحًا للمنتج..." required>
                 <div id="product-name-char-counter" class="edit-product-modal__char-counter">0 / 100</div>
             </div>
 
             <!-- حقل وصف المنتج -->
             <div class="edit-product-modal__form-group">
-                <label for="product-description" class="edit-product-modal__label"><i class="fas fa-file-alt"></i> الوصف</label>
-                <textarea id="product-description" name="product-description" class="edit-product-modal__textarea" rows="4" maxlength="400" placeholder="اكتب وصفًا جذابًا ..."></textarea>
+                <label for="product-description" class="edit-product-modal__label"><i class="fas fa-file-alt"></i>
+                    الوصف</label>
+                <textarea id="product-description" name="product-description" class="edit-product-modal__textarea"
+                    rows="4" maxlength="400" placeholder="اكتب وصفًا جذابًا ..."></textarea>
                 <div id="description-char-counter" class="edit-product-modal__char-counter">0 / 400</div>
             </div>
 
             <!-- حقل رسالة من البائع -->
             <div class="edit-product-modal__form-group">
-                <label for="seller-message" class="edit-product-modal__label"><i class="fas fa-comment-dots"></i> رسالة من البائع</label>
-                <input type="text" id="seller-message" name="seller-message" class="edit-product-modal__input" maxlength="100" placeholder="اكتب رسالة قصيرة ومميزة تظهر للمشتري...">
+                <label for="seller-message" class="edit-product-modal__label"><i class="fas fa-comment-dots"></i> رسالة
+                    من البائع</label>
+                <input type="text" id="seller-message" name="seller-message" class="edit-product-modal__input"
+                    maxlength="100" placeholder="اكتب رسالة قصيرة ومميزة تظهر للمشتري...">
                 <div id="seller-message-char-counter" class="edit-product-modal__char-counter">0 / 100</div>
             </div>
 
             <!-- حقل ملاحظات -->
             <div class="edit-product-modal__form-group">
-                <label for="product-notes" class="edit-product-modal__label"><i class="fas fa-sticky-note"></i> ملاحظات</label>
-                <input type="text" id="product-notes" name="product-notes" class="edit-product-modal__input" maxlength="100" placeholder="النص هنا لا يظهر للمشتري هو خاص بك انت">
+                <label for="product-notes" class="edit-product-modal__label"><i class="fas fa-sticky-note"></i>
+                    ملاحظات</label>
+                <input type="text" id="product-notes" name="product-notes" class="edit-product-modal__input"
+                    maxlength="100" placeholder="النص هنا لا يظهر للمشتري هو خاص بك انت">
                 <div id="notes-char-counter" class="edit-product-modal__char-counter">0 / 100</div>
             </div>
 
@@ -381,18 +392,24 @@
             <div class="edit-product-modal__form-row" id="price-quantity-row">
                 <!-- حقل الكمية -->
                 <div class="edit-product-modal__form-group">
-                    <label for="product-quantity" class="edit-product-modal__label"><i class="fas fa-boxes-stacked"></i> الكمية المتاحة</label>
-                    <input type="number" id="product-quantity" name="product-quantity" class="edit-product-modal__input" placeholder="مثال: 50" required min="1">
+                    <label for="product-quantity" class="edit-product-modal__label"><i class="fas fa-boxes-stacked"></i>
+                        الكمية المتاحة</label>
+                    <input type="number" id="product-quantity" name="product-quantity" class="edit-product-modal__input"
+                        placeholder="مثال: 50" required min="1">
                 </div>
                 <!-- حقل السعر -->
                 <div class="edit-product-modal__form-group">
-                    <label for="product-price" class="edit-product-modal__label"><i class="fas fa-dollar-sign"></i>سعر القطعة</label>
-                    <input type="text" inputmode="decimal" id="product-price" name="product-price" class="edit-product-modal__input" placeholder="بالجنيه" required>
+                    <label for="product-price" class="edit-product-modal__label"><i class="fas fa-dollar-sign"></i>سعر
+                        القطعة</label>
+                    <input type="text" inputmode="decimal" id="product-price" name="product-price"
+                        class="edit-product-modal__input" placeholder="بالجنيه" required>
                 </div>
                 <!-- حقل السعر قبل الخصم -->
                 <div class="edit-product-modal__form-group">
-                    <label for="original-price" class="edit-product-modal__label"><i class="fas fa-tag"></i>السعر قبل الخصم</label>
-                    <input type="text" inputmode="decimal" id="original-price" name="original-price" class="edit-product-modal__input" placeholder="اختياري">
+                    <label for="original-price" class="edit-product-modal__label"><i class="fas fa-tag"></i>السعر قبل
+                        الخصم</label>
+                    <input type="text" inputmode="decimal" id="original-price" name="original-price"
+                        class="edit-product-modal__input" placeholder="اختياري">
                 </div>
             </div>
 
@@ -404,7 +421,9 @@
     </div>
 
     <!-- حاوية للكاميرا -->
-    <div id="camera-modal-container" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;"></div>
+    <div id="camera-modal-container"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+    </div>
 
     <script>
         /**
@@ -412,12 +431,12 @@
          */
         async function initializeEditProductForm() {
             console.log('%c[ProductForm] Initializing edit form...', 'color: blue;');
-            
+
             if (!productSession) {
                 console.error('%c[ProductForm] productSession not found!', 'color: red;');
                 Swal.fire('خطأ!', 'لم يتم العثور على بيانات المنتج.', 'error');
                 return;
-            }else{
+            } else {
                 console.log('%c[ProductForm] productSession 0000000 found!', 'color: green;');
             }
 
@@ -429,7 +448,7 @@
             form.dataset.mode = 'edit';
             form.dataset.productKey = productSession.product_key;
             console.log(`[ProductForm] Editing product: ${productSession.product_key}`);
-            
+
             window.productModule.originalImageNames = []; // إعادة تعيين
 
             // تعبئة الحقول النصية
@@ -454,7 +473,7 @@
         }
 
         // جعل الدوال والمتغيرات متاحة عالميًا ضمن نطاق النافذة
-        window.productModule = (function() {
+        window.productModule = (function () {
             // --- إعدادات ضغط افتراضية ---
             const IMAGE_MAX_WIDTH = 1600;
             const IMAGE_MAX_HEIGHT = 1600;
@@ -466,7 +485,6 @@
             const fileInput = document.getElementById('file-input');
             const pickFilesBtn = document.getElementById('pick-files-btn');
             const takePhotoBtn = document.getElementById('take-photo-btn');
-            const clearAllBtn = document.getElementById('clear-all-btn');
             const previewsEl = document.getElementById('previews');
             const uploaderEl = document.getElementById('image-uploader');
             const form = document.getElementById('edit-product-form');
@@ -510,9 +528,9 @@
             async function supportsWebP() {
                 if (!self.createImageBitmap) return false;
                 const blob = await fetch('data:image/webp;base64,UklGRiIAAABXRUJQVlA4TAYAAAAvAAAAAAfQ//73v/+BiOh/AAA=')
-                    .then(r => r.blob()).catch(()=>null);
+                    .then(r => r.blob()).catch(() => null);
                 if (!blob) return false;
-                try { await createImageBitmap(blob); return true; } catch(e) { return false; }
+                try { await createImageBitmap(blob); return true; } catch (e) { return false; }
             }
             const WEBP_SUPPORTED_PROMISE = supportsWebP();
 
@@ -529,7 +547,7 @@
                 const ctx = canvas.getContext('2d');
 
                 ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0,0,newWidth,newHeight);
+                ctx.fillRect(0, 0, newWidth, newHeight);
                 ctx.drawImage(imgBitmap, 0, 0, newWidth, newHeight);
 
                 const webpSupported = await WEBP_SUPPORTED_PROMISE;
@@ -537,7 +555,7 @@
 
                 const blob = await new Promise((res) => canvas.toBlob(res, mime, IMAGE_QUALITY));
 
-                try { imgBitmap.close(); } catch(e){}
+                try { imgBitmap.close(); } catch (e) { }
 
                 return blob;
             }
@@ -592,7 +610,7 @@
 
                 const imageNames = productSession.ImageName.split(',').filter(name => name.trim());
                 window.productModule.originalImageNames = [...imageNames];
-                
+
                 console.log(`[ProductForm] Loading ${imageNames.length} existing images`);
 
                 for (let i = 0; i < imageNames.length; i++) {
@@ -601,7 +619,7 @@
 
                     const id = genId();
                     const imageUrl = CLOUDFLARE_BASE_URL + name;
-                    
+
                     const state = {
                         id: id,
                         file: null,
@@ -610,9 +628,9 @@
                         fileName: name,
                         isExisting: true
                     };
-                    
+
                     images.push(state);
-                    
+
                     // تحميل الصورة لعرضها
                     const img = new Image();
                     img.onload = () => {
@@ -663,45 +681,21 @@
                 });
             }
 
-            // --- إعادة تعيين الكل ---
-            function clearAll() {
-                console.log('[ImageUploader] Attempting to clear all images.');
-                if (images.length === 0) return;
-
-                Swal.fire({
-                    title: 'هل أنت متأكد؟',
-                    text: "سيتم حذف جميع الصور المضافة!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#e74c3c',
-                    cancelButtonColor: '#3498db',
-                    confirmButtonText: 'نعم، احذف الكل!',
-                    cancelButtonText: 'إلغاء'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        previewsEl.innerHTML = '<div class="edit-product-modal__loading" id="images-loading"><i class="fas fa-spinner fa-spin"></i><div>جاري تحميل الصور...</div></div>';
-                        console.log('[ImageUploader] All images cleared.');
-                        images.length = 0;
-                        imagesLoadingEl.style.display = 'block';
-                        loadExistingImages();
-                    }
-                });
-            }
-
+            
             // --- معالجة ملفات جديدة ---
-            async function handleNewFiles(fileList){
+            async function handleNewFiles(fileList) {
                 console.log(`[ImageUploader] Handling ${fileList.length} new files.`);
                 clearError(uploaderEl);
 
                 const filesArr = Array.from(fileList).slice(0, MAX_FILES - images.length);
-                for(const file of filesArr){
-                    if(!file.type.startsWith('image/')) continue;
+                for (const file of filesArr) {
+                    if (!file.type.startsWith('image/')) continue;
                     const id = genId();
-                    const state = { id, file, compressedBlob: null, status:'pending', isExisting: false };
+                    const state = { id, file, compressedBlob: null, status: 'pending', isExisting: false };
                     images.push(state);
                     createPreviewItem(state);
-                    
-                    try{
+
+                    try {
                         console.log(`[ImageUploader] Compressing image: ${file.name}`);
                         state.status = 'compressing';
                         const compressed = await compressImage(file);
@@ -711,7 +705,7 @@
                         if (state._metaEl) {
                             state._metaEl.textContent = formatBytes(compressed.size);
                         }
-                    }catch(err){
+                    } catch (err) {
                         console.error('%c[ImageUploader] Error compressing image:', 'color: red;', err);
                         state.status = 'error';
                         if (state._metaEl) {
@@ -727,8 +721,7 @@
                 fileInput.removeAttribute('capture');
                 fileInput.click();
             });
-            
-            clearAllBtn.addEventListener('click', ()=> clearAll());
+
 
             // عداد الحروف
             productNameInput.addEventListener('input', () => {
@@ -776,7 +769,7 @@
                 priceInput.value = value;
                 if (priceInput.value) clearError(priceInput);
             });
-            
+
             originalPriceInput.addEventListener('input', () => {
                 let value = normalizeDigits(originalPriceInput.value);
                 value = value.replace(/[^0-9.]/g, '');
@@ -853,15 +846,10 @@
                 }
             }
 
-            fileInput.addEventListener('change', (e)=> handleNewFiles(e.target.files));
-
-            // سحب وإفلات
-            uploaderEl.addEventListener('dragover', (e)=>{ e.preventDefault(); uploaderEl.style.borderColor = '#e67e22'; });
-            uploaderEl.addEventListener('dragleave', (e)=>{ uploaderEl.style.borderColor = ''; });
-            uploaderEl.addEventListener('drop', (e)=>{ e.preventDefault(); uploaderEl.style.borderColor = ''; handleNewFiles(e.dataTransfer.files); });
+            fileInput.addEventListener('change', (e) => handleNewFiles(e.target.files));
 
             // إرسال النموذج
-            form.addEventListener('submit', async (e)=>{
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 console.log('%c[ProductForm] Submit event triggered for editing.', 'color: blue;');
                 let isValid = true;
@@ -929,33 +917,53 @@
                 try {
                     const productKey = form.dataset.productKey;
                     const originalImageNames = window.productModule.originalImageNames || [];
+
+                    // 1. تحديد الصور المحذوفة - التصحيح هنا
+                    // الصور القديمة هي تلك التي لديها isExisting: true
+                    const existingImages = images.filter(state => state.isExisting === true);
                     
-                    // 1. تحديد الصور المحذوفة
-                    const finalImageNames = images
-                        .filter(state => state.status === 'uploaded') // الصور القديمة المتبقية
+                    // الصور الجديدة هي تلك التي لديها status: 'ready'
+                    const newImages = images.filter(state => state.status === 'ready' && state.isExisting === false);
+                    
+                    // أسماء الصور القديمة المتبقية
+                    const remainingExistingImageNames = existingImages
                         .map(state => state.fileName)
                         .filter(Boolean);
-                        
-                    const imagesToDelete = originalImageNames.filter(name => !finalImageNames.includes(name));
-                    
+
+                    // تحديد الصور المحذوفة
+                    const imagesToDelete = originalImageNames.filter(name => !remainingExistingImageNames.includes(name));
+
                     // 2. رفع الصور الجديدة
                     const uploadedImageUrls = [];
-                    console.log(`[ProductForm] Uploading ${images.filter(s => s.status === 'ready').length} new images...`);
-                    
-                    for (let i = 0; i < images.length; i++) {
-                        const state = images[i];
+                    console.log(`[ProductForm] Uploading ${newImages.length} new images...`);
+
+                    // رفع الصور الجديدة
+                    for (let i = 0; i < newImages.length; i++) {
+                        const state = newImages[i];
                         if (state.status !== 'ready' || !state.compressedBlob) continue;
 
-                        const fileName = `${i + 1}_${productKey}.webp`;
-                        const result = await uploadFile2cf(state.compressedBlob, fileName, (msg) => console.log('[CloudflareUpload]', msg));
-                        console.log(`[ProductForm] New image uploaded: ${result.file}`);
-                        uploadedImageUrls.push(result.file);
+                        const fileName = `${Date.now()}_${i + 1}_${productKey}.webp`;
+                        console.log(`[ProductForm] Uploading new image as: ${fileName}`);
+                        
+                        try {
+                            const result = await uploadFile2cf(state.compressedBlob, fileName, (msg) => console.log('[CloudflareUpload]', msg));
+                            console.log(`[ProductForm] New image uploaded successfully: ${result.file}`);
+                            uploadedImageUrls.push(result.file);
+                        } catch (uploadError) {
+                            console.error('[ProductForm] Failed to upload new image:', uploadError);
+                            throw new Error(`فشل رفع الصورة الجديدة: ${uploadError.message}`);
+                        }
                     }
 
-                    // 3. دمج الصور القديمة والجديدة
-                    const allImageNames = [...finalImageNames, ...uploadedImageUrls];
-                    
+                    // 3. دمج الصور القديمة المتبقية والجديدة
+                    const allImageNames = [...remainingExistingImageNames, ...uploadedImageUrls];
+
                     console.log('[ProductForm] Assembling final product data for update.');
+                    console.log('[ProductForm] Remaining existing images:', remainingExistingImageNames);
+                    console.log('[ProductForm] New images:', uploadedImageUrls);
+                    console.log('[ProductForm] Images to delete:', imagesToDelete);
+                    console.log('[ProductForm] All image names:', allImageNames);
+
                     // 4. تجميع بيانات المنتج
                     const productData = {
                         productName: normalizeArabicText(document.getElementById('product-name').value.trim()),
@@ -974,8 +982,9 @@
                         serviceType: 0
                     };
 
+                    console.log('[ProductForm] Sending UPDATE request to backend with data:', productData);
+
                     // 5. إرسال طلب التحديث
-                    console.log('[ProductForm] Sending UPDATE request to backend...');
                     const dbResult = await updateProduct(productData);
 
                     if (dbResult && dbResult.error) {
@@ -984,20 +993,40 @@
 
                     // 6. حذف الصور المحذوفة بعد النجاح
                     if (imagesToDelete.length > 0) {
-                        console.log("[ProductForm] Deleting removed images:", imagesToDelete);
-                        await Promise.all(imagesToDelete.map(name => 
+                        console.log("[ProductForm] Deleting removed images from cloud storage:", imagesToDelete);
+                        
+                        // حذف الصور بشكل متوازي مع معالجة الأخطاء
+                        const deletePromises = imagesToDelete.map(name =>
                             deleteFile2cf(name, (msg) => console.log('[CloudflareDelete]', msg))
-                                .catch(err => console.error(`فشل حذف الملف ${name}:`, err))
-                        ));
+                                .catch(err => {
+                                    console.error(`فشل حذف الملف ${name}:`, err);
+                                    // لا نوقف العملية إذا فشل حذف صورة واحدة
+                                    return null;
+                                })
+                        );
+                        
+                        await Promise.all(deletePromises);
+                        console.log('[ProductForm] Deletion process completed.');
                     }
 
                     console.log('%c[ProductForm] Product updated successfully.', 'color: green; font-weight: bold;');
+                    
                     // 7. عرض رسالة النجاح
-                    Swal.fire('تم بنجاح!', 'تم تحديث المنتج بنجاح.', 'success');
+                    Swal.fire({
+                        title: 'تم بنجاح!',
+                        text: 'تم تحديث المنتج بنجاح.',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
 
                 } catch (error) {
                     console.error('%c[ProductForm] Update failed with critical error:', 'color: red; font-weight: bold;', error);
-                    Swal.fire('خطأ!', `فشل في تحديث المنتج: ${error.message}`, 'error');
+                    Swal.fire({
+                        title: 'خطأ!',
+                        text: `فشل في تحديث المنتج: ${error.message}`,
+                        icon: 'error'
+                    });
                 }
             });
 
@@ -1013,8 +1042,6 @@
         })();
 
         // تهيئة النموذج عند تحميل الصفحة
-    
-            initializeEditProductForm();
-        
+        initializeEditProductForm();
     </script>
 </body>

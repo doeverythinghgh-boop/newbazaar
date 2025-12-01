@@ -327,12 +327,7 @@
     <form class="search-form" id="search-form">
       <div class="form-group">
         <label class="form-label">بحث بالاسم</label>
-        <input
-          type="text"
-          class="form-input"
-          id="search-input"
-          placeholder="ابحث باسم المنتج..."
-        />
+        <input type="text" class="form-input" id="search-input" placeholder="ابحث باسم المنتج..." />
       </div>
       <div class="form-group">
         <label class="form-label">الفئة الرئيسية</label>
@@ -457,23 +452,20 @@
 
     card.innerHTML = `
                 <div class="product-image">
-                    ${
-                      imageUrl
-                        ? `<img src="${imageUrl}" alt="${product.productName}" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-box\\'></i>';" />`
-                        : '<i class="fas fa-box"></i>'
-                    }
+                    ${imageUrl
+        ? `<img src="${imageUrl}" alt="${product.productName}" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-box\\'></i>';" />`
+        : '<i class="fas fa-box"></i>'
+      }
                 </div>
                 <div class="product-content">
                     <h3 class="product-name">${displayName}</h3>
                     <div class="product-actions">
-                        <button class="btn btn-edit" onclick="editProduct(${
-                          product.id
-                        })">
+                        <button class="btn btn-edit" onclick="editProduct(${product.id
+      })">
                             <i class="fas fa-edit"></i> تعديل
                         </button>
-                        <button class="btn btn-delete" onclick="deleteProduct(${
-                          product.id
-                        })">
+                        <button class="btn btn-delete" onclick="deleteProduct(${product.id
+      })">
                             <i class="fas fa-trash"></i> حذف
                         </button>
                     </div>
@@ -499,8 +491,8 @@
           original_price: product.original_price,
           imageSrc: product.ImageName
             ? product.ImageName.split(",").map(
-                (name) => `${CLOUDFLARE_BASE_URL}${name.trim()}`
-              )
+              (name) => `${CLOUDFLARE_BASE_URL}${name.trim()}`
+            )
             : [],
           availableQuantity: product.product_quantity,
           sellerMessage: product.user_message,
@@ -518,7 +510,7 @@
   /**
    * دالة تعديل المنتج
    */
-  function editProduct(productId) {
+  async function editProduct(productId) {
     const product = myProducts.find((p) => p.id === productId);
     if (!product) {
       console.error(
@@ -530,10 +522,19 @@
     }
 
     console.log("%c[Products] Editing product:", "color: blue;", product);
-  
-    productSession=product;
-    mainLoader("./pages/productEdit.html","index-product-container",0,undefined,"showHomeIcon",true);
-    
+    const result = await CategoryModal.show(product.MainCategory, product.SubCategory,"سوق المنتج");
+    if (result.status === 'success') {
+      console.log('تم الاختيار:', result.mainId, result.subId);
+
+      //mainCategorySelectToAdd = result.mainId; //الفئه الرئيسية المختارة عند اضافة منتج
+      //subCategorySelectToAdd = result.subId; //الفئه الفرعية المختارة عند اضافة منتج
+
+      product.MainCategory = result.mainId;
+      product.SubCategory = result.subId;
+
+      productSession = product;
+      mainLoader("./pages/productEdit.html", "index-product-container", 0, undefined, "showHomeIcon", true);
+    }
   }
 
   /**

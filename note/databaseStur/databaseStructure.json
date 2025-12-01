@@ -1,0 +1,615 @@
+{
+  "schemaMetadata": {
+    "ai_prompt": "You are a database analysis expert. This JSON contains the complete schema of an SQLite database In turso server. Use 'tableNames' to iterate through tables. Use 'tablesInfo' for column details and 'foreignKeys' to understand relationships between tables. Your task is to analyze this schema to answer questions, generate documentation, or create diagrams.",
+    "type": "object",
+    "properties": {
+      "tableNames": {
+        "type": "array",
+        "description": "An array of all user-defined table names in the database.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "createStatements": {
+        "type": "object",
+        "description": "A map where each key is a table name and the value is its full 'CREATE TABLE' SQL statement.",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "tablesInfo": {
+        "type": "object",
+        "description": "A map where each key is a table name, and the value is an array of objects describing each column in that table.",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "cid": {
+                "type": "integer",
+                "description": "Column ID (0-indexed position)."
+              },
+              "name": {
+                "type": "string",
+                "description": "Column name."
+              },
+              "type": {
+                "type": "string",
+                "description": "Declared data type (e.g., 'TEXT', 'INTEGER')."
+              },
+              "notnull": {
+                "type": "integer",
+                "description": "1 if the column has a NOT NULL constraint, 0 otherwise."
+              },
+              "dflt_value": {
+                "type": "any",
+                "description": "The default value for the column."
+              },
+              "pk": {
+                "type": "integer",
+                "description": "1 if this column is part of the primary key, 0 otherwise."
+              }
+            }
+          }
+        }
+      },
+      "foreignKeys": {
+        "type": "object",
+        "description": "A map where each key is a table name, and the value is an array of objects describing the foreign key constraints originating from that table.",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Unique ID for the FK constraint within the table."
+              },
+              "seq": {
+                "type": "integer",
+                "description": "Sequence number for composite keys (starts at 0)."
+              },
+              "table": {
+                "type": "string",
+                "description": "The parent table being referenced."
+              },
+              "from": {
+                "type": "string",
+                "description": "The column in the current (child) table."
+              },
+              "to": {
+                "type": "string",
+                "description": "The column in the parent table."
+              },
+              "on_update": {
+                "type": "string",
+                "description": "Action for ON UPDATE (e.g., 'CASCADE')."
+              },
+              "on_delete": {
+                "type": "string",
+                "description": "Action for ON DELETE (e.g., 'CASCADE')."
+              },
+              "match": {
+                "type": "string",
+                "description": "The MATCH clause (usually 'NONE')."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tableNames": [
+    "users",
+    "marketplace_products",
+    "order_items",
+    "user_tokens",
+    "updates",
+    "orders",
+    "suppliers_deliveries"
+  ],
+  "createStatements": {
+    "sqlite_sequence": "CREATE TABLE sqlite_sequence(name,seq)",
+    "users": "CREATE TABLE users (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  username TEXT NOT NULL,\n  phone TEXT NOT NULL UNIQUE,\n  Password TEXT,\n  Address TEXT,\n  user_key TEXT NOT NULL UNIQUE,\n  is_seller INTEGER DEFAULT 0\n)",
+    "marketplace_products": "CREATE TABLE marketplace_products (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  productName TEXT NOT NULL,\n  product_key TEXT NOT NULL UNIQUE,\n  user_key TEXT NOT NULL,\n  product_description TEXT,\n  product_price REAL NOT NULL,\n  product_quantity INTEGER NOT NULL,\n  user_message TEXT,\n  user_note TEXT,\n  ImageName TEXT,\n  MainCategory INTEGER,\n  SubCategory INTEGER,\n  ImageIndex INTEGER, original_price REAL, serviceType INTEGER DEFAULT 0,\n  FOREIGN KEY (user_key) REFERENCES users(user_key)\n    ON DELETE CASCADE\n    ON UPDATE CASCADE\n)",
+    "order_items": "CREATE TABLE order_items (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  order_key TEXT NOT NULL,\n  product_key TEXT NOT NULL,\n  quantity INTEGER NOT NULL,\n  seller_key TEXT,  -- البائع (نفس user_key من جدول المنتجات)\n\n  FOREIGN KEY (order_key) REFERENCES orders(order_key) ON DELETE CASCADE ON UPDATE CASCADE,\n  FOREIGN KEY (product_key) REFERENCES marketplace_products(product_key) ON DELETE CASCADE ON UPDATE CASCADE,\n  FOREIGN KEY (seller_key) REFERENCES users(user_key) ON DELETE CASCADE ON UPDATE CASCADE\n)",
+    "user_tokens": "CREATE TABLE user_tokens (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  user_key TEXT NOT NULL,\n  fcm_token TEXT NOT NULL,\n  created_at DATETIME DEFAULT CURRENT_TIMESTAMP\n, platform TEXT)",
+    "updates": "CREATE TABLE updates (\n    Id INTEGER PRIMARY KEY AUTOINCREMENT,\n    txt TEXT,\n    datetime DATETIME DEFAULT CURRENT_TIMESTAMP\n)",
+    "orders": "CREATE TABLE \"orders\" (\n\t`order_key` text NOT NULL UNIQUE,\n\t`user_key` text NOT NULL,\n\t`total_amount` real NOT NULL,\n\t`order_status` text,\n\t`created_at` numeric DEFAULT CURRENT_TIMESTAMP,\n\tFOREIGN KEY (`user_key`) REFERENCES `users`(`user_key`) ON UPDATE NO ACTION ON DELETE NO ACTION\n)",
+    "suppliers_deliveries": "CREATE TABLE \"suppliers_deliveries\" (\n    \"id\" INTEGER PRIMARY KEY AUTOINCREMENT,\n    \"seller_key\" TEXT NOT NULL,\n    \"delivery_key\" TEXT NOT NULL,\n    \"is_active\" INTEGER NOT NULL DEFAULT 0,\n    FOREIGN KEY (\"seller_key\") REFERENCES \"users\"(\"user_key\") ON DELETE CASCADE,\n    FOREIGN KEY (\"delivery_key\") REFERENCES \"users\"(\"user_key\") ON DELETE CASCADE\n)"
+  },
+  "tablesInfo": {
+    "users": [
+      {
+        "cid": 0,
+        "name": "id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "username",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "phone",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "Password",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "Address",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "user_key",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 6,
+        "name": "is_seller",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": "0",
+        "pk": 0
+      }
+    ],
+    "marketplace_products": [
+      {
+        "cid": 0,
+        "name": "id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "username",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "phone",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "Password",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "Address",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "user_key",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 6,
+        "name": "is_seller",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": "0",
+        "pk": 0
+      }
+    ],
+    "order_items": [
+      {
+        "cid": 0,
+        "name": "id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "username",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "phone",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "Password",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "Address",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "user_key",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 6,
+        "name": "is_seller",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": "0",
+        "pk": 0
+      }
+    ],
+    "user_tokens": [
+      {
+        "cid": 0,
+        "name": "id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "username",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "phone",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "Password",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "Address",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "user_key",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 6,
+        "name": "is_seller",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": "0",
+        "pk": 0
+      }
+    ],
+    "updates": [
+      {
+        "cid": 0,
+        "name": "id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "username",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "phone",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "Password",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "Address",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "user_key",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 6,
+        "name": "is_seller",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": "0",
+        "pk": 0
+      }
+    ],
+    "orders": [
+      {
+        "cid": 0,
+        "name": "id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "username",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "phone",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "Password",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "Address",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "user_key",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 6,
+        "name": "is_seller",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": "0",
+        "pk": 0
+      }
+    ],
+    "suppliers_deliveries": [
+      {
+        "cid": 0,
+        "name": "id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "username",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "phone",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "Password",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "Address",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "user_key",
+        "type": "TEXT",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 6,
+        "name": "is_seller",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": "0",
+        "pk": 0
+      }
+    ]
+  },
+  "foreignKeys": {
+    "users": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "users",
+        "from": "user_key",
+        "to": "user_key",
+        "on_update": "CASCADE",
+        "on_delete": "CASCADE",
+        "match": "NONE"
+      }
+    ],
+    "marketplace_products": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "users",
+        "from": "user_key",
+        "to": "user_key",
+        "on_update": "CASCADE",
+        "on_delete": "CASCADE",
+        "match": "NONE"
+      }
+    ],
+    "order_items": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "users",
+        "from": "user_key",
+        "to": "user_key",
+        "on_update": "CASCADE",
+        "on_delete": "CASCADE",
+        "match": "NONE"
+      }
+    ],
+    "user_tokens": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "users",
+        "from": "user_key",
+        "to": "user_key",
+        "on_update": "CASCADE",
+        "on_delete": "CASCADE",
+        "match": "NONE"
+      }
+    ],
+    "updates": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "users",
+        "from": "user_key",
+        "to": "user_key",
+        "on_update": "CASCADE",
+        "on_delete": "CASCADE",
+        "match": "NONE"
+      }
+    ],
+    "orders": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "users",
+        "from": "user_key",
+        "to": "user_key",
+        "on_update": "CASCADE",
+        "on_delete": "CASCADE",
+        "match": "NONE"
+      }
+    ],
+    "suppliers_deliveries": [
+      {
+        "id": 0,
+        "seq": 0,
+        "table": "users",
+        "from": "user_key",
+        "to": "user_key",
+        "on_update": "CASCADE",
+        "on_delete": "CASCADE",
+        "match": "NONE"
+      }
+    ]
+  }
+}

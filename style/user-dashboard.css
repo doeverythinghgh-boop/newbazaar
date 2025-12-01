@@ -1,0 +1,66 @@
+
+
+
+
+/* رسالة الترحيب */ 
+#dash-welcome-message {
+  /* ✅ تعديل: مظهر أبسط وأكثر حداثة */
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--dark-blue); /* ✅ تعديل: استخدام لون مناسب من المتغيرات */
+  margin-bottom: 35px;
+  border-bottom: none; /* إزالة الخط السفلي */
+  padding-bottom: 0;
+  text-align: center; /* ✅ تأكيد: توسيط النص */
+}
+
+/* حاوية مجموعات الأزرار */
+.dash-action-buttons {
+  /* ✅ تعديل: تحويل الحاوية إلى شبكة متجاوبة */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 15px;
+}
+
+/* تصميم الأزرار الموحد */
+.dash-button {
+  /* ✅ تعديل: ترتيب الأيقونة والنص عموديًا */
+  display: flex; /* استخدام flex لإظهار/إخفاء الأزرار بشكل صحيح */
+  flex-direction: column; /* جعل المحتوى عموديًا */
+  align-items: center;
+  justify-content: center;
+  gap: 4px; /* تقليل المسافة بين الأيقونة والنص */
+  padding: 10px;
+  font-size: 8px; /* ✅ تعديل: تصغير حجم الخط */
+  font-weight: 500;
+  font-family: "Tajawal", sans-serif;
+  color: #1f68a9; /* ✅ تعديل: تغيير لون الخط */
+  background-color: transparent; /* خلفية شفافة */
+  border: none; /* بدون حدود */
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+}
+
+/* ✅ جديد: تأثير عند مرور الفأرة */
+.dash-button:hover {
+  background-color: #f0f2f5; /* خلفية رمادية خفيفة عند المرور */
+}
+
+.dash-button:active {
+  transform: scale(0.97);
+}
+
+.dash-button i {
+  font-size: 2.2em; /* ✅ تعديل: تكبير حجم الأيقونة */
+  color: #007bff; /* ✅ جديد: تغيير لون الأيقونة إلى الأزرق */
+}
+
+/* ✅ جديد: تخصيص لون زر تسجيل الخروج */
+#dash-logout-btn-alt {
+  color: #dc3545; /* لون أحمر للنص */
+}
+#dash-logout-btn-alt i {
+  color: #dc3545; /* لون أحمر للأيقونة */
+}

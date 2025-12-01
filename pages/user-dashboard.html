@@ -1,0 +1,213 @@
+<link rel="stylesheet" href="../style/user-dashboard.css" />
+<style>
+  /*
+  * ========================================
+  * Modern Styles for User Dashboard
+  * ========================================
+  */
+
+  /* --- Page Body and Welcome Message --- */
+  body {
+    /* خلفية متدرجة ناعمة */
+    background: linear-gradient(
+      180deg,
+      var(--bg-color-light, #f8f9fa) 0%,
+      var(--border-color-soft, #eef2f7) 100%
+    );
+    padding: 20px;
+    font-family: "Tajawal", sans-serif;
+  }
+
+  #dash-welcome-message {
+    text-align: center;
+    color: var(--dark-blue, #03478f);
+    font-size: clamp(24px, 5vw, 32px); /* حجم خط متجاوب */
+    font-weight: 700;
+    margin-bottom: 40px;
+    animation: fadeInDown 0.5s ease-out;
+  }
+
+  /* --- Action Buttons Grid --- */
+  .dash-action-buttons {
+    display: grid;
+    /* إنشاء عمودين متساويين، مع عرض أدنى 150 بكسل لكل زر */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px; /* مسافة بين الأزرار */
+    max-width: 800px;
+    margin: 0 auto; /* توسيط الحاوية */
+    animation: fadeInUp 0.6s ease-out 0.2s;
+    animation-fill-mode: both; /* لضمان بقاء الحالة النهائية للحركة */
+  }
+
+  /* --- Button Styling --- */
+  .dash-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px; /* مسافة بين الأيقونة والنص */
+    padding: 25px 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-blue, #03478f);
+    background-color: var(--bg-color-white, #fff);
+    border: 1px solid var(--border-color-soft, #eef2f7);
+    border-radius: 15px; /* حواف أكثر دائرية */
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease,
+      border-color 0.2s ease;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .dash-button i {
+    font-size: 2rem; /* تكبير حجم الأيقونة */
+    color: var(--primary-color, #007bff);
+  }
+
+  .dash-button:active {
+    transform: scale(0.96);
+    box-shadow: var(--shadow-interactive);
+    border-color: var(--primary-color-light);
+  }
+
+  /* تمييز زر تسجيل الخروج */
+  #dash-logout-btn-alt {
+    background-color: var(--danger-color-light, #ffeeee);
+    border-color: var(--danger-color, #dc3545);
+  }
+
+  #dash-logout-btn-alt i {
+    color: var(--danger-color, #dc3545);
+  }
+
+  /* ✅ جديد: أنماط النافذة المنبثقة لاختيار الفئة */
+  .category-selection-popup .swal2-title {
+    color: var(--dark-blue, #03478f);
+    font-weight: 700;
+  }
+  .category-selection-popup .category-selection-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-top: 20px;
+    text-align: right;
+    box-sizing: border-box;
+  }
+  .category-selection-popup .category-select-group {
+    position: relative;
+    box-sizing: border-box;
+  }
+  .category-selection-popup .category-select-group label {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    display: block;
+    color: var(--text-color-dark, #333);
+  }
+  .category-selection-popup .category-select-group i {
+    margin-left: 8px;
+    color: var(--primary-color, #007bff);
+  }
+  .category-selection-popup .swal2-select {
+    width: 90%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color-input, #ddd);
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+  }
+  .category-selection-popup .swal2-select:focus {
+    border-color: var(--primary-color, #007bff);
+    box-shadow: 0 0 0 3px var(--primary-color-light, #cfe2ff);
+  }
+  .category-selection-popup .swal2-select:disabled {
+    background-color: var(--border-color-soft, #eef2f7);
+    cursor: not-allowed;
+  }
+
+  /* أنماط للشاشات الصغيرة (Responsive) */
+  @media (max-width: 768px) {
+    .category-selection-popup {
+      width: 90vw !important;
+      padding: 15px !important;
+    }
+    .category-selection-popup .swal2-title {
+      font-size: 1.4rem;
+    }
+    .category-selection-popup .category-selection-container {
+      gap: 15px;
+      margin-top: 15px;
+    }
+  }
+</style>
+
+<!-- حاوية لعرض الهيدر بشكل ديناميكي -->
+<div id="dash-header-container" style="height: 70px"></div>
+
+<div id="dash-profile-modal-container" class="modal">
+  <!-- سيتم ملء محتوى تعديل الملف الشخصي هنا -->
+</div>
+
+
+<h2 id="dash-welcome-message"></h2>
+<!-- حاوية رئيسية للأزرار مقسمة إلى مجموعات -->
+<!-- ✅ تعديل: حاوية شبكية لجميع الأزرار -->
+<div id="dash-action-buttons" class="dash-action-buttons">
+  <!-- أزرار المستخدم العام -->
+  <button id="dash-edit-profile-btn" class="dash-button">
+    <i class="fas fa-user-cog"></i> تعديل البيانات
+  </button>
+
+  <!-- أزرار البائع -->
+  <button id="dash-add-product-btn" class="dash-button">
+    <i class="fas fa-plus"></i> إضافة منتج
+  </button>
+  <button id="dash-view-my-products-btn" class="dash-button">
+    <i class="fas fa-archive"></i> منتجاتي
+  </button>
+
+  <!-- أزرار التقارير -->
+  <button id="dash-view-sales-movement-btn" class="dash-button">
+    <i class="fas fa-dolly-flatbed"></i> حركة المشتريات
+  </button>
+
+  <!-- أزرار المسؤول -->
+  <button id="dash-admin-panel-btn" class="dash-button">
+    <i class="fas fa-user-shield"></i> لوحة المسؤول
+  </button>
+
+  <!-- زر الخروج -->
+  <button id="dash-logout-btn-alt" class="dash-button">
+    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+  </button>
+</div>
+
+<!-- ✅ جديد: قالب HTML لنافذة اختيار الفئة -->
+<template id="category-selection-template">
+  <div class="category-selection-container">
+    <div class="category-select-group">
+      <label for="swal-main-category"><i class="fas fa-layer-group"></i> السوق الرئيسي</label>
+      <select id="swal-main-category" class="swal2-select">
+        <option value="" disabled selected>اختر السوق الرئيسي...</option>
+      </select>
+    </div>
+    <div class="category-select-group">
+      <label for="swal-sub-category"><i class="fas fa-tags"></i> السوق الفرعي</label>
+      <select id="swal-sub-category" class="swal2-select" disabled>
+        <option value="" disabled selected>اختر السوق الفرعي...</option>
+      </select>
+    </div>
+  </div>
+</template>
+
+<!-- ✅ جديد: ربط ملف الجافاسكريبت الخاص بالصفحة -->
+<script src="../js/user-dashboard.js"></script>
+
+<script src="../js/profile-modal.js"></script>
+<script>
+
+     insertUniqueSnapshot("../pages/header.html", "dash-header-container", 300);
+
+</script>

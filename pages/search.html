@@ -1,0 +1,810 @@
+<style>
+  .loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 4px solid transparent; /* Set base border to transparent */
+    border-top-color: var(--primary-color); /* Animate top border color */
+    border-right-color: var(--primary-color); /* Animate right border color */
+    animation: material-spin 0.7s linear infinite;
+    margin: 40px auto;
+  }
+
+  @keyframes material-spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .search-modal-content {
+    margin: 40px;
+    background-color: transparent; /* لون الخلفية */
+    animation: slide-down 0.5s ease-out forwards;
+    text-align: right; /* ✅ تعديل: محاذاة المحتوى لليمين ليتناسب مع اللغة */
+  
+  }
+
+  @keyframes slide-down {
+    from {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* ✅ جديد: تأثير الظهور التدريجي للنافذة */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* ✅ جديد: حاوية لتجميع حقل البحث وزر البحث */
+  .search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* مسافة بين حقل البحث والزر */
+  }
+
+  /* ✅ جديد: أنماط زر البحث الجديد */
+  .search-button {
+    flex-shrink: 0; /* منع الزر من التقلص */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--border-color-input); /* ✅ تعديل: حدود أرفع بلون أزرق خفيف */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-interactive); /* ✅ تعديل: ظل أكثر وضوحًا */
+  }
+
+  /* ✅ جديد: تعريف حركة النبض لزر البحث */
+  @keyframes pulse-animation {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+    }
+    70% {
+      transform: scale(1.05);
+      box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    }
+  }
+
+  .search-button.is-pulsing {
+    animation: pulse-animation 1.5s infinite;
+  }
+  .search-modal-input-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    border: 1px solid var(--border-color-input);
+    border-radius: 50px;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* ✅ تعديل: إزالة الحشو من هنا */
+    background-color: var(--bg-color-light);
+    flex-grow: 1; /* جعل حقل البحث يملأ المساحة المتاحة */
+  }
+
+  .search-modal-input-container:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-color-light); /* ✅ تحسين: استخدام متغير لون للتوهج */
+  }
+
+  /* ✅ جديد: أنماط أيقونة البحث داخل حقل الإدخال */
+  .search-modal-input-icon {
+    font-style: normal; /* إزالة النمط المائل من وسم <i> */
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 1rem;
+    transition: color 0.3s ease;
+    /* ✅ تعديل: إضافة حشو على اليمين لإنشاء مسافة من حافة الحاوية */
+    padding-right: 20px;
+  }
+  /* ✅ جديد: استخدام ::before لإظهار نص "txt" بدلاً من أيقونة font-awesome */
+  .search-modal-input-icon.fa-search::before {
+    content: "txt";
+    font-family: "Tajawal", sans-serif; /* استخدام خط متناسق */
+  }
+  .search-modal-input-icon.fa-search {
+    font-family: "Font Awesome 5 Free"; /* تعريف احتياطي لتجنب مشاكل العرض */
+  }
+
+  /* ✅ جديد: تغيير لون أيقونة البحث عند التركيز */
+  #search-modal-input {
+    flex-grow: 1;
+    border: none;
+    padding: 15px 20px; /* ✅ تعديل: توحيد الحشو بعد الاعتماد على flexbox */
+    font-size: 1.1rem;
+    outline: none;
+    background-color: transparent;
+    width: 100%; /* ✅ جديد: لضمان ملء المساحة */
+    box-sizing: border-box; /* ✅ جديد: لضمان حساب الحشو بشكل صحيح */
+  }
+
+  /* ✅ جديد: تغيير لون الأيقونة عند التركيز على حقل الإدخال */
+  .search-modal-input-container:focus-within .search-modal-input-icon {
+    color: var(--primary-color);
+  }
+
+  /* ✅ جديد: أنماط رابط إظهار/إخفاء الفلاتر */
+  .search-toggle-filters-link {
+    display: block; /* ✅ تعديل: تغيير العرض ليأخذ كامل المساحة المتاحة */
+    text-align: center; /* ✅ جديد: توسيط النص داخل الرابط */
+    margin-top: 15px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: normal;
+    cursor: pointer; /* Use pointer cursor for links */
+    font-size: 1rem; /* ✅ تعديل: توحيد حجم الخط مع النص التعريفي */
+    transition: color 0.3s ease;
+  }
+
+  .search-toggle-filters-link i {
+    transition: transform 0.3s ease;
+  }
+  /* ✅ جديد: أنماط أيقونة البحث داخل الحقل */
+
+  /* ✅ جديد: أنماط حاوية فلاتر الفئات */
+  .search-filters-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .search-filter-group {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-filter-icon {
+    position: absolute;
+    right: 18px; /* ✅ تعديل: تحسين الموضع */
+    color: var(--primary-color);
+    pointer-events: none; /* لمنع الأيقونة من التداخل مع النقر */
+    transition: color 0.3s ease; /* ✅ جديد: إضافة حركة لتغيير اللون */
+  }
+
+  /* ✅ جديد: تغيير لون أيقونة الفلتر عند التركيز */
+  .search-filter-group:focus-within .search-filter-icon {
+    color: var(--primary-color);
+  }
+  .search-category-filter {
+    width: 100%;
+    padding: 12px 45px 12px 20px; /* حشو لإفساح المجال للأيقونة */
+    border: 1px solid var(--border-color-input);
+    border-radius: 50px;
+    background-color: var(--bg-color-light);
+    font-family: "Tajawal", sans-serif;
+    font-size: 0.95rem;
+    color: var(--text-color-medium);
+    cursor: pointer;
+    -webkit-appearance: none; /* إزالة المظهر الافتراضي للمتصفح */
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='var(--text-color-dark)' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: left 0.75rem center;
+    background-size: 16px 12px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* ✅ تحسين: إضافة تأثير للظل */
+  }
+
+  .search-category-filter:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-color-light); /* ✅ جديد: إضافة توهج عند التركيز */
+  }
+
+  .search-category-filter:disabled {
+    background-color: var(--border-color);
+    border-color: var(--border-color-input);
+    cursor: not-allowed;
+  }
+
+  #search-results-container {
+    margin-top: 20px;
+    text-align: right; /* محاذاة نتائج البحث لليمين */
+  }
+
+  /* ✅ جديد: أنماط الشبكة لعرض نتائج البحث */
+  .search-results-grid {
+    display: grid;
+    /* إنشاء أعمدة متجاوبة، كل عمود عرضه الأدنى 180 بكسل والأقصى 1fr (جزء من المساحة المتاحة) */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px; /* مسافة بين العناصر */
+    padding-top: 10px;
+  }
+
+  /* ✅ جديد: أنماط كل عنصر في شبكة البحث */
+  .search-result-item {
+    background-color: var(--bg-color-white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden; /* لإخفاء أي أجزاء من الصورة تتجاوز الحدود الدائرية */
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    text-align: right; /* محاذاة النص لليمين */
+  }
+
+  /* ✅ جديد: أنماط صورة المنتج في نتيجة البحث */
+  .search-result-image {
+    width: 100%;
+    height: 160px; /* ارتفاع ثابت للصور للحفاظ على التناسق */
+    object-fit: cover; /* لضمان ملء الصورة للمساحة دون تشويه */
+  }
+
+  /* ✅ جديد: أنماط تفاصيل المنتج في نتيجة البحث */
+  .search-result-details {
+    padding: 15px;
+    flex-grow: 1; /* لجعل هذا الجزء يملأ المساحة المتبقية */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .search-result-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--text-color-dark);
+    margin: 0 0 8px 0;
+  }
+
+  .search-result-price {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin: auto 0 0 0; /* دفع السعر إلى الأسفل */
+  }
+  /* ✅ جديد: أنماط للشاشات الصغيرة (Responsive) */
+  @media (max-width: 768px) {
+    .search-modal-content {
+      width: 95%; /* زيادة العرض قليلاً ليملأ الشاشة بشكل أفضل */
+      margin: 20px auto;
+      padding: 15px;
+      max-width: none;
+    }
+
+    #search-modal-input {
+      padding: 12px 15px 12px 10px; /* ✅ تعديل: تعديل الحشو ليتناسب مع flexbox */
+      font-size: 1rem; /* تصغير حجم خط الإدخال */
+    }
+
+    /* ✅ جديد: جعل الفلاتر تحت بعضها في الشاشات الصغيرة */
+    .search-filters-container {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-category-filter {
+      padding: 10px 40px 10px 15px;
+      font-size: 0.9rem;
+    }
+
+    /* ✅ جديد: تعديل حجم الأعمدة في الشاشات الصغيرة جدًا */
+    .search-results-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+    }
+  }
+</style>
+
+<div id="search-modal-content" class="search-modal-content">
+  <table id="search-layout-table" style="width: 100%; border-spacing: 10px; table-layout: fixed">
+    <tbody id="search-layout-tbody">
+      <!-- الصف الأول: الفئات الرئيسية والفرعية -->
+      <tr id="search-filters-row">
+        <td id="search-main-category-cell">
+          <div
+            id="search-main-category-filter-group"
+            class="search-filter-group"
+          >
+            <i
+              id="search-main-category-filter-icon"
+              class="fas fa-layer-group search-filter-icon"
+            ></i>
+            <select
+              id="search-main-category-filter"
+              class="search-category-filter"
+              aria-label="الفئة الرئيسية"
+            >
+              <option id="search-main-category-default-option" value="">كل الاسواق الرئيسية</option>
+            </select>
+          </div>
+        </td>
+        <td id="search-sub-category-cell">
+          <div
+            class="search-filter-group"
+            id="search-sub-category-filter-group"
+          >
+            <i
+              id="search-sub-category-filter-icon"
+              class="fas fa-tags search-filter-icon"
+            ></i>
+            <select
+              id="search-sub-category-filter"
+              class="search-category-filter"
+              disabled
+              aria-label="الفئة الفرعية"
+            >
+              <option id="search-sub-category-default-option" value="">كل الاسواق الفرعية</option>
+            </select>
+          </div>
+        </td>
+      </tr>
+      <!-- الصف الثاني: حقل البحث -->
+      <tr id="search-input-row">
+        <td id="search-input-cell" colspan="2">
+          <div
+            id="search-modal-input-container"
+            class="search-modal-input-container"
+            style="padding-right: 0px"
+          >
+            <i
+              class="fas fa-search search-modal-input-icon"
+              id="search-input-icon"
+              aria-hidden="true"
+            ></i>
+            <input
+              type="search"
+              id="search-modal-input"
+              placeholder="اكتب اسم المنتج الذي تبحث عنه..."
+              autocomplete="off"
+            />
+          </div>
+        </td>
+      </tr>
+      <!-- الصف الثالث: فلتر الترتيب وزر البحث -->
+      <tr id="search-action-row">
+        <td id="search-sort-cell">
+          <div id="search-sort-filter-group" class="search-filter-group">
+            <i
+              id="search-sort-filter-icon"
+              class="fas fa-sort-amount-down search-filter-icon"
+            ></i>
+            <select
+              id="search-sort-filter"
+              class="search-category-filter"
+              aria-label="ترتيب حسب"
+            >
+              <option id="search-sort-default" value="default">الترتيب الافتراضي</option>
+              <option id="search-sort-price-asc" value="price-asc">الأقل سعراً</option>
+              <option id="search-sort-price-desc" value="price-desc">الأعلى سعراً</option>
+            </select>
+          </div>
+        </td>
+        <td id="search-button-cell">
+          <button
+            id="search-perform-search-btn"
+            class="search-button"
+            aria-label="بحث"
+            style="width: 100%; height: 50px; border-radius: 50px"
+          >
+            <i id="search-button-icon" class="fas fa-search"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div id="search-results-container"></div>
+</div>
+
+<script>
+  async function initSearchModal(containerId) {
+    // ✅ رسالة للمطور: بداية تهيئة نافذة البحث
+    console.log(
+      "%c[SearchModal] Starting initialization of the search modal.",
+      "color: #007bff; font-weight: bold;"
+    );
+    const searchModalInput = document.getElementById("search-modal-input");
+    const mainCategoryFilter = document.getElementById(
+      "search-main-category-filter"
+    );
+    const subCategoryFilter = document.getElementById(
+      "search-sub-category-filter"
+    );
+    const subCategoryFilterGroup = document.getElementById(
+      "search-sub-category-filter-group"
+    );
+    const searchResultsContainer = document.getElementById(
+      "search-results-container"
+    );
+    const performSearchBtn = document.getElementById(
+      "search-perform-search-btn"
+    );
+    const sortFilter = document.getElementById("search-sort-filter");
+    let currentResults = [];
+    // ✅ رسالة للمطور: تم جلب عناصر DOM بنجاح
+    console.log(
+      "[SearchModal] All required DOM elements have been successfully retrieved."
+    );
+
+    /**
+     * @description دالة لتأخير تنفيذ دالة معينة (Debounce) لتحسين أداء البحث أثناء الكتابة.
+     * @function debounce
+     * @param {function(...any): any} func - الدالة المراد تأخير تنفيذها.
+     * @param {number} delay - فترة التأخير بالمللي ثانية.
+     * @returns {function(...any): void} - دالة مُعدّلة تنفذ الدالة الأصلية بعد فترة التأخير.
+     */
+    function debounce(func, delay) {
+      let timeout;
+      return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    /**
+     * @description تنفذ عملية البحث بناءً على معايير البحث الحالية (النص، الفئات الرئيسية والفرعية).
+     *   تعرض مؤشر تحميل وتُظهر النتائج أو رسالة خطأ.
+     * @function performSearch
+     * @returns {Promise<void>} - وعد (Promise) لا يُرجع قيمة عند الاكتمال.
+     * @see normalizeArabicText
+     * @see displaySearchResults
+     */
+    async function performSearch() {
+      // ✅ رسالة للمطور: تم استدعاء دالة البحث
+      console.log("[SearchModal] performSearch function has been triggered.");
+      // ✅ جديد: إيقاف حركة الزر بمجرد بدء البحث
+      performSearchBtn.classList.remove("is-pulsing");
+
+      // ✅ تحسين: تنقيح النص العربي من التشكيل والهمزات قبل إرساله للبحث
+      const searchTerm = normalizeArabicText(searchModalInput.value.trim());
+      const mainCategory = mainCategoryFilter.value;
+      const subCategory = subCategoryFilter.value;
+
+      // ✅ تحسين: تسجيل معايير البحث (بعد التنقيح) لتسهيل التصحيح
+      console.info(
+        `[SearchModal] Starting search with: searchTerm='${searchTerm}', mainCategory='${mainCategory}', subCategory='${subCategory}'`
+      );
+
+      // لا تقم بالبحث إذا كان حقل البحث فارغًا ولم يتم تحديد أي فئة
+      if (!searchTerm && !mainCategory) {
+        searchResultsContainer.innerHTML = ""; // مسح النتائج
+        return;
+      }
+
+      // إظهار مؤشر التحميل
+      // ✅ تحسين: مسح المحتوى القديم وإنشاء عنصر التحميل برمجياً
+      searchResultsContainer.innerHTML = ""; // مسح النتائج السابقة أولاً
+      const loader = document.createElement("div"); // NOSONAR
+      loader.className = "loader";
+      loader.style.margin = "40px auto"; // استخدام الهامش المحدد في الـ CSS
+      searchResultsContainer.appendChild(loader);
+
+      const params = new URLSearchParams();
+      if (searchTerm) params.append("searchTerm", searchTerm);
+      if (mainCategory) params.append("MainCategory", mainCategory);
+      if (subCategory) params.append("SubCategory", subCategory);
+
+      const searchURL = `${baseURL}/api/products?${params.toString()}`;
+      // ✅ جديد: تسجيل رابط الطلب الكامل قبل إرساله
+      console.info(`[SearchModal] Fetching from URL: ${searchURL}`);
+
+      try {
+        const response = await fetch(searchURL);
+        if (!response.ok) throw new Error("فشل جلب نتائج البحث");
+        const results = await response.json();
+        currentResults = results; // ✅ جديد: تخزين النتائج الأصلية
+        console.log(
+          "[SearchModal] Successfully received results from server:",
+          currentResults
+        ); // ✅ جديد: تسجيل النتائج المستلمة
+        displaySearchResults(results);
+      } catch (error) {
+        console.error("%c[SearchModal] خطأ في البحث:", "color: red;", error);
+        searchResultsContainer.innerHTML = // NOSONAR
+          '<p class="search-error-message">حدث خطأ أثناء البحث. يرجى المحاولة مرة أخرى.</p>'; // NOSONAR
+      }
+      // ✅ جديد: إعلام المطور بانتهاء عملية البحث
+      console.log(
+        "%c[SearchModal] عملية البحث قد اكتملت.",
+        "color: blue; font-style: italic;"
+      );
+    }
+
+    /**
+     * @description تعرض نتائج البحث في الواجهة، مع تطبيق خيارات الفرز إن وجدت.
+     *   تربط أحداث النقر على بطاقات المنتجات لفتح تفاصيلها في نافذة منبثقة.
+     * @function displaySearchResults
+     * @param {Array<Object>} results - مصفوفة من كائنات المنتجات التي تمثل نتائج البحث.
+     * @returns {void}
+     * @see showProductDetails
+     */
+    function displaySearchResults(results) {
+      // ✅ رسالة للمطور: بداية عرض نتائج البحث
+      console.log("[SearchModal] Starting to display search results.");
+      let sortedResults = [...results]; // إنشاء نسخة من النتائج للترتيب
+      const sortValue = sortFilter.value;
+
+      // ✅ جديد: تطبيق منطق الترتيب قبل العرض
+      if (sortValue === "price-asc") {
+        console.info("[SearchModal] Sorting results by price: Low to High.");
+        sortedResults.sort(
+          (a, b) => parseFloat(a.product_price) - parseFloat(b.product_price)
+        );
+      } else if (sortValue === "price-desc") {
+        console.info("[SearchModal] Sorting results by price: High to Low.");
+        sortedResults.sort(
+          (a, b) => parseFloat(b.product_price) - parseFloat(a.product_price)
+        );
+      }
+
+      // ✅ جديد: تسجيل عدد النتائج قبل عرضها
+      console.log(
+        `[SearchModal] Preparing to display ${sortedResults.length} search results.`
+      );
+
+      if (sortedResults.length === 0) {
+        searchResultsContainer.innerHTML = // NOSONAR
+          '<p class="search-no-results-message">لم يتم العثور على منتجات تطابق بحثك.</p>';
+        return;
+      }
+
+      let resultsHTML = '<div class="search-results-grid">';
+      sortedResults.forEach((product) => {
+        // NOSONAR
+        // ✅ استدعاء الدالة الموحدة
+        resultsHTML += generateSearchResultHTML(product);
+      });
+      resultsHTML += "</div>";
+      searchResultsContainer.innerHTML = resultsHTML;
+
+      // إضافة حدث النقر على كل نتيجة لفتح تفاصيل المنتج
+      document.querySelectorAll(".search-result-item").forEach((item) => {
+        // NOSONAR
+        item.addEventListener("click", () => {
+          const productKey = item.dataset.productKey;
+          const productData = sortedResults.find(
+            (p) => p.product_key === productKey
+          );
+          // ✅ جديد: إخفاء نافذة البحث وتمرير دالة لإعادة إظهارها عند إغلاق نافذة التفاصيل
+          // ✅ تنفيذ: إظهار رسالة للمطور تحدد المنتج المستهدف عند النقر عليه
+          console.log(
+            "%c[Search Result Click] تم النقر على المنتج:",
+            "color: #20c997; font-weight: bold;",
+            productData
+          );
+
+          // ✅ إصلاح: إعادة هيكلة بيانات المنتج لتتطابق مع الهيكل الذي تتوقعه دالة showProductDetails
+          const productDataForModal = {
+            product_key: productData.product_key,
+            productName: productData.productName,
+            user_key: productData.user_key,
+            pricePerItem: productData.product_price, // استخدام product_price
+            original_price: productData.original_price,
+            imageSrc: productData.ImageName
+              ? productData.ImageName.split(",").map(
+                  (name) =>
+                    `https://pub-e828389e2f1e484c89d8fb652c540c12.r2.dev/${name}`
+                )
+              : [],
+            availableQuantity: productData.product_quantity,
+            sellerMessage: productData.user_message,
+            description: productData.product_description,
+            sellerName: productData.seller_username,
+            sellerPhone: productData.seller_phone,
+            MainCategory: productData.MainCategory, // ✅ إضافة: تمرير ID الفئة الرئيسية
+            SubCategory: productData.SubCategory, // ✅ إضافة: تمرير ID الفئة الفرعية
+            type: productData.serviceType,
+          };
+
+          if (productDataForModal.type === 0) {
+            productSession = [productDataForModal, true];
+            mainLoader(
+              "pages/productView.html",
+              "index-product-container",
+              0,
+              undefined,
+              "showHomeIcon",
+              true
+            );
+          }
+        });
+      });
+    }
+
+    // ✅ جديد: إضافة حدث عند تغيير خيار الترتيب
+    sortFilter.addEventListener("change", () => {
+      // ✅ رسالة للمطور: تم تغيير ترتيب الفرز
+      console.log(
+        `[SearchModal] Sort option changed to: ${sortFilter.value}. Re-displaying results.`
+      );
+      // إعادة عرض النتائج الحالية مع الترتيب الجديد دون استدعاء API
+      displaySearchResults(currentResults);
+    });
+    /**
+     * @description تجلب الفئات من ملف `shared/list.json` وتعبئ فلاتر الفئات الرئيسية والفرعية في نافذة البحث.
+     *   تقوم أيضًا بإعداد مستمعي الأحداث لتحديث الفلاتر الفرعية عند تغيير الفئة الرئيسية.
+     * @function loadCategoryFilters
+     * @returns {Promise<void>} - وعد (Promise) لا يُرجع قيمة عند الاكتمال.
+     * @throws {Error} - إذا فشل تحميل الفئات.
+     */
+    async function loadCategoryFilters() {
+      // ✅ رسالة للمطور: بداية تحميل فلاتر الفئات
+      console.log(
+        "[SearchModal] Starting to load category filters from 'list.json'."
+      );
+      try {
+        const response = await fetch("../shared/list.json");
+        if (!response.ok) throw new Error("فشل تحميل الفئات للفلاتر");
+        const data = await response.json();
+        const categories = data.categories;
+
+        // ✅ رسالة للمطور: تم تحميل وتفسير ملف الفئات بنجاح
+        console.log(
+          "[SearchModal] 'list.json' loaded and parsed successfully.",
+          categories
+        );
+        // 1. تعبئة فلتر الفئات الرئيسية
+        categories.forEach((category) => {
+          const option = document.createElement("option"); // NOSONAR
+          option.value = category.id;
+          option.textContent = category.title;
+          // تخزين الفئات الفرعية في بيانات العنصر للوصول إليها لاحقًا
+          option.dataset.subcategories = JSON.stringify(
+            category.subcategories || []
+          );
+          mainCategoryFilter.appendChild(option);
+        });
+
+        // 2. إضافة حدث عند تغيير الفئة الرئيسية
+        // ✅ رسالة للمطور: ربط حدث تغيير الفئة الرئيسية
+        console.log(
+          "[SearchModal] Attaching 'change' event listener to the main category filter."
+        );
+        mainCategoryFilter.addEventListener("change", () => {
+          // مسح وتحديث الفئات الفرعية
+          subCategoryFilter.innerHTML = // NOSONAR
+            '<option value="">كل الاسواق الفرعية</option>';
+          const selectedOption =
+            mainCategoryFilter.options[mainCategoryFilter.selectedIndex];
+
+          if (selectedOption.value) {
+            const subcategories = JSON.parse(
+              selectedOption.dataset.subcategories
+            );
+            if (subcategories.length > 0) {
+              subcategories.forEach((sub) => {
+                const subOption = document.createElement("option"); // NOSONAR
+                subOption.value = sub.id;
+                subOption.textContent = sub.title;
+                subCategoryFilter.appendChild(subOption);
+              });
+              subCategoryFilter.disabled = false; // تفعيل فلتر الفئات الفرعية
+            } else {
+              subCategoryFilter.disabled = true; // تعطيل إذا لم تكن هناك فئات فرعية
+            }
+          } else {
+            subCategoryFilter.innerHTML = // NOSONAR
+              '<option value="">كل الاسواق الفرعية</option>'; // إعادة تعيين الفئات الفرعية
+            subCategoryFilter.disabled = true; // تعطيل إذا تم اختيار "كل الفئات"
+          }
+          // ✅ رسالة للمطور: تم تحديث الفلتر الفرعي
+          console.log(
+            "[SearchModal] Sub-category filter updated based on main category selection."
+          );
+        });
+      } catch (error) {
+        console.error(
+          "%c[SearchModal] خطأ في تحميل فلاتر الفئات:",
+          "color: red;",
+          error
+        );
+      }
+      // ✅ رسالة للمطور: اكتمل تحميل فلاتر الفئات
+      console.log(
+        "[SearchModal] Category filters have been fully loaded and configured."
+      );
+    }
+
+    // استدعاء الدالة لتحميل الفلاتر
+    loadCategoryFilters();
+
+    // ✅ جديد: ربط أحداث البحث
+    // ✅ تعديل: تغيير الحدث من 'input' إلى 'change' لتنفيذ البحث عند الانتهاء من الكتابة فقط
+    // ✅ إصلاح: التحقق من وجود العناصر قبل ربط الأحداث لتجنب الأخطاء
+    // ✅ رسالة للمطور: ربط أحداث البحث
+    console.log(
+      "[SearchModal] Attaching search event listeners to input fields and buttons."
+    );
+    // ✅ تعديل: تم إزالة مستمعي الأحداث من حقول الإدخال والفلاتر
+    // البحث الآن يتم فقط عند الضغط على زر البحث
+
+    if (performSearchBtn) {
+      performSearchBtn.addEventListener("click", performSearch);
+    } else {
+      // رسالة للمطور في حال عدم العثور على الزر
+      console.error(
+        "[SearchModal] لم يتم العثور على زر البحث (perform-search-btn) لربط حدث النقر."
+      );
+
+      // ✅ جديد: إضافة حدث للتحكم في حركة زر البحث أثناء الكتابة
+      searchModalInput.addEventListener("input", () => {
+        if (searchModalInput.value.trim() !== "") {
+          performSearchBtn.classList.add("is-pulsing");
+        } else {
+          performSearchBtn.classList.remove("is-pulsing");
+        }
+      });
+
+      setTimeout(() => searchModalInput.focus(), 50);
+    }
+
+    // ✅ جديد: إعلام المطور بأن تهيئة الصفحة قد اكتملت
+    console.log(
+      "%c[SearchModal] Initialization complete. The search modal is ready.",
+      "color: green; font-weight: bold;"
+    );
+  }
+
+  function generateSearchResultHTML(product) {
+    let SERVICE_CATEGORY_NoPrice_ID = 6;
+    // معالجة الصور
+    const firstImageName = product.ImageName
+      ? product.ImageName.split(",")[0]
+      : null;
+    const imageUrl = firstImageName
+      ? `https://pub-e828389e2f1e484c89d8fb652c540c12.r2.dev/${firstImageName}`
+      : "images/placeholder.png";
+
+    // تحديد إذا كان المنتج خدمة
+    const isService = product.MainCategory == SERVICE_CATEGORY_NoPrice_ID;
+    const price = parseFloat(product.product_price);
+
+    // بناء الهيكل الخاص بنتائج البحث فقط
+    return `
+    <div class="search-result-item" data-product-key="${product.product_key}">
+      <img src="${imageUrl}" alt="${
+      product.productName
+    }" class="search-result-image">
+      <div class="search-result-details">
+        <h4 class="search-result-title">${product.productName}</h4>
+        ${
+          !isService
+            ? `<p class="search-result-price">${price.toFixed(2)} جنيه</p>`
+            : ""
+        }
+      </div>
+    </div>
+  `;
+  }
+
+  window.addEventListener("message", async function listener(event) {
+    // التحقق من أن الرسالة هي من النوع الصحيح ('ASSETS_INJECTED')
+    if (event.data.type === "ASSETS_INJECTED") {
+      // ✅ رسالة للمطور: تم استقبال رسالة تحميل الأصول
+      console.log(
+        "[Search Page] 'ASSETS_INJECTED' message received. Initializing search modal."
+      );
+
+      await initSearchModal("search-modal-container");
+
+      window.removeEventListener("message", listener); // إزالة المستمع بعد الاستخدام
+    }
+  });
+
+  initSearchModal("search-modal-content");
+</script>

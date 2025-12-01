@@ -1,0 +1,46 @@
+
+
+<div id="loader-container" class="loader"></div>
+<div id="advertisement"></div>
+<div id="categories00"></div>
+
+<script>
+  // يتم تنفيذ هذا الكود بعد تحميل كامل محتوى الصفحة لضمان توفر جميع عناصر DOM
+  async function main ()  {
+    // تحديد العناصر الأساسية في الصفحة: مؤشر التحميل وحاويات المحتوى
+    const loaderElement = document.getElementById("loader-container");
+    const contentElements = [
+      document.getElementById("advertisement"),
+      document.getElementById("categories00"),
+    ];
+    // لتخزين حالة العرض الأصلية للعناصر قبل إخفائها
+    const originalDisplays = new Map();
+
+    // الخطوة 1: إخفاء المحتوى الرئيسي وإظهار مؤشر التحميل لتحسين تجربة المستخدم
+    contentElements.forEach((el) => {
+      originalDisplays.set(el, el.style.display || ""); // حفظ حالة العرض الأصلية
+      el.style.display = "none";
+    });
+    loaderElement.style.display = "block";
+
+    // الخطوة 2: تحميل محتوى الأجزاء المختلفة (الإعلانات والفئات) بشكل متزامن
+    // يتم استخدام Promise.all لضمان اكتمال تحميل جميع الأجزاء قبل المتابعة
+    await Promise.all([
+      loader("../pages/advertisement.html", "advertisement", 0),
+      loader("../pages/categories.html", "categories00", 300),
+    ]);
+
+    // الخطوة 3: بعد تحميل المحتوى، يتم تهيئة الوحدات البرمجية المسؤولة عن وظائف كل جزء
+    // تهيئة وحدة الإعلانات
+    initAdverModule(document.getElementById("advertisement-section"));
+    // تحميل وعرض الفئات
+    categories_loadCategoriesAsTable(); // افترض أن هذه الدالة تضيف المحتوى إلى العناصر المخفية
+
+    // الخطوة 4: بعد اكتمال التحميل والتهيئة، يتم إظهار المحتوى وإخفاء مؤشر التحميل
+    contentElements.forEach(
+      (el) => (el.style.display = originalDisplays.get(el))
+    );
+    loaderElement.style.display = "none";
+
+  }main();
+</script>

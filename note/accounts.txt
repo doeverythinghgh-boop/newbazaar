@@ -1,0 +1,38 @@
+
+do.everything.hgh@gmail.com   for turso
+
+libsql://bazaar-bazaar.aws-eu-west-1.turso.io
+
+eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NjE5ODExODcsImlkIjoiMjk3ZTJkOTgtODkxZi00MjVmLWI0YjQtOGNlNTM2MmM5ZTQ4IiwicmlkIjoiNjRkMTg0YWQtZTJhMC00YmEwLWI3NzUtN2Q3MjlkYmQ5YmY1In0.z-P7Vt-ixn5pMmgoOKAsQes4knj9FBY017xqogMD1YklBaRFBAFvhMLREu9uQrj9n3LOfX7R77MVVgePyfV4CA
+
+موقع vercel بدل من deno يتعرف علي الملفات داخل المجلد api تلقائيا
+
+const url = "https://github.com/doeverythinghgh-boop/bazaar/archive/refs/heads/main.zip";
+
+
+
+Hossam darwish | 01024182175 | بائع
+bazaar1111 | 12345678900 | خدمة توصيل
+mira hossam | 01280936579 | بائع
+سامح سامح | 01208761619 | بائع
+هشام جابر | 01026546550 | بائع
+Reda elmasry | 01070606712 | بائع
+نصره صبحي | 01229952679 | عميل
+
+مشتري 001 | 00000000000 | عميل
+مشترى 0002 | 010000000000 | عميل
+مشترى 0003 | 0122222222222 | عميل
+
+
+بائع 0001 | 011111111111 | بائع      l65dpg84
+       n846w1mc    بائع 0002 | 01333333333 | بائع
+بائع 0003 | 014444444444 | بائع
+
+
+خدمة 0001 | 01555555555 | خدمة توصيل
+خدمة 0002 | 016666666666 | خدمة توصيل
+خدمة 0003 | 01777777777 | خدمة توصيل
+
+
+هشام اشتري منتج 1 من البائع 1
+هشام اشتري منتج 1 من البائع 2

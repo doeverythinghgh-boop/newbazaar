@@ -1,0 +1,293 @@
+ <style>
+    /*
+    * ========================================
+    * ProductView Styles (productView_)
+    * ========================================
+    */
+
+    /* Keyframes للحركات */
+    @keyframes productView_fadeInScaleUp {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes productView_zoomInEffect {
+        from {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes productView_slideInFromTop {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* تطبيق الحركات على العناصر */
+    .productView_modal_content {
+        padding: 20px;
+        max-width: 700px;
+        margin: auto;
+        animation: productView_fadeInScaleUp 0.4s ease-out forwards;
+    }
+
+    #productView_image {
+        width: 100%;
+        animation: productView_zoomInEffect 0.5s ease-out 0.1s forwards;
+        opacity: 0; /* يبدأ مخفياً */
+        max-height: 400px; /* تحديد ارتفاع أقصى */
+        border-radius: 8px;
+        background-color: var(--bg-color-light, #f9f9f9); /* خلفية للصورة */
+    }
+
+    #productView_details_container {
+        animation: productView_slideInFromTop 0.5s ease-out 0.2s forwards;
+        opacity: 0; /* يبدأ مخفياً */
+        text-align: right;
+    }
+
+    /* حركة متدرجة للتفاصيل */
+    #productView_details_container > * {
+        animation: productView_slideInFromTop 0.5s ease-out forwards;
+        opacity: 0; /* يبدأ مخفياً */
+    }
+
+    /* حاويات الوصف والرسالة */
+    .productView_description_box,
+    .productView_seller_message_box {
+        background-color: var(--bg-color-white, #fff);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 15px;
+        border: 1px solid var(--border-color-soft, #eef2f7);
+        box-shadow: var(--shadow-soft);
+    }
+    .productView_description_box h4,
+    .productView_seller_message_box h4 {
+        margin-top: 0;
+        color: var(--dark-blue, #03478f);
+        border-bottom: 1px solid var(--border-color, #e9ecef);
+        padding-bottom: 10px;
+    }
+    .productView_description_box p,
+    .productView_seller_message_box p {
+        color: var(--text-color-medium, #4a5568);
+        line-height: 1.6;
+    }
+    .productView_description_box h4 i,
+    .productView_seller_message_box h4 i {
+        color: var(--primary-color, #007bff);
+        margin-left: 8px; /* تغيير جهة الهامش */
+    }
+
+    .productView_image_container {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 15px;
+    }
+
+    .productView_thumbnails_container {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+    .productView_thumbnails_container img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 4px;
+        cursor: pointer;
+        border: 2px solid var(--border-color, #e9ecef);
+        transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+    .productView_thumbnails_container img.active {
+        border-color: var(--primary-color, #007bff);
+        box-shadow: var(--shadow-focus);
+        transform: scale(1.1);
+    }
+
+</style>
+
+<div class="modal-content productView_modal_content" id="productView_modal_content">
+    <div
+        class="productView_image_container"
+        id="productView_image_container"
+    >
+        <img id="productView_image" src="" alt="صورة المنتج" />
+        <div class="productView_thumbnails_container" id="productView_thumbnails_container">
+            </div>
+    </div>
+    <div class="productView_details" id="productView_details_container">
+        <h3
+            id="productView_name"
+            style="text-align: center; margin-bottom: 1rem; color: var(--text-color-dark, #222)"
+        >
+            </h3>
+        <div
+            class="productView_description_box"
+            id="productView_description_container"
+        >
+            <h4 id="productView_description_header">
+                <i class="fas fa-file-alt"></i> وصف المنتج
+            </h4>
+            <p id="productView_description_text"></p>
+        </div>
+
+        <div class="productView_seller_message_box" id="productView_seller_message_container">
+            <h4 id="productView_seller_message_header">
+                <i
+                    class="fas fa-comment-dots"
+                    id="productView_seller_message_icon"
+                ></i>
+                رسالة من البائع
+            </h4>
+            <p id="productView_seller_message_text"></p>
+        </div>
+    </div>
+</div>
+<script>
+    /**
+     * @fileoverview Product View Details Logic (productView_ module)
+     * @author Hisham (BidStory Project)
+     */
+
+    // ==============================================
+    //  الوصول إلى عناصر DOM (فصل المسؤوليات - SRP)
+    // ==============================================
+
+    /**
+     * كائن يحتوي على جميع معرفات DOM المستخدمة لتجنب تكرار استدعاء document.getElementById.
+     */
+    const productView_domElements = {
+        // بيانات المنتج
+        name: document.getElementById("productView_name"),
+        description: document.getElementById("productView_description_text"),
+        sellerMessage: document.getElementById("productView_seller_message_text"),
+
+        // الصور
+        mainImage: document.getElementById("productView_image"),
+        thumbnailsContainer: document.getElementById("productView_thumbnails_container"),
+    };
+
+
+    // ==============================================
+    //  الدوال المساعدة (قابلية الصيانة - Modularity)
+    // ==============================================
+
+    /**
+     * تُنشئ وتعالج صور المصغرات للمنتج.
+     * @param {string[]} imageSrcArray - مصفوفة مسارات الصور.
+     * @param {HTMLElement} mainImageEl - عنصر الصورة الرئيسية (<img>).
+     * @param {HTMLElement} thumbnailsContainerEl - حاوية الصور المصغرة.
+     */
+    function productView_populateThumbnails(imageSrcArray, mainImageEl, thumbnailsContainerEl) {
+        try {
+            thumbnailsContainerEl.innerHTML = ""; // مسح الصور المصغرة القديمة
+            mainImageEl.src = imageSrcArray[0] || ""; // عرض الصورة الأولى
+
+            imageSrcArray.forEach((src) => {
+                const thumb = document.createElement("img");
+                thumb.alt = "صورة مصغرة للمنتج";
+                thumb.src = src;
+
+                thumb.onclick = () => { // عند النقر، تحديث الصورة الرئيسية
+                    mainImageEl.src = src;
+                    // إزالة الكلاس 'active' من الجميع وإضافته إلى الصورة المحددة
+                    document.querySelectorAll('.productView_thumbnails_container img').forEach(t => t.classList.remove('active'));
+                    thumb.classList.add('active');
+                };
+
+                thumb.onerror = () => {
+                    console.warn("[productView_] فشل تحميل الصورة المصغرة:", src);
+                    // استبدال الصورة الفاشلة بعنصر نائب (يمكن تحسين هذا في CSS المشروع)
+                    const placeholder = document.createElement("div");
+                    placeholder.className = "image-load-error-placeholder";
+                    placeholder.innerHTML = `<i class="fas fa-exclamation-triangle"></i><span>فشل التحميل</span>`;
+                    thumb.replaceWith(placeholder);
+                };
+                thumbnailsContainerEl.appendChild(thumb);
+            });
+
+            // تفعيل أول صورة مصغرة بشكل افتراضي (تأخير بسيط لضمان الإلحاق)
+            setTimeout(() => {
+                if (thumbnailsContainerEl.firstChild) thumbnailsContainerEl.firstChild.classList.add('active');
+            }, 0);
+
+        } catch (error) {
+            console.error("productView_populateThumbnails - خطأ في تعبئة الصور المصغرة:", error);
+        }
+    }
+
+
+    // ==============================================
+    //  الدالة الرئيسية (مبدأ المسؤولية الواحدة - SRP)
+    // ==============================================
+
+    /**
+     * تعرض تفاصيل المنتج في النافذة المنبثقة وتُهيئ الوظائف التفاعلية.
+     * تُعد هذه الدالة نقطة الدخول الرئيسية لعرض بيانات المنتج.
+     * @param {object} productData - كائن بيانات المنتج المراد عرضه.
+     */
+    function productView_viewDetails(productData) {
+        try {
+            console.log("[productView_] جاري عرض تفاصيل المنتج...");
+            const {
+                name, description, sellerMessage,
+                mainImage, thumbnailsContainer,
+            } = productView_domElements;
+
+            // تعبئة البيانات الأساسية
+            name.textContent = productData.productName || "غير متوفر";
+            description.textContent = productData.description || "لا يوجد وصف متاح.";
+            sellerMessage.textContent = productData.sellerMessage || "لا توجد رسالة من البائع.";
+            
+            // تعبئة معرض الصور
+            productView_populateThumbnails(
+                productData.imageSrc || [],
+                mainImage,
+                thumbnailsContainer
+            );
+
+        } catch (error) {
+            console.error("productView_viewDetails - خطأ عام أثناء عرض التفاصيل:", error);
+            // رسالة تنبيه للمستخدم النهائي باستخدام SweetAlert2
+            Swal.fire({
+                icon: "error",
+                title: "عفواً!",
+                text: "حدث خطأ أثناء تحميل تفاصيل المنتج. يرجى المحاولة لاحقاً.",
+                customClass: { popup: 'fullscreen-swal' },
+            });
+        }
+    }
+
+    // ==============================================
+    //  نقطة الدخول (Initialization)
+    // ==============================================
+
+    try {
+        console.log("Initializing product view module with received state:", productSession);
+        // productSession[0] هو بيانات المنتج
+        productView_viewDetails(productSession[0]);
+    } catch (error) {
+        console.error("خطأ أثناء تهيئة نافذة عرض المنتج:", error);
+    }
+</script>

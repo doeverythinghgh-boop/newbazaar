@@ -1,0 +1,1 @@
+https://bazaar-neon-three.vercel.app/api/database-analysis

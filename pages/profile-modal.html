@@ -1,0 +1,741 @@
+<style>
+    /* ======================================
+    CSS: أنماط بروفايل المستخدم
+    ✅ تحديث: تم تحديث الأنماط لتصميم عصري وجذاب
+    ======================================
+    */
+
+    /* أنماط محتوى النافذة المنبثقة (Modal Content) */
+    .profile-content {
+        font-family: "Tajawal", sans-serif;
+        /* ✅ تحديث: استخدام تأثير الزجاج المصنفر (Frosted Glass) للخلفية */
+        background-color: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid var(--border-color-soft);
+        animation: profileSlideIn 0.4s ease-out; /* تم تغيير اسم الانيميشن */
+        overflow-x: hidden;
+        max-width: 500px; /* تحديد عرض أقصى للحاوية */
+        margin: 20px auto; /* توسيط الحاوية */
+    }
+
+    .profile-content h3 {
+        font-family: "Tajawal", sans-serif;
+        font-size: clamp(24px, 5vw, 28px); /* ✅ تحديث: حجم خط متجاوب */
+        margin-top: 0;
+        margin-bottom: 25px;
+        color: var(--dark-blue);
+        text-align: center;
+        font-weight: 700; /* ✅ جديد: زيادة وزن الخط للعنوان */
+    }
+
+    /* ✅ جديد: أيقونات داخل حقول الإدخال */
+    .profile-form-group .profile-input-icon {
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(calc(-50% + 14px)); /* ضبط المحاذاة العمودية بدقة */
+        color: var(--icon-color);
+        pointer-events: none; /* لمنع التفاعل مع الأيقونة */
+    }
+    .profile-form-group input {
+        padding-right: 45px; /* ✅ تحديث: إضافة حشو لترك مساحة للأيقونة */
+    }
+
+    /* أنماط مجموعات وحقول النموذج (Form Group) */
+    .profile-form-group {
+        margin-bottom: 20px;
+        text-align: right;
+        position: relative;
+    }
+
+    .profile-form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: var(--dark-blue);
+        font-size: 0.9rem;
+    }
+
+    .profile-form-group input {
+        width: 100%;
+        padding: 14px 45px 14px 15px; /* ✅ تحديث: تعديل الحشو ليتناسب مع الأيقونات */
+        border: 1px solid var(--border-color-input);
+        border-radius: 10px;
+        box-sizing: border-box;
+        font-family: "Tajawal", sans-serif;
+        font-size: 16px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        background-color: var(--bg-color-white);
+    }
+
+    /* ✅ جديد: تحسين مظهر الحقل عند التركيز */
+    .profile-form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: var(--shadow-focus);
+    }
+
+    .profile-error-message {
+        color: var(--danger-color);
+        font-size: 12px;
+        margin-top: 5px;
+        min-height: 15px;
+    }
+
+    .profile-toggle-password-icon {
+        position: absolute;
+        top: 50%; /* ✅ تعديل: محاذاة أفضل مع الحقل */
+        left: 15px;
+        transform: translateY(-50%);
+        color: var(--icon-color);
+        cursor: pointer;
+    }
+
+    /* أنماط تذييل النافذة والأزرار (Footer) */
+     .profile-modal-footer {
+        display: flex;
+        justify-content: center; /* ✅ تعديل: توسيط الأزرار */
+        align-items: center;
+        gap: 15px; /* ✅ جديد: مسافة بين الأزرار */
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .profile-modal-footer .profile-button {
+        width: 100%; /* ✅ تعديل: جعل الأزرار تملأ المساحة المتاحة */
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        padding: 15px;
+        font-size: 1rem;
+    }
+
+    .profile-modal-footer .profile-button i {
+        margin-left: 8px; /* ✅ جديد: مسافة بين الأيقونة والنص */
+    }
+
+    /* ✅ تحديث: تصميم زر الحفظ كزر أساسي */
+    .profile-modal-footer .profile-save-btn {
+        background-color: var(--primary-color);
+        color: white;
+        box-shadow: var(--shadow-interactive);
+    }
+
+    /* ✅ تحديث: تصميم زر الحذف كزر ثانوي تحذيري */
+    .profile-modal-footer .profile-delete-btn-small {
+        background-color: transparent;
+        color: var(--danger-color, #dc3545);
+        border: 1px solid var(--danger-color-light);
+        flex-grow: 0; /* منع الزر من التمدد */
+        width: auto;
+        padding: 15px 20px;
+    }
+
+    .profile-button:active {
+        transform: translateY(2px);
+        box-shadow: none;
+    }
+
+    /* ✅ جديد: فاصل بصري أنيق */
+    .profile-separator {
+        height: 1px;
+        background-color: var(--border-color);
+        margin: 25px 0;
+    }
+
+    /* Modern Checkbox Styles */
+    /* ✅ تحسين: مظهر أكثر حداثة لمربع الاختيار */
+    .profile-form-group-checkbox {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        margin: 20px 0;
+        user-select: none;
+    }
+
+    /* Hide the default checkbox */
+    .profile-form-group-checkbox input[type="checkbox"] {
+        display: none;
+    }
+
+    /* Style the label to act as the custom checkbox container */
+    .profile-form-group-checkbox label {
+        position: relative;
+        padding-right: 35px;
+        font-size: 16px;
+        color: var(--dark-blue);
+        cursor: pointer;
+    }
+
+    /* Create the custom checkbox box */
+    .profile-form-group-checkbox label::before {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 22px;
+        height: 22px;
+        border: 2px solid var(--border-color);
+        border-radius: 6px;
+        background-color: var(--bg-color-white);
+        transition: all 0.2s ease-in-out;
+    }
+
+    /* Create the checkmark icon (hidden by default) */
+    .profile-form-group-checkbox label::after {
+        content: "✔";
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%) scale(0);
+        font-size: 16px;
+        color: white;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    /* Reveal and style when checked */
+    .profile-form-group-checkbox input[type="checkbox"]:checked + label::before {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .profile-form-group-checkbox input[type="checkbox"]:checked + label::after {
+        transform: translateY(-50%) scale(1);
+    }
+
+    /* Animation for modal content */
+    @keyframes profileSlideIn {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
+
+<div id="profile-header-container" style="height: 70px;">
+    </div>
+
+<div id="profile-content-container" class="profile-content">
+    <h3 id="profile-title">تعديل بياناتك الشخصية</h3>
+    
+    <div id="profile-username-group" class="profile-form-group">
+        <label id="profile-username-label" for="profile-username">الاسم</label>
+        <i class="fas fa-user profile-input-icon"></i>
+        <input id="profile-username" class="profile-form-control" placeholder="الاسم" />
+        <div id="profile-username-error" class="profile-error-message"></div>
+    </div>
+
+    <div id="profile-phone-group" class="profile-form-group">
+        <label id="profile-phone-label" for="profile-phone">رقم الهاتف</label>
+        <i class="fas fa-phone profile-input-icon"></i>
+        <input id="profile-phone" class="profile-form-control" placeholder="رقم الهاتف" />
+        <div id="profile-phone-error" class="profile-error-message"></div>
+    </div>
+
+    <div id="profile-address-group" class="profile-form-group">
+        <label id="profile-address-label" for="profile-address">العنوان (اختياري)</label>
+        <i class="fas fa-map-marker-alt profile-input-icon"></i>
+        <input id="profile-address" class="profile-form-control" placeholder="العنوان (اختياري)"/>
+        <div id="profile-address-error" class="profile-error-message"></div>
+    </div>
+
+    <div id="profile-change-password-group" class="profile-form-group profile-form-group-checkbox">
+        <input type="checkbox" id="profile-change-password-checkbox" />
+        <label id="profile-change-password-label" for="profile-change-password-checkbox">تغيير كلمة المرور</label>
+    </div>
+
+    <div id="profile-password-fields-container" style="display: none;">
+        <div id="profile-password-separator" class="profile-separator"></div>
+
+        <div id="profile-new-password-group" class="profile-form-group profile-password-container">
+            <label id="profile-new-password-label" for="profile-new-password">
+                <i id="profile-new-password-icon" class="fas fa-lock"></i> كلمة المرور الجديدة
+            </label>
+            <input
+                type="password"
+                id="profile-new-password"
+                class="profile-form-control"
+                placeholder="كلمة المرور الجديدة"
+            />
+            <i class="fas fa-eye profile-toggle-password-icon" id="profile-toggle-new-password" style="padding-right: 0px;"></i>
+        </div>
+
+        <div id="profile-confirm-password-group" class="profile-form-group profile-password-container">
+            <label id="profile-confirm-password-label" for="profile-confirm-password">
+                <i id="profile-confirm-password-icon" class="fas fa-lock"></i> تأكيد كلمة المرور
+            </label>
+            <input
+                type="password"
+                id="profile-confirm-password"
+                class="profile-form-control"
+                placeholder="تأكيد كلمة المرور الجديدة"
+            />
+            <i class="fas fa-eye profile-toggle-password-icon" id="profile-toggle-confirm-password-icon" style="padding-right: 0px;"></i>
+            <div id="profile-password-error" class="profile-error-message"></div>
+        </div>
+    </div>
+
+    <div id="profile-footer" class="profile-modal-footer">
+        <button id="profile-save-button" class="profile-button profile-save-btn">
+            <i class="fas fa-save"></i>حفظ التغييرات
+        </button>
+        <button id="profile-delete-account-button" class="profile-button profile-delete-btn-small">
+            <i class="fas fa-trash-alt"></i>حذف الحساب
+        </button>
+    </div>
+</div>
+<script>
+    /**
+     * ======================================
+     * وحدة إدارة بروفايل المستخدم (Profile Module)
+     * تم تنظيم الكود وتطبيق مبادئ SRP و SoC والتعليقات العربية ومسك الأخطاء.
+     * ======================================
+     */
+
+    // استيراد الهيدر كإجراء أولي (يجب أن يبقى خارج الدالة الرئيسية)
+    // تم تغيير ID الحاوية إلى "profile-header-container"
+    insertUniqueSnapshot("../pages/header.html", "profile-header-container", 300);
+
+    // ----------------------------------------------------
+    // 1. تعريف العناصر والمتغيرات (DOM Elements & State)
+    // ----------------------------------------------------
+    const profileElements = {
+        // حقول الإدخال
+        usernameInput: document.getElementById("profile-username"),
+        phoneInput: document.getElementById("profile-phone"),
+        addressInput: document.getElementById("profile-address"),
+        newPasswordInput: document.getElementById("profile-new-password"),
+        confirmPasswordInput: document.getElementById("profile-confirm-password"),
+        
+        // عناصر التحكم
+        changePasswordCheckbox: document.getElementById("profile-change-password-checkbox"),
+        passwordFieldsContainer: document.getElementById("profile-password-fields-container"),
+        saveButton: document.getElementById("profile-save-button"),
+        deleteButton: document.getElementById("profile-delete-account-button"),
+
+        // الأخطاء
+        passwordErrorDiv: document.getElementById("profile-password-error"),
+    };
+
+    // حالة لتتبع ما إذا تم التحقق من كلمة المرور القديمة بنجاح (لتقليل تكرار Swal.fire)
+    let profileIsPasswordVerified = false;
+
+    // ----------------------------------------------------
+    // 2. دوال مساعدة محلية (Local Helper Functions)
+    // ----------------------------------------------------
+
+    /**
+     * @description تظهر رسالة خطأ محددة في عنصر الخطأ المقابل للحقل المُدخل.
+     * @function profileShowError
+     * @param {HTMLElement} inputElement - عنصر الإدخال الذي حدث فيه الخطأ.
+     * @param {string} message - رسالة الخطأ المراد عرضها.
+     * @param {object} validationState - كائن لتتبع حالة التحقق.
+     */
+    const profileShowError = (inputElement, message, validationState) => {
+        try {
+            const errorDiv = document.getElementById(`${inputElement.id}-error`);
+            if (errorDiv) errorDiv.textContent = message;
+            validationState.isValid = false;
+        } catch (error) {
+            console.error("خطأ في عرض رسالة الخطأ (profileShowError):", error);
+        }
+    };
+
+    /**
+     * @description تمسح جميع رسائل الخطأ من حقول النموذج.
+     */
+    const profileClearErrors = () => {
+        try {
+            document.querySelectorAll(".profile-error-message")
+                .forEach((el) => (el.textContent = ""));
+        } catch (error) {
+            console.error("خطأ في مسح رسائل الخطأ (profileClearErrors):", error);
+        }
+    };
+
+    /**
+     * @description تبديل حالة رؤية حقل كلمة المرور والأيقونة المصاحبة له.
+     * @function profileTogglePasswordVisibility
+     * @param {string} inputId - ID حقل الإدخال.
+     * @param {string} toggleId - ID أيقونة التبديل.
+     */
+    const profileTogglePasswordVisibility = (inputId, toggleId) => {
+        try {
+            const input = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(toggleId);
+            if (!input || !toggleIcon) return;
+            
+            toggleIcon.addEventListener("click", () => {
+                const isPassword = input.type === "password";
+                input.type = isPassword ? "text" : "password";
+                toggleIcon.classList.toggle("fa-eye");
+                toggleIcon.classList.toggle("fa-eye-slash");
+            });
+        } catch (error) {
+            console.error(`خطأ في تبديل رؤية كلمة المرور لـ ${inputId}:`, error);
+        }
+    };
+
+    // ----------------------------------------------------
+    // 3. دوال المعالجة الرئيسية (Core Handlers)
+    // ----------------------------------------------------
+
+    /**
+     * @description تهيئة البيانات الأولية للحقول عند تحميل النموذج.
+     * @function profileInitializeData
+     */
+    function profileInitializeData() {
+        try {
+            profileElements.usernameInput.value = userSession.username || "";
+            profileElements.phoneInput.value = userSession.phone || "";
+            // تم تغيير userSession.Address إلى userSession.address لتوحيد حالة الأحرف if needed 
+            profileElements.addressInput.value = userSession.Address || ""; 
+
+            // إعادة تعيين حالة حقول كلمة المرور (OCP: مفتوح للتوسع، مغلق للتعديل)
+            profileElements.changePasswordCheckbox.checked = false;
+            profileElements.passwordFieldsContainer.style.display = "none";
+            profileElements.newPasswordInput.value = "";
+            profileElements.confirmPasswordInput.value = "";
+            profileElements.passwordErrorDiv.textContent = "";
+
+            profileIsPasswordVerified = false; // إعادة تعيين حالة التحقق
+        } catch (error) {
+            console.error("خطأ في تهيئة بيانات البروفايل (profileInitializeData):", error);
+        }
+    }
+
+    /**
+     * @description التحقق من كلمة المرور القديمة عند محاولة المستخدم تحديد خيار التغيير.
+     * @function profileHandleChangePasswordCheck
+     * @param {Event} event - حدث النقر على مربع الاختيار.
+     */
+    async function profileHandleChangePasswordCheck(event) {
+        try {
+            if (!event.target.checked) {
+                profileElements.passwordFieldsContainer.style.display = "none";
+                return;
+            }
+
+            event.preventDefault(); // منع التحديد الفوري لتشغيل منطق التحقق
+
+            // إذا لم يكن لدى المستخدم كلمة مرور (تسجيل دخول خارجي مثلاً)، اسمح بالتغيير فوراً
+            if (!userSession.Password) {
+                profileElements.changePasswordCheckbox.checked = true;
+                profileElements.passwordFieldsContainer.style.display = "block";
+                return;
+            }
+
+            // نافذة SweetAlert2 للتحقق من كلمة المرور القديمة
+            const { isConfirmed } = await Swal.fire({
+                title: "التحقق من الهوية",
+                text: "لتغيير كلمة المرور، الرجاء إدخال كلمة المرور القديمة أولاً.",
+                input: "password",
+                inputPlaceholder: "أدخل كلمة المرور القديمة",
+                inputAttributes: { autocapitalize: "off", autocorrect: "off" },
+                customClass: { popup: 'fullscreen-swal' }, // تطبيق النمط المخصص المحفوظ في الذاكرة
+                showCancelButton: true,
+                confirmButtonText: "تحقق",
+                cancelButtonText: "إلغاء",
+                showLoaderOnConfirm: true,
+                preConfirm: async (enteredOldPassword) => {
+                    if (!enteredOldPassword) {
+                        Swal.showValidationMessage("يجب إدخال كلمة المرور القديمة.");
+                        return false;
+                    }
+                    const verificationResult = await verifyUserPassword(
+                        userSession.phone,
+                        enteredOldPassword
+                    );
+                    if (verificationResult && verificationResult.error) {
+                        Swal.showValidationMessage(`كلمة المرور القديمة غير صحيحة.`);
+                        return false;
+                    }
+                    return true;
+                },
+                allowOutsideClick: () => !Swal.isLoading(),
+            });
+
+            if (isConfirmed) {
+                profileElements.changePasswordCheckbox.checked = true;
+                profileElements.passwordFieldsContainer.style.display = "block";
+                profileIsPasswordVerified = true; // تم التحقق بنجاح
+            }
+        } catch (error) {
+            console.error("خطأ في معالجة التحقق من كلمة المرور (profileHandleChangePasswordCheck):", error);
+            Swal.fire("خطأ", "حدث خطأ أثناء محاولة التحقق من كلمة المرور.", "error");
+        }
+    }
+
+    /**
+     * @description تتحقق من صلاحية مدخلات النموذج قبل إرسالها.
+     * @function profileValidateInputs
+     * @returns {{isValid: boolean, data: object}} - كائن يحتوي على حالة الصلاحية وبيانات النموذج المُستخلصة.
+     */
+    function profileValidateInputs() {
+        const validationState = { isValid: true };
+        profileClearErrors();
+
+        const username = profileElements.usernameInput.value.trim();
+        const phone = profileElements.phoneInput.value.trim();
+        const address = profileElements.addressInput.value.trim();
+        const password = profileElements.newPasswordInput.value;
+        const confirmPassword = profileElements.confirmPasswordInput.value;
+        
+        // التحقق من الاسم
+        if (!username || username.length < 8) {
+            profileShowError(profileElements.usernameInput, "الاسم مطلوب ويجب أن يكون 8 أحرف على الأقل.", validationState);
+        }
+        
+        // التحقق من رقم الهاتف
+        if (!phone || phone.length < 11) {
+            profileShowError(profileElements.phoneInput, "رقم الهاتف مطلوب ويجب أن يكون 11 رقمًا على الأقل.", validationState);
+        }
+        
+        // التحقق من تطابق كلمتي المرور إذا كان خيار التغيير محددًا
+        if (profileElements.changePasswordCheckbox.checked && password !== confirmPassword) {
+            profileShowError(profileElements.confirmPasswordInput, "كلمتا المرور غير متطابقتين.", validationState);
+        }
+
+        const data = { username, phone, address, password };
+        return { isValid: validationState.isValid, data };
+    }
+
+    /**
+     * @description معالجة طلب حفظ التغييرات.
+     * @function profileHandleSaveChanges
+     * @async
+     */
+    async function profileHandleSaveChanges() {
+        try {
+            const validationResult = profileValidateInputs();
+            if (!validationResult.isValid) return;
+
+            const { username, phone, address, password } = validationResult.data;
+
+            // 1. إعداد البيانات للتحديث
+            const updatedData = { user_key: userSession.user_key };
+            if (username !== userSession.username) updatedData.username = username;
+            if (phone !== userSession.phone) updatedData.phone = phone;
+            if (address !== (userSession.Address || "")) updatedData.address = address;
+            if (profileElements.changePasswordCheckbox.checked && password) {
+                updatedData.password = password;
+            }
+
+            // التحقق من عدم وجود تغييرات
+            if (Object.keys(updatedData).length === 1) {
+                await Swal.fire("لم يتغير شيء", "لم تقم بإجراء أي تغييرات على بياناتك.", "info");
+                return;
+            }
+
+            // 2. التحقق من كلمة المرور الحالية (إذا لزم الأمر)
+            if (userSession.Password && !profileIsPasswordVerified) {
+                const { isConfirmed } = await Swal.fire({
+                    title: "تأكيد الهوية",
+                    text: "لحفظ التغييرات، يرجى إدخال كلمة المرور الحالية.",
+                    input: "password",
+                    inputPlaceholder: "أدخل كلمة المرور الحالية",
+                    inputAttributes: { autocapitalize: "off", autocorrect: "off" },
+                    customClass: { popup: 'fullscreen-swal' }, // تطبيق النمط المخصص المحفوظ في الذاكرة
+                    showCancelButton: true,
+                    confirmButtonText: "تأكيد وحفظ",
+                    cancelButtonText: "إلغاء",
+                    showLoaderOnConfirm: true,
+                    preConfirm: async (enteredPassword) => {
+                        const verificationResult = await verifyUserPassword(userSession.phone, enteredPassword);
+                        if (verificationResult && verificationResult.error) {
+                            Swal.showValidationMessage(`كلمة المرور غير صحيحة.`);
+                            return false;
+                        }
+                        return true; // Verification successful
+                    },
+                    allowOutsideClick: () => !Swal.isLoading(),
+                });
+
+                if (!isConfirmed) return; // المستخدم ألغى
+            }
+            
+            // 3. عرض شاشة التحميل وتنفيذ التحديث
+            Swal.fire({
+                title: "جاري حفظ التغييرات...",
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading(),
+                customClass: { popup: 'fullscreen-swal' },
+            });
+
+            const result = await updateUser(updatedData);
+            Swal.close();
+
+            // 4. معالجة نتائج التحديث
+            if (result && !result.error) {
+                profileUpdateSession(updatedData); // تحديث بيانات الجلسة المحلية
+
+                await Swal.fire({
+                    icon: "success",
+                    title: "تم التحديث بنجاح!",
+                    text: result.message,
+                });
+                
+                // إعادة تحميل الصفحة الرئيسية لتحديث الواجهة (Header)
+            } else {
+                await Swal.fire({
+                    icon: "error",
+                    title: "حدث خطأ",
+                    text: result.error || "فشل تحديث البيانات. يرجى المحاولة مرة أخرى.",
+                });
+            }
+        } catch (error) {
+            console.error("خطأ في معالجة حفظ التغييرات (profileHandleSaveChanges):", error);
+            await Swal.fire("خطأ عام", "حدث خطأ غير متوقع أثناء الحفظ.", "error");
+        }
+    }
+
+    /**
+     * @description تحديث كائن الجلسة (userSession) في localStorage بعد نجاح الحفظ.
+     * @function profileUpdateSession
+     * @param {object} updatedData - البيانات التي تم تحديثها بنجاح.
+     */
+    function profileUpdateSession(updatedData) {
+        try {
+            if (updatedData.username) userSession.username = updatedData.username;
+            if (updatedData.phone) userSession.phone = updatedData.phone;
+            if (updatedData.address !== undefined) userSession.Address = updatedData.address;
+            if (updatedData.password) userSession.Password = true; 
+
+            localStorage.setItem("loggedInUser", JSON.stringify(userSession));
+        } catch (error) {
+            console.error("خطأ في تحديث بيانات الجلسة (profileUpdateSession):", error);
+        }
+    }
+
+    /**
+     * @description يعالج عملية حذف حساب المستخدم بشكل آمن.
+     * @function profileHandleAccountDeletion
+     * @async
+     * @param {object} userSession - كائن يحتوي على بيانات المستخدم الحالي.
+     * @returns {Promise<void>}
+     */
+    async function profileHandleAccountDeletion(userSession) {
+        try {
+            // 1. التأكيد الأولي للحذف
+            const confirmationResult = await Swal.fire({
+                title: "هل أنت متأكد تمامًا؟",
+                html: `<div style="text-align: right; color: #e74c3c; font-weight: bold;">
+                    سيتم حذف حسابك وجميع بياناتك نهائيًا. <br> هذا الإجراء لا يمكن التراجع عنه.
+                </div>`,
+                icon: "warning",
+                customClass: { popup: 'fullscreen-swal' },
+                showCancelButton: true,
+                confirmButtonText: "نعم، أفهم وأريد المتابعة",
+                cancelButtonText: "إلغاء",
+                confirmButtonColor: "#d33",
+            });
+
+            if (!confirmationResult.isConfirmed) return;
+
+            let canDelete = !userSession.Password;
+
+            // 2. التحقق النهائي بكلمة المرور إذا كانت موجودة
+            if (userSession.Password) {
+                const { value: password } = await Swal.fire({
+                    title: "التحقق النهائي",
+                    text: "لحماية حسابك، يرجى إدخال كلمة المرور الخاصة بك لتأكيد الحذف.",
+                    input: "password",
+                    inputPlaceholder: "أدخل كلمة المرور",
+                    customClass: { popup: 'fullscreen-swal' },
+                    showCancelButton: true,
+                    confirmButtonText: "تأكيد الحذف",
+                    cancelButtonText: "إلغاء",
+                    showLoaderOnConfirm: true,
+                    preConfirm: async (enteredPassword) => {
+                        const verificationResult = await verifyUserPassword(userSession.phone, enteredPassword);
+                        if (verificationResult && verificationResult.error) {
+                            Swal.showValidationMessage("كلمة المرور غير صحيحة.");
+                            return false;
+                        }
+                        return true;
+                    },
+                    allowOutsideClick: () => !Swal.isLoading(),
+                });
+
+                if (password) {
+                    canDelete = true;
+                }
+            }
+
+            // 3. تنفيذ عملية الحذف
+            if (canDelete) {
+                Swal.fire({
+                    title: "جاري حذف الحساب...",
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading(),
+                    customClass: { popup: 'fullscreen-swal' },
+                });
+
+                const deleteResult = await deleteUser(userSession.user_key);
+
+                if (deleteResult && !deleteResult.error) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    await clearAllBrowserData();
+                    await Swal.fire("تم الحذف", "تم حذف حسابك بنجاح.", "success");
+                    // إعادة توجيه المستخدم بعد الحذف
+                } else {
+                    await Swal.fire("خطأ", `فشل حذف الحساب: ${deleteResult.error || "خطأ غير معروف."}`, "error");
+                }
+            }
+        } catch (error) {
+            console.error("خطأ في معالجة حذف الحساب (profileHandleAccountDeletion):", error);
+            await Swal.fire("خطأ عام", "حدث خطأ غير متوقع أثناء الحذف.", "error");
+        }
+    }
+
+
+    // ----------------------------------------------------
+    // 4. ربط الأحداث (Event Listeners)
+    // ----------------------------------------------------
+
+    /**
+     * @description تهيئة جميع مستمعات الأحداث بعد تحميل العناصر.
+     * @function profileSetupListeners
+     */
+    function profileSetupListeners() {
+        try {
+            // 1. تهيئة رؤية كلمات المرور
+            profileTogglePasswordVisibility("profile-new-password", "profile-toggle-new-password");
+            profileTogglePasswordVisibility("profile-confirm-password", "profile-toggle-confirm-password-icon");
+
+            // 2. معالج خيار تغيير كلمة المرور
+            profileElements.changePasswordCheckbox.addEventListener("click", profileHandleChangePasswordCheck);
+
+            // 3. معالج زر الحفظ
+            profileElements.saveButton.addEventListener("click", profileHandleSaveChanges);
+
+            // 4. معالج زر حذف الحساب
+            profileElements.deleteButton.addEventListener("click", (e) => {
+                e.preventDefault();
+                profileHandleAccountDeletion(userSession);
+            });
+        } catch (error) {
+            console.error("خطأ في تهيئة مستمعات الأحداث (profileSetupListeners):", error);
+        }
+    }
+    
+    // ----------------------------------------------------
+    // 5. نقطة الدخول: بدء الوحدة (Entry Point)
+    // ----------------------------------------------------
+    profileInitializeData();
+    profileSetupListeners();
+
+</script>

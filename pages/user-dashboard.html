@@ -81,66 +81,6 @@
     color: var(--danger-color, #dc3545);
   }
 
-  /* ✅ جديد: أنماط النافذة المنبثقة لاختيار الفئة */
-  .category-selection-popup .swal2-title {
-    color: var(--dark-blue, #03478f);
-    font-weight: 700;
-  }
-  .category-selection-popup .category-selection-container {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    margin-top: 20px;
-    text-align: right;
-    box-sizing: border-box;
-  }
-  .category-selection-popup .category-select-group {
-    position: relative;
-    box-sizing: border-box;
-  }
-  .category-selection-popup .category-select-group label {
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 8px;
-    display: block;
-    color: var(--text-color-dark, #333);
-  }
-  .category-selection-popup .category-select-group i {
-    margin-left: 8px;
-    color: var(--primary-color, #007bff);
-  }
-  .category-selection-popup .swal2-select {
-    width: 90%;
-    padding: 12px 15px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color-input, #ddd);
-    font-size: 1rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
-  }
-  .category-selection-popup .swal2-select:focus {
-    border-color: var(--primary-color, #007bff);
-    box-shadow: 0 0 0 3px var(--primary-color-light, #cfe2ff);
-  }
-  .category-selection-popup .swal2-select:disabled {
-    background-color: var(--border-color-soft, #eef2f7);
-    cursor: not-allowed;
-  }
-
-  /* أنماط للشاشات الصغيرة (Responsive) */
-  @media (max-width: 768px) {
-    .category-selection-popup {
-      width: 90vw !important;
-      padding: 15px !important;
-    }
-    .category-selection-popup .swal2-title {
-      font-size: 1.4rem;
-    }
-    .category-selection-popup .category-selection-container {
-      gap: 15px;
-      margin-top: 15px;
-    }
-  }
 </style>
 
 <!-- حاوية لعرض الهيدر بشكل ديناميكي -->
@@ -183,28 +123,10 @@
   </button>
 </div>
 
-<!-- ✅ جديد: قالب HTML لنافذة اختيار الفئة -->
-<template id="category-selection-template">
-  <div class="category-selection-container">
-    <div class="category-select-group">
-      <label for="swal-main-category"><i class="fas fa-layer-group"></i> السوق الرئيسي</label>
-      <select id="swal-main-category" class="swal2-select">
-        <option value="" disabled selected>اختر السوق الرئيسي...</option>
-      </select>
-    </div>
-    <div class="category-select-group">
-      <label for="swal-sub-category"><i class="fas fa-tags"></i> السوق الفرعي</label>
-      <select id="swal-sub-category" class="swal2-select" disabled>
-        <option value="" disabled selected>اختر السوق الفرعي...</option>
-      </select>
-    </div>
-  </div>
-</template>
-
 <!-- ✅ جديد: ربط ملف الجافاسكريبت الخاص بالصفحة -->
 <script src="../js/user-dashboard.js"></script>
 
-<script src="../js/profile-modal.js"></script>
+
 <script>
 
      insertUniqueSnapshot("../pages/header.html", "dash-header-container", 300);

@@ -189,6 +189,7 @@ window.CategoryModal = (function() {
                         font-size: 1.3rem;
                     }
                 }
+                    
             `;
 
             // إنشاء هيكل النافذة

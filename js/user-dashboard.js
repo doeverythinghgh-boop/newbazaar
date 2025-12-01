@@ -212,7 +212,10 @@ async function showAddProductModal() {
   try {
     console.log('0000000000000000');
 
-CategoryModal.show()
+const result = await CategoryModal.show();
+if (result.status === 'success') {
+            console.log('تم الاختيار:', result.mainId, result.subId);
+        }else{  console.log('00000000111111111111111111111111111100000000');}
     return;
     // 1. جلب بيانات الفئات
     const response = await fetch("../shared/list.json");

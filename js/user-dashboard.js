@@ -158,7 +158,6 @@ function updateViewForLoggedInUser() {
         console.log("تم النقر على زر تسجيل الخروج.2");
 
         logout();
-      
       });
 
     // 2. إعداد زر تعديل الملف الشخصي
@@ -172,7 +171,8 @@ function updateViewForLoggedInUser() {
           "index-user-container",
           0,
           undefined,
-          "showHomeIcon",true
+          "showHomeIcon",
+          true
         )
       );
 
@@ -188,12 +188,14 @@ function updateViewForLoggedInUser() {
     );
     if (viewMyProductsBtn) {
       viewMyProductsBtn.addEventListener("click", async () => {
-      
         console.log(myProducts);
         mainLoader(
-          "pages/myProduct.html",
+          "pages/product2Me.html",
           "index-product-container",
-          0, undefined, "showHomeIcon", true
+          0,
+          undefined,
+          "showHomeIcon",
+          true
         );
       });
     }
@@ -215,17 +217,21 @@ async function showAddProductModal() {
     const categories = data.categories;
 
     // ✅ تعديل: جلب هيكل النافذة من القالب في HTML
-    const template = document.getElementById('category-selection-template');
-    if (!template) throw new Error('لم يتم العثور على قالب اختيار الفئة.');
+    const template = document.getElementById("category-selection-template");
+    if (!template) throw new Error("لم يتم العثور على قالب اختيار الفئة.");
     const modalContent = template.content.cloneNode(true);
-    const mainCategorySelectInTemplate = modalContent.querySelector('#swal-main-category'); // NOSONAR
+    const mainCategorySelectInTemplate = modalContent.querySelector(
+      "#swal-main-category"
+    ); // NOSONAR
 
     // ملء القائمة الرئيسية بالبيانات
-    const mainCategoryOptions = categories.map(cat => `<option value="${cat.id}">${cat.title}</option>`).join('');
+    const mainCategoryOptions = categories
+      .map((cat) => `<option value="${cat.id}">${cat.title}</option>`)
+      .join("");
     mainCategorySelectInTemplate.innerHTML += mainCategoryOptions;
 
     // ✅ إصلاح: إنشاء حاوية جديدة وتمريرها إلى Swal بدلاً من DocumentFragment
-    const container = document.createElement('div');
+    const container = document.createElement("div");
     container.appendChild(modalContent);
 
     // 3. عرض نافذة Swal باستخدام الهيكل من القالب
@@ -237,7 +243,7 @@ async function showAddProductModal() {
       showCancelButton: true,
       focusConfirm: false,
       customClass: {
-        popup: 'category-selection-popup' // تطبيق الكلاس المخصص
+        popup: "category-selection-popup", // تطبيق الكلاس المخصص
       },
       didOpen: () => {
         // ✅ إصلاح: البحث داخل حاوية Swal لضمان العثور على العناصر الصحيحة
@@ -247,7 +253,9 @@ async function showAddProductModal() {
 
         mainCategorySelect.addEventListener("change", (e) => {
           const selectedMainCategoryId = e.target.value;
-          const selectedCategory = categories.find((cat) => cat.id == selectedMainCategoryId);
+          const selectedCategory = categories.find(
+            (cat) => cat.id == selectedMainCategoryId
+          );
 
           // تفريغ وتحديث القائمة الفرعية
           subCategorySelect.innerHTML = `<option value="" disabled selected>اختر السوق الفرعي...</option>`;
@@ -276,28 +284,12 @@ async function showAddProductModal() {
           `%c[HGH-Dev] Category Selected: Main=${mainCategory}, Sub=${subCategory}`,
           "color: #8A2BE2; font-weight: bold;"
         );
-         mainCategorySelectToAdd =mainCategory;//الفئه الرئيسية المختارة عند اضافة منتج
- subCategorySelectToAdd =subCategory;//الفئه الفرعية المختارة عند اضافة منتج
- if(mainCategorySelectToAdd==6){
- productTypeToAdd =2;//نوع المنتج المختار المختارة عند اضافة منتج
-
- }else{
-   productTypeToAdd =0;//نوع المنتج المختار المختارة عند اضافة منتج
-
- }
-
-
-        mainLoader(
-    "./pages/addProduct.html",
-    "index-product-container",
-    0,
-    undefined,
-    "showHomeIcon",true
-  );
-
+        mainCategorySelectToAdd = mainCategory; //الفئه الرئيسية المختارة عند اضافة منتج
+        subCategorySelectToAdd = subCategory; //الفئه الفرعية المختارة عند اضافة منتج
+        productAddLayout();
+      
       },
     });
-
   } catch (error) {
     console.error("خطأ في عرض نافذة إضافة المنتج:", error);
     Swal.fire("خطأ", "حدث خطأ أثناء محاولة عرض النافذة.", "error");

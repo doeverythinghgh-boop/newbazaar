@@ -24,7 +24,6 @@
     background-color: transparent; /* لون الخلفية */
     animation: slide-down 0.5s ease-out forwards;
     text-align: right; /* ✅ تعديل: محاذاة المحتوى لليمين ليتناسب مع اللغة */
-  
   }
 
   @keyframes slide-down {
@@ -312,7 +311,10 @@
 </style>
 
 <div id="search-modal-content" class="search-modal-content">
-  <table id="search-layout-table" style="width: 100%; border-spacing: 10px; table-layout: fixed">
+  <table
+    id="search-layout-table"
+    style="width: 100%; border-spacing: 10px; table-layout: fixed"
+  >
     <tbody id="search-layout-tbody">
       <!-- الصف الأول: الفئات الرئيسية والفرعية -->
       <tr id="search-filters-row">
@@ -330,7 +332,9 @@
               class="search-category-filter"
               aria-label="الفئة الرئيسية"
             >
-              <option id="search-main-category-default-option" value="">كل الاسواق الرئيسية</option>
+              <option id="search-main-category-default-option" value="">
+                كل الاسواق الرئيسية
+              </option>
             </select>
           </div>
         </td>
@@ -349,7 +353,9 @@
               disabled
               aria-label="الفئة الفرعية"
             >
-              <option id="search-sub-category-default-option" value="">كل الاسواق الفرعية</option>
+              <option id="search-sub-category-default-option" value="">
+                كل الاسواق الفرعية
+              </option>
             </select>
           </div>
         </td>
@@ -389,9 +395,15 @@
               class="search-category-filter"
               aria-label="ترتيب حسب"
             >
-              <option id="search-sort-default" value="default">الترتيب الافتراضي</option>
-              <option id="search-sort-price-asc" value="price-asc">الأقل سعراً</option>
-              <option id="search-sort-price-desc" value="price-desc">الأعلى سعراً</option>
+              <option id="search-sort-default" value="default">
+                الترتيب الافتراضي
+              </option>
+              <option id="search-sort-price-asc" value="price-asc">
+                الأقل سعراً
+              </option>
+              <option id="search-sort-price-desc" value="price-desc">
+                الأعلى سعراً
+              </option>
             </select>
           </div>
         </td>
@@ -610,18 +622,8 @@
             SubCategory: productData.SubCategory, // ✅ إضافة: تمرير ID الفئة الفرعية
             type: productData.serviceType,
           };
-
-          if (productDataForModal.type === 0) {
-            productSession = [productDataForModal, true];
-            mainLoader(
-              "pages/productView.html",
-              "index-product-container",
-              0,
-              undefined,
-              "showHomeIcon",
-              true
-            );
-          }
+          productSession = [productDataForModal, true];
+          productViewLayout(productDataForModal.type);
         });
       });
     }

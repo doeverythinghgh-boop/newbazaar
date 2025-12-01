@@ -6,6 +6,13 @@
     /* السماح باستخدام جميع أنواع الوحدات */
     "module": "ESNext",
     "moduleResolution": "Node",
+    
+    /* دعم استيراد JSON (مفيد للإعدادات والتكوينات) */
+    "resolveJsonModule": true,
+
+    /* تحسين التكامل مع بيئة التطوير */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
 
     /* دعم تلقائي للتلميحات عبر IntelliSense */
     "checkJs": false,
@@ -14,29 +21,46 @@
     /* تسهيل الانتقال بين الملفات */
     "baseUrl": "./",
     "paths": {
-      "*": ["*", "src/*", "scripts/*", "js/*"]
+      "@/*": ["src/*"],
+      "@scripts/*": ["scripts/*"],
+      "@js/*": ["js/*"],
+      "@assets/*": ["assets/*"]
     },
 
     /* دعم الكود الذكي للدوال العامة (global functions) */
     "lib": [
       "ES2021",
       "DOM",
-      "DOM.Iterable"
+      "DOM.Iterable",
+      "WebWorker"
     ],
 
     /* دعم ظهور الأخطاء الذكية بدون إجبارية */
     "strict": false,
+    
+    /* إعدادات إضافية لتحسين التجربة */
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
 
     /* تحسين السرعة */
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    
+    /* تحسين الاكتمال التلقائي */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
 
   /* يشمل جميع الملفات */
   "include": [
     "./**/*.js",
+    "./**/*.jsx",
+    "./**/*.ts",
+    "./**/*.tsx",
     "./**/*.json",
-    "./**/*.html"
+    "./**/*.html",
+    "./**/*.css"
   ],
 
   /* استثناء الملفات غير المهمة */
@@ -44,6 +68,20 @@
     "node_modules",
     "**/dist/*",
     "**/build/*",
-    "**/out/*"
-  ]
+    "**/out/*",
+    "**/.git/*",
+    "**/temp/*",
+    "**/test/*",
+    "**/coverage/*"
+  ],
+  
+  /* إعدادات خاصة بالمشروع */
+  "typeAcquisition": {
+    "enable": true,
+    "include": [
+      "jquery",
+      "bootstrap",
+      "lodash"
+    ]
+  }
 }

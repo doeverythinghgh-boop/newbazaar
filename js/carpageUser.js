@@ -14,8 +14,8 @@
  */
 function getCartStorageKey() {
 
-    if (userSession && userSession.user_key) {
-      return `cart_${userSession.user_key}`; // ربط السلة بالـ user_key
+    if (window.userSession && window.userSession.user_key) {
+      return `cart_${window.userSession.user_key}`; // ربط السلة بالـ user_key
     }
   
   return null; // لا يوجد مستخدم، لا توجد سلة

@@ -210,6 +210,10 @@ function updateViewForLoggedInUser() {
  */
 async function showAddProductModal() {
   try {
+    console.log('0000000000000000');
+
+CategoryModal.show()
+    return;
     // 1. جلب بيانات الفئات
     const response = await fetch("../shared/list.json");
     if (!response.ok) throw new Error("فشل تحميل ملف الفئات");

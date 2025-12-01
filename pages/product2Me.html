@@ -490,7 +490,24 @@
           "color: #007bff; font-weight: bold;",
           product
         );
-        productSession = [product, false];
+        // ✅ إصلاح: تجهيز بيانات المنتج بشكل صحيح قبل تمريرها
+        const productDataForModal = {
+          product_key: product.product_key,
+          productName: product.productName,
+          user_key: product.user_key,
+          pricePerItem: product.product_price,
+          original_price: product.original_price,
+          imageSrc: product.ImageName
+            ? product.ImageName.split(",").map(
+                (name) => `${CLOUDFLARE_BASE_URL}${name.trim()}`
+              )
+            : [],
+          availableQuantity: product.product_quantity,
+          sellerMessage: product.user_message,
+          description: product.product_description,
+          serviceType: product.serviceType,
+        };
+        productSession = [productDataForModal, false];
         productViewLayout(product.serviceType);
       }
     });

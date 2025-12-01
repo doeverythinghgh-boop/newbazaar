@@ -7,8 +7,12 @@ let productTypeToAdd = null; //نوع المنتج المختار المختار
 let myProducts = null; //نوع المنتج المختار عند اضافة منتج
 
 function productViewLayout(View) {
-  //productSession = [productDataForModal,option];
-  if (View == 0) {
+  //في الارسال
+  //productSession = [productDataForModal,{showAddToCart:true}];
+  //في الاستقبال
+  //(productSession[0],  productSession[1] )
+  //function productView_viewDetails(productData, options = {})--->options.showAddToCart
+  if (View == '0') {
     //option = t/f ==> view or hidden pasket option
     mainLoader(
       "pages/productView.html",
@@ -19,7 +23,7 @@ function productViewLayout(View) {
       true
     );
   }
-  if (View == 2) {
+  if (View == '2') {
     mainLoader(
       "pages/productView2.html",
       "index-product-container",

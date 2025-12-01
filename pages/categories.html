@@ -865,7 +865,7 @@
         SubCategory: product.SubCategory,
         type: product.serviceType,
       };
-      productSession = [productDataForModal, true];
+      productSession = [productDataForModal,{showAddToCart:true}];
       productViewLayout(productDataForModal.type);
     } catch (error) {
       console.error(

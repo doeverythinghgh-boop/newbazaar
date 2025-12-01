@@ -16,13 +16,13 @@ mainLoader(
   const user = JSON.parse(localStorage.getItem("loggedInUser"));
 
 //if (Number(userSession.is_seller) >= 1)  /////////////////////////////////////////////////////////
-console.log(
+/*console.log(
   "%c✔✔✔✔✔✔✔ تم التحميل ✔✔✔✔✔✔✔\n" +
   `pageUrl: ${pageUrl}\n` +
   `containerId: ${containerId}\n` +
   `reload: ${reload}`,
   "color: #0a4902ff; font-size: 12px; font-weight: bold; font-family: 'Tahoma';"
-);
+);*/
 
 
 

@@ -10,29 +10,34 @@
     .productView_modal_content {
         padding: 20px;
         max-width: 700px;
-        
+
         animation: productView_fadeInScaleUp 0.4s ease-out forwards;
     }
 
     #productView_image {
         width: 100%;
         animation: productView_zoomInEffect 0.5s ease-out 0.1s forwards;
-        opacity: 0; /* يبدأ مخفياً */
-        max-height: 400px; /* تحديد ارتفاع أقصى */
+        opacity: 0;
+        /* يبدأ مخفياً */
+        max-height: 400px;
+        /* تحديد ارتفاع أقصى */
         border-radius: 8px;
-        background-color: var(--bg-color-light, #f9f9f9); /* خلفية للصورة */
+        background-color: var(--bg-color-light, #f9f9f9);
+        /* خلفية للصورة */
     }
 
     #productView_details_container {
         animation: productView_slideInFromTop 0.5s ease-out 0.2s forwards;
-        opacity: 0; /* يبدأ مخفياً */
+        opacity: 0;
+        /* يبدأ مخفياً */
         text-align: right;
     }
 
     /* حركة متدرجة للتفاصيل */
-    #productView_details_container > * {
+    #productView_details_container>* {
         animation: productView_slideInFromTop 0.5s ease-out forwards;
-        opacity: 0; /* يبدأ مخفياً */
+        opacity: 0;
+        /* يبدأ مخفياً */
     }
 
     /* حاويات الوصف والرسالة */
@@ -45,6 +50,7 @@
         border: 1px solid var(--border-color-soft, #eef2f7);
         box-shadow: var(--shadow-soft);
     }
+
     .productView_description_box h4,
     .productView_seller_message_box h4 {
         margin-top: 0;
@@ -52,15 +58,18 @@
         border-bottom: 1px solid var(--border-color, #e9ecef);
         padding-bottom: 10px;
     }
+
     .productView_description_box p,
     .productView_seller_message_box p {
         color: var(--text-color-medium, #4a5568);
         line-height: 1.6;
     }
+
     .productView_description_box h4 i,
     .productView_seller_message_box h4 i {
         color: var(--primary-color, #007bff);
-        margin-left: 8px; /* تغيير جهة الهامش */
+        margin-left: 8px;
+        /* تغيير جهة الهامش */
     }
 
     .productView_image_container {
@@ -77,6 +86,7 @@
         margin-top: 10px;
         flex-wrap: wrap;
     }
+
     .productView_thumbnails_container img {
         width: 60px;
         height: 60px;
@@ -86,6 +96,7 @@
         border: 2px solid var(--border-color, #e9ecef);
         transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
     }
+
     .productView_thumbnails_container img.active {
         border-color: var(--primary-color, #007bff);
         box-shadow: var(--shadow-focus);
@@ -190,12 +201,14 @@
         cursor: pointer;
         transition: background-color 0.3s, transform 0.2s;
     }
-        /* Keyframes للحركات */
+
+    /* Keyframes للحركات */
     @keyframes productView_fadeInScaleUp {
         from {
             opacity: 0;
             transform: scale(0.9);
         }
+
         to {
             opacity: 1;
             transform: scale(1);
@@ -207,6 +220,7 @@
             opacity: 0;
             transform: scale(0.5);
         }
+
         to {
             opacity: 1;
             transform: scale(1);
@@ -218,29 +232,23 @@
             opacity: 0;
             transform: translateY(-30px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
         }
     }
-
 </style>
 
 <div class="modal-content productView_modal_content" id="productView_modal_content">
-    <div
-        class="productView_image_container"
-        id="productView_image_container"
-    >
+    <div class="productView_image_container" id="productView_image_container">
         <img id="productView_image" src="" alt="صورة المنتج" />
         <div class="productView_thumbnails_container" id="productView_thumbnails_container">
-            </div>
+        </div>
     </div>
     <div class="productView_details" id="productView_details_container">
-        <h3
-            id="productView_name"
-            style="text-align: center; margin-bottom: 1rem; color: var(--text-color-dark, #222)"
-        >
-            </h3>
+        <h3 id="productView_name" style="text-align: center; margin-bottom: 1rem; color: var(--text-color-dark, #222)">
+        </h3>
 
         <p id="productView_quantity_container">
             <i class="fas fa-archive" id="productView_quantity_icon"></i>
@@ -255,10 +263,7 @@
             <i class="fas fa-tag" id="productView_price_icon"></i> سعر القطعة:
             <span id="productView_price"></span>
         </p>
-        <div
-            class="productView_description_box"
-            id="productView_description_container"
-        >
+        <div class="productView_description_box" id="productView_description_container">
             <h4 id="productView_description_header">
                 <i class="fas fa-file-alt"></i> وصف المنتج
             </h4>
@@ -267,10 +272,7 @@
 
         <div class="productView_seller_message_box" id="productView_seller_message_container">
             <h4 id="productView_seller_message_header">
-                <i
-                    class="fas fa-comment-dots"
-                    id="productView_seller_message_icon"
-                ></i>
+                <i class="fas fa-comment-dots" id="productView_seller_message_icon"></i>
                 رسالة من البائع
             </h4>
             <p id="productView_seller_message_text"></p>
@@ -278,33 +280,17 @@
 
         <div class="productView_cart_actions_container" id="productView_cart_actions">
             <div class="productView_quantity_selector" id="productView_quantity_selector">
-                <button
-                    class="productView_quantity_btn"
-                    id="productView_decrease_quantity_btn"
-                    title="إنقاص الكمية"
-                >
+                <button class="productView_quantity_btn" id="productView_decrease_quantity_btn" title="إنقاص الكمية">
                     -
                 </button>
-                <input
-                    type="number"
-                    id="productView_selected_quantity_input"
-                    value="1"
-                    min="1"
-                    aria-label="الكمية المختارة"
-                />
-                <button
-                    class="productView_quantity_btn"
-                    id="productView_increase_quantity_btn"
-                    title="زيادة الكمية"
-                >
+                <input type="number" id="productView_selected_quantity_input" value="1" min="1"
+                    aria-label="الكمية المختارة" />
+                <button class="productView_quantity_btn" id="productView_increase_quantity_btn" title="زيادة الكمية">
                     +
                 </button>
             </div>
 
-            <div
-                class="productView_total_price_container"
-                id="productView_total_price_container"
-            >
+            <div class="productView_total_price_container" id="productView_total_price_container">
                 <strong id="productView_total_price_label">الإجمالي:</strong>
                 <span id="productView_total_price"></span>
             </div>
@@ -483,7 +469,7 @@
         try {
             productView_domElements.addToCartBtn.onclick = async () => {
 
-                if (Number(userSession.is_seller)>-1) {
+                if (Number(userSession.is_seller) > -1) {
                     console.log("[productView_] المستخدم مسجل، جاري الإضافة للسلة...");
                     const quantity = parseInt(productView_domElements.selectedQuantityInput.value, 10);
 
@@ -532,7 +518,7 @@
      */
     function productView_viewDetails(productData, options = {}) {
         try {
-            console.log("[productView_] جاري عرض تفاصيل المنتج...");
+            console.log("[productView_] جاري عرض تفاصيل المنتج...", options.showAddToCart);
             const {
                 name, quantityValue, price, description, sellerMessage,
                 quantityContainer, priceContainer, cartActionsContainer,
@@ -546,7 +532,7 @@
             name.textContent = productData.productName || "غير متوفر";
             description.textContent = productData.description || "لا يوجد وصف متاح.";
             sellerMessage.textContent = productData.sellerMessage || "لا توجد رسالة من البائع.";
-            
+
             // تهيئة العرض بناءً على خيار showAddToCart
             if (showAddToCart) {
                 quantityContainer.style.display = "flex"; // كانت "block"
@@ -602,7 +588,7 @@
     try {
         console.log("Initializing product view module with received state:", productSession);
         // productSession[0] هو بيانات المنتج، productSession[1] هو خيار showAddToCart
-        productView_viewDetails(productSession[0],  productSession[1] );
+        productView_viewDetails(productSession[0], productSession[1]);
     } catch (error) {
         console.error("خطأ أثناء تهيئة نافذة عرض المنتج:", error);
     }

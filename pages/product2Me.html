@@ -472,6 +472,9 @@
                 if (!e.target.closest('.btn')) {
                     // تم التعديل: بدلاً من إظهار النافذة، يتم تسجيل بيانات المنتج في لوحة التحكم فقط
                     console.log('%c[Developer] تم النقر على بطاقة المنتج. البيانات:', 'color: #007bff; font-weight: bold;', product);
+                    console.log('name',product.productName)
+                    productSession = [product,false];
+productViewLayout(product.serviceType);
                 }
             });
 

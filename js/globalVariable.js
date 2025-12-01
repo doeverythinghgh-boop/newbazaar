@@ -7,7 +7,7 @@ let productTypeToAdd = null; //نوع المنتج المختار المختار
 let myProducts = null; //نوع المنتج المختار المختارة عند اضافة منتج
 
 function productViewLayout(View) {
-    //productSession = [productDataForModal,option];
+  //productSession = [productDataForModal,option];
   if (View == 0) {
     //option = t/f ==> view or hidden pasket option
     mainLoader(
@@ -31,37 +31,34 @@ function productViewLayout(View) {
   }
 }
 
-function productAddLayout(){
-
-    if (mainCategorySelectToAdd == 6) {
-          productTypeToAdd = 2; //نوع المنتج خدمي
-        } else {
-          productTypeToAdd = 0; //نوع المنتج افتراضي
-        }
+function productAddLayout() {
+  if (mainCategorySelectToAdd == 6) {
+    productTypeToAdd = 2; //نوع المنتج خدمي
+  } else {
+    productTypeToAdd = 0; //نوع المنتج افتراضي
+  }
   mainLoader(
-          "./pages/productAdd.html",
-          "index-product-container",
-          0,
-          undefined,
-          "showHomeIcon",
-          true
-        );
+    "./pages/productAdd.html",
+    "index-product-container",
+    0,
+    undefined,
+    "showHomeIcon",
+    true
+  );
 }
 
-function productEditLayout(){
-
-    if (mainCategorySelectToAdd == 6) {
-          productTypeToAdd = 2; //نوع المنتج خدمي
-        } else {
-          //نوع المنتج افتراضي
-          mainLoader(
-          "./pages/productEdit.html",
-          "index-product-container",
-          0,
-          undefined,
-          "showHomeIcon",
-          true
-        );
-        }
-  
+function productEditLayout() {
+  if (mainCategorySelectToAdd == 6) {
+    productTypeToAdd = 2; //نوع المنتج خدمي
+  } else {
+    //نوع المنتج افتراضي
+    mainLoader(
+      "./pages/productEdit.html",
+      "index-product-container",
+      0,
+      undefined,
+      "showHomeIcon",
+      true
+    );
+  }
 }

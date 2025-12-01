@@ -530,16 +530,10 @@
     }
 
     console.log("%c[Products] Editing product:", "color: blue;", product);
-
-    // تخزين بيانات المنتج في المتغير العام
-    window.productSession = product;
-
-    Swal.fire({
-      title: "جاهز للتعديل!",
-      text: `بيانات المنتج "${product.productName}" جاهزة للتعديل`,
-      icon: "success",
-      confirmButtonText: "حسناً",
-    });
+  
+    productSession=product;
+    mainLoader("./pages/productEdit.html","index-product-container",0,undefined,"showHomeIcon",true);
+    
   }
 
   /**

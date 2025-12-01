@@ -1,21 +1,6 @@
 
     <style>
-        /* أنماط CSS من الكود الأصلي مع تعديلات بسيطة */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+    
 
         .edit-product-modal {
             background: white;
@@ -428,10 +413,12 @@
         async function initializeEditProductForm() {
             console.log('%c[ProductForm] Initializing edit form...', 'color: blue;');
             
-            if (!window.productSession) {
+            if (!productSession) {
                 console.error('%c[ProductForm] productSession not found!', 'color: red;');
                 Swal.fire('خطأ!', 'لم يتم العثور على بيانات المنتج.', 'error');
                 return;
+            }else{
+                console.log('%c[ProductForm] productSession 0000000 found!', 'color: green;');
             }
 
             const form = document.getElementById('edit-product-form');
@@ -440,19 +427,19 @@
 
             // تعيين وضع التعديل
             form.dataset.mode = 'edit';
-            form.dataset.productKey = window.productSession.product_key;
-            console.log(`[ProductForm] Editing product: ${window.productSession.product_key}`);
+            form.dataset.productKey = productSession.product_key;
+            console.log(`[ProductForm] Editing product: ${productSession.product_key}`);
             
             window.productModule.originalImageNames = []; // إعادة تعيين
 
             // تعبئة الحقول النصية
-            document.getElementById('product-name').value = window.productSession.productName || '';
-            document.getElementById('product-description').value = window.productSession.product_description || '';
-            document.getElementById('seller-message').value = window.productSession.user_message || '';
-            document.getElementById('product-notes').value = window.productSession.user_note || '';
-            document.getElementById('product-quantity').value = window.productSession.product_quantity || '';
-            document.getElementById('product-price').value = window.productSession.product_price || '';
-            document.getElementById('original-price').value = window.productSession.original_price || '';
+            document.getElementById('product-name').value = productSession.productName || '';
+            document.getElementById('product-description').value = productSession.product_description || '';
+            document.getElementById('seller-message').value = productSession.user_message || '';
+            document.getElementById('product-notes').value = productSession.user_note || '';
+            document.getElementById('product-quantity').value = productSession.product_quantity || '';
+            document.getElementById('product-price').value = productSession.product_price || '';
+            document.getElementById('original-price').value = productSession.original_price || '';
 
             // تحديث عدادات الحروف
             document.getElementById('product-name').dispatchEvent(new Event('input'));
@@ -598,12 +585,12 @@
 
             // --- دالة تحميل الصور الحالية ---
             async function loadExistingImages() {
-                if (!window.productSession || !window.productSession.ImageName) {
+                if (!productSession || !productSession.ImageName) {
                     imagesLoadingEl.style.display = 'none';
                     return;
                 }
 
-                const imageNames = window.productSession.ImageName.split(',').filter(name => name.trim());
+                const imageNames = productSession.ImageName.split(',').filter(name => name.trim());
                 window.productModule.originalImageNames = [...imageNames];
                 
                 console.log(`[ProductForm] Loading ${imageNames.length} existing images`);
@@ -972,7 +959,7 @@
                     // 4. تجميع بيانات المنتج
                     const productData = {
                         productName: normalizeArabicText(document.getElementById('product-name').value.trim()),
-                        user_key: window.productSession.user_key,
+                        user_key: productSession.user_key,
                         product_key: productKey,
                         product_description: normalizeArabicText(document.getElementById('product-description').value.trim()),
                         product_price: parseFloat(document.getElementById('product-price').value) || 0,
@@ -981,8 +968,8 @@
                         user_message: normalizeArabicText(document.getElementById('seller-message').value.trim()),
                         user_note: normalizeArabicText(document.getElementById('product-notes').value.trim()),
                         ImageName: allImageNames.join(','),
-                        MainCategory: window.productSession.MainCategory || 2,
-                        SubCategory: window.productSession.SubCategory || 3,
+                        MainCategory: productSession.MainCategory || 2,
+                        SubCategory: productSession.SubCategory || 3,
                         ImageIndex: allImageNames.length,
                         serviceType: 0
                     };
@@ -1026,8 +1013,8 @@
         })();
 
         // تهيئة النموذج عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
+    
             initializeEditProductForm();
-        });
+        
     </script>
 </body>

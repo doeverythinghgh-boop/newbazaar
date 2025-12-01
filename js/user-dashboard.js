@@ -212,91 +212,16 @@ async function showAddProductModal() {
   try {
     console.log('0000000000000000');
 
-const result = await CategoryModal.show();
-if (result.status === 'success') {
-            console.log('تم الاختيار:', result.mainId, result.subId);
-        }else{  console.log('00000000111111111111111111111111111100000000');}
-    return;
-    // 1. جلب بيانات الفئات
-    const response = await fetch("../shared/list.json");
-    if (!response.ok) throw new Error("فشل تحميل ملف الفئات");
-    const data = await response.json();
-    const categories = data.categories;
+    const result = await CategoryModal.show();
+    if (result.status === 'success') {
+      console.log('تم الاختيار:', result.mainId, result.subId);
+    
+    mainCategorySelectToAdd = result.mainId; //الفئه الرئيسية المختارة عند اضافة منتج
+    subCategorySelectToAdd = result.subId; //الفئه الفرعية المختارة عند اضافة منتج
+    productAddLayout();
+    }
 
-    // ✅ تعديل: جلب هيكل النافذة من القالب في HTML
-    const template = document.getElementById("category-selection-template");
-    if (!template) throw new Error("لم يتم العثور على قالب اختيار الفئة.");
-    const modalContent = template.content.cloneNode(true);
-    const mainCategorySelectInTemplate = modalContent.querySelector(
-      "#swal-main-category"
-    ); // NOSONAR
 
-    // ملء القائمة الرئيسية بالبيانات
-    const mainCategoryOptions = categories
-      .map((cat) => `<option value="${cat.id}">${cat.title}</option>`)
-      .join("");
-    mainCategorySelectInTemplate.innerHTML += mainCategoryOptions;
-
-    // ✅ إصلاح: إنشاء حاوية جديدة وتمريرها إلى Swal بدلاً من DocumentFragment
-    const container = document.createElement("div");
-    container.appendChild(modalContent);
-
-    // 3. عرض نافذة Swal باستخدام الهيكل من القالب
-    const { value: formValues } = await Swal.fire({
-      title: "تحديد فئة المنتج",
-      html: container,
-      confirmButtonText: "متابعة",
-      cancelButtonText: "إلغاء",
-      showCancelButton: true,
-      focusConfirm: false,
-      customClass: {
-        popup: "category-selection-popup", // تطبيق الكلاس المخصص
-      },
-      didOpen: () => {
-        // ✅ إصلاح: البحث داخل حاوية Swal لضمان العثور على العناصر الصحيحة
-        const popup = Swal.getPopup();
-        const mainCategorySelect = popup.querySelector("#swal-main-category"); // NOSONAR
-        const subCategorySelect = popup.querySelector("#swal-sub-category"); // NOSONAR
-
-        mainCategorySelect.addEventListener("change", (e) => {
-          const selectedMainCategoryId = e.target.value;
-          const selectedCategory = categories.find(
-            (cat) => cat.id == selectedMainCategoryId
-          );
-
-          // تفريغ وتحديث القائمة الفرعية
-          subCategorySelect.innerHTML = `<option value="" disabled selected>اختر السوق الفرعي...</option>`;
-          if (selectedCategory && selectedCategory.subcategories) {
-            const subCategoryOptions = selectedCategory.subcategories
-              .map((sub) => `<option value="${sub.id}">${sub.title}</option>`)
-              .join("");
-            subCategorySelect.innerHTML += subCategoryOptions;
-            subCategorySelect.disabled = false;
-          } else {
-            subCategorySelect.disabled = true;
-          }
-        });
-      },
-      preConfirm: () => {
-        // ✅ إصلاح: البحث داخل حاوية Swal
-        const popup = Swal.getPopup();
-        const mainCategory = popup.querySelector("#swal-main-category").value; // NOSONAR
-        const subCategory = popup.querySelector("#swal-sub-category").value; // NOSONAR
-        if (!mainCategory || !subCategory) {
-          Swal.showValidationMessage("يجب اختيار الفئة الرئيسية والفرعية");
-          return false;
-        }
-        // ✅ جديد: رسالة خاصة للمطور لتتبع القيم المختارة
-        console.log(
-          `%c[HGH-Dev] Category Selected: Main=${mainCategory}, Sub=${subCategory}`,
-          "color: #8A2BE2; font-weight: bold;"
-        );
-        mainCategorySelectToAdd = mainCategory; //الفئه الرئيسية المختارة عند اضافة منتج
-        subCategorySelectToAdd = subCategory; //الفئه الفرعية المختارة عند اضافة منتج
-        productAddLayout();
-      
-      },
-    });
   } catch (error) {
     console.error("خطأ في عرض نافذة إضافة المنتج:", error);
     Swal.fire("خطأ", "حدث خطأ أثناء محاولة عرض النافذة.", "error");

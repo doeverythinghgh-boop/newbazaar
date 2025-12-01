@@ -4,4 +4,4 @@ let productSession=null;//بيانات منتج للعرض
 let mainCategorySelectToAdd =null;//الفئه الرئيسية المختارة عند اضافة منتج
 let subCategorySelectToAdd =null;//الفئه الفرعية المختارة عند اضافة منتج
 let productTypeToAdd =null;//نوع المنتج المختار المختارة عند اضافة منتج
-
+let myProducts =null;//نوع المنتج المختار المختارة عند اضافة منتج

@@ -366,24 +366,9 @@
         </div>
     </div>
 
-    <!-- نافذة تفاصيل المنتج -->
-    <div class="product-modal" id="product-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">تفاصيل المنتج</h3>
-                <button class="modal-close" id="modal-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body" id="modal-body">
-                <!-- سيتم تعبئة التفاصيل هنا -->
-            </div>
-        </div>
-    </div>
-
     <script>
         // بيانات المنتجات (سيتم استبدالها بالبيانات الفعلية)
-        const dataProduct = []; // سيتم تعبئتها من المصدر الفعلي
+        //const myProducts = []; // سيتم تعبئتها من المصدر الفعلي
 
         // العناصر الرئيسية في DOM
         const productsGrid = document.getElementById('products-grid');
@@ -393,9 +378,6 @@
         const searchInput = document.getElementById('search-input');
         const mainCategoryFilter = document.getElementById('main-category-filter');
         const subCategoryFilter = document.getElementById('sub-category-filter');
-        const productModal = document.getElementById('product-modal');
-        const modalBody = document.getElementById('modal-body');
-        const modalClose = document.getElementById('modal-close');
 
         // المسار الأساسي للصور
         const CLOUDFLARE_BASE_URL = 'https://pub-e828389e2f1e484c89d8fb652c540c12.r2.dev/';
@@ -403,22 +385,22 @@
         /**
          * دالة لتحميل وعرض المنتجات
          */
-        function loadProducts() {
+        async function loadProducts() {
             console.log('%c[Products] Loading products...', 'color: blue;');
-            
             // إخفاء البطاقات وإظهار حالة التحميل
             productsGrid.innerHTML = '';
             loadingState.style.display = 'block';
             emptyState.style.display = 'none';
+              myProducts = await getProductsByUser(userSession.user_key)
 
             // محاكاة تحميل البيانات (سيتم استبدالها بالبيانات الفعلية)
             setTimeout(() => {
-                if (dataProduct.length === 0) {
+                if (myProducts.length === 0) {
                     showEmptyState();
                     return;
                 }
 
-                renderProducts(dataProduct);
+                renderProducts(myProducts);
                 loadingState.style.display = 'none';
                 
             }, 1000);
@@ -486,8 +468,10 @@
 
             // إضافة حدث النقر لعرض التفاصيل
             card.addEventListener('click', (e) => {
+                // التحقق من أن النقر لم يكن على زر التعديل أو الحذف
                 if (!e.target.closest('.btn')) {
-                    showProductDetails(product);
+                    // تم التعديل: بدلاً من إظهار النافذة، يتم تسجيل بيانات المنتج في لوحة التحكم فقط
+                    console.log('%c[Developer] تم النقر على بطاقة المنتج. البيانات:', 'color: #007bff; font-weight: bold;', product);
                 }
             });
 
@@ -495,72 +479,10 @@
         }
 
         /**
-         * دالة لعرض تفاصيل المنتج
-         */
-        function showProductDetails(product) {
-            console.log('%c[Products] Showing details for product:', 'color: green;', product);
-            
-            const firstImage = product.ImageName ? 
-                product.ImageName.split(',')[0].trim() : null;
-            
-            const imageUrl = firstImage ? 
-                CLOUDFLARE_BASE_URL + firstImage : null;
-
-            modalBody.innerHTML = `
-                <div class="modal-image">
-                    ${imageUrl ? 
-                        `<img src="${imageUrl}" alt="${product.productName}" />` : 
-                        '<i class="fas fa-box"></i>'
-                    }
-                </div>
-                <div class="modal-details">
-                    <div class="detail-item">
-                        <span class="detail-label">اسم المنتج:</span>
-                        <span class="detail-value">${product.productName}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">الوصف:</span>
-                        <span class="detail-value">${product.product_description || 'لا يوجد وصف'}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">السعر:</span>
-                        <span class="detail-value">${product.product_price} جنيه</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">الكمية:</span>
-                        <span class="detail-value">${product.product_quantity} قطعة</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">السعر الأصلي:</span>
-                        <span class="detail-value">${product.original_price || 'لا يوجد'} جنيه</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">رسالة البائع:</span>
-                        <span class="detail-value">${product.user_message || 'لا توجد رسالة'}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">ملاحظات:</span>
-                        <span class="detail-value">${product.user_note || 'لا توجد ملاحظات'}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">الفئة الرئيسية:</span>
-                        <span class="detail-value">${product.MainCategory}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">الفئة الفرعية:</span>
-                        <span class="detail-value">${product.SubCategory}</span>
-                    </div>
-                </div>
-            `;
-
-            productModal.style.display = 'flex';
-        }
-
-        /**
          * دالة تعديل المنتج
          */
         function editProduct(productId) {
-            const product = dataProduct.find(p => p.id === productId);
+            const product = myProducts.find(p => p.id === productId);
             if (!product) {
                 console.error('%c[Products] Product not found:', 'color: red;', productId);
                 return;
@@ -583,7 +505,7 @@
          * دالة حذف المنتج
          */
         function deleteProduct(productId) {
-            const product = dataProduct.find(p => p.id === productId);
+            const product = myProducts.find(p => p.id === productId);
             if (!product) {
                 console.error('%c[Products] Product not found:', 'color: red;', productId);
                 return;
@@ -615,9 +537,9 @@
                     }
 
                     // حذف المنتج من البيانات
-                    const index = dataProduct.findIndex(p => p.id === productId);
+                    const index = myProducts.findIndex(p => p.id === productId);
                     if (index > -1) {
-                        dataProduct.splice(index, 1);
+                        myProducts.splice(index, 1);
                     }
 
                     // إعادة تحميل العرض
@@ -640,7 +562,7 @@
             const mainCategory = mainCategoryFilter.value;
             const subCategory = subCategoryFilter.value;
 
-            const filteredProducts = dataProduct.filter(product => {
+            const filteredProducts = myProducts.filter(product => {
                 const matchesSearch = !searchTerm || 
                     product.productName.toLowerCase().includes(searchTerm) ||
                     (product.product_description && product.product_description.toLowerCase().includes(searchTerm));
@@ -677,22 +599,10 @@
             searchInput.addEventListener('input', filterProducts);
             mainCategoryFilter.addEventListener('change', filterProducts);
             subCategoryFilter.addEventListener('change', filterProducts);
-
-            // إغلاق نافذة التفاصيل
-            modalClose.addEventListener('click', function() {
-                productModal.style.display = 'none';
-            });
-
-            // إغلاق النافذة بالنقر خارجها
-            productModal.addEventListener('click', function(e) {
-                if (e.target === productModal) {
-                    productModal.style.display = 'none';
-                }
-            });
         });
 
         // جعل الدوال متاحة عالمياً
         window.editProduct = editProduct;
         window.deleteProduct = deleteProduct;
-        window.showProductDetails = showProductDetails;
+        loadProducts();
     </script>

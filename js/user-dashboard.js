@@ -181,6 +181,22 @@ function updateViewForLoggedInUser() {
     if (addProductBtn) {
       addProductBtn.addEventListener("click", showAddProductModal);
     }
+
+    // ✅ جديد: إعداد زر عرض منتجاتي
+    const viewMyProductsBtn = document.getElementById(
+      "dash-view-my-products-btn"
+    );
+    if (viewMyProductsBtn) {
+      viewMyProductsBtn.addEventListener("click", async () => {
+      
+        console.log(myProducts);
+        mainLoader(
+          "pages/myProduct.html",
+          "index-product-container",
+          0, undefined, "showHomeIcon", true
+        );
+      });
+    }
   }
 }
 

@@ -116,8 +116,7 @@ function addToCart(product, quantity, note = '') {
     confirmButtonText: 'موافق'
   }).then((result) => {
     if (result.isConfirmed) {
-      profileGoBack("index-product-container");
-    //  initializeGoBackHandler();
+    containerGoBack();
     }
   });
   return true;

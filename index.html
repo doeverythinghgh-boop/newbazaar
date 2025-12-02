@@ -125,6 +125,23 @@
             /* ✅ حل مشكلة الفجوة: إزالة الهوامش بالكامل عند الإخفاء */
             margin: 0;
         }
+
+        /* ✅ جديد: تنسيق الزر النشط */
+        .index-header-login-btn.active {
+            border-bottom: 2px solid var(--primary-color);
+            background-color: var(--primary-color-light);
+            color: var(--primary-color);
+            border-radius: 8px;
+        }
+
+        .index-header-login-btn.active .index-user-icon {
+            color: var(--primary-color);
+        }
+
+        .index-header-login-btn.active span {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -164,6 +181,17 @@
         <button class="index-header-login-btn" id="index-gifts-btn">
             <i class="fas fa-gift index-user-icon" id="index-gifts-icon"></i>
             <span id="index-gifts-text">هدايا</span>
+        </button>
+        <!-- جديد: زر إضافة منتج -->
+        <button class="index-header-login-btn" id="dash-add-product-btn">
+            <i class="fas fa-plus index-user-icon"></i>
+            <span>إضافة منتج</span>
+        </button>
+
+        <!-- جديد: زر منتجاتي -->
+        <button class="index-header-login-btn" id="dash-view-my-products-btn">
+            <i class="fas fa-archive index-user-icon"></i>
+            <span>منتجاتي</span>
         </button>
     </header>
 
@@ -292,7 +320,50 @@
                     "showHomeIcon"
                 );
             }
+            // ✅ جديد: إعداد زر إضافة منتج
+            const addProductBtn = document.getElementById("dash-add-product-btn");
+            if (addProductBtn) {
+                addProductBtn.addEventListener("click", showAddProductModal);
+            }
+
+            // ✅ جديد: إعداد زر عرض منتجاتي
+            const viewMyProductsBtn = document.getElementById("dash-view-my-products-btn");
+            if (viewMyProductsBtn) {
+                viewMyProductsBtn.addEventListener("click", async () => {
+                    console.log(myProducts);
+                    mainLoader(
+                        "pages/product2Me.html",
+                        "index-myProducts-container",
+                        0,
+                        undefined,
+                        "showHomeIcon",
+                        true
+                    );
+                });
+            }
             //#endregion
+
+            // ✅ جديد: منطق تحديد الزر النشط
+            const headerButtons = document.querySelectorAll('.index-header-login-btn');
+
+            function setActiveButton(clickedBtn) {
+                headerButtons.forEach(btn => btn.classList.remove('active'));
+                if (clickedBtn) {
+                    clickedBtn.classList.add('active');
+                }
+            }
+
+            headerButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    setActiveButton(this);
+                });
+            });
+
+            // تعيين الزر الرئيسي كنشط افتراضيًا
+            const homeBtn = document.getElementById('index-home-btn');
+            if (homeBtn) {
+                setActiveButton(homeBtn);
+            }
         });
 
     </script>

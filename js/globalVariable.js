@@ -66,3 +66,27 @@ function productEditLayout() {
     );
   }
 }
+
+/**
+ * @description يعرض نافذة منبثقة لاختيار الفئة الرئيسية والفرعية قبل إضافة منتج جديد.
+ * @async
+ * @function showAddProductModal
+ * @returns {Promise<void>}
+ */
+async function showAddProductModal() {
+  try {
+
+    const result = await CategoryModal.show();
+    if (result.status === 'success') {
+      console.log('تم الاختيار:', result.mainId, result.subId);
+      mainCategorySelectToAdd = result.mainId; //الفئه الرئيسية المختارة عند اضافة منتج
+      subCategorySelectToAdd = result.subId; //الفئه الفرعية المختارة عند اضافة منتج
+      productAddLayout();
+    }
+
+
+  } catch (error) {
+    console.error("خطأ في عرض نافذة إضافة المنتج:", error);
+    Swal.fire("خطأ", "حدث خطأ أثناء محاولة عرض النافذة.", "error");
+  }
+}

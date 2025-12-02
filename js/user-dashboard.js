@@ -12,42 +12,42 @@
  * @returns {{open: function(): void, close: function(): void, modalElement: HTMLElement}|null} - كائن يحتوي على دوال الفتح والإغلاق وعنصر النافذة، أو `null` إذا لم يتم العثور على عنصر النافذة.
  */
 function setupModalLogic(modalId, closeBtnId, options = {}) {
-  const modalElement = document.getElementById(modalId);
-  if (!modalElement) {
-    console.error(
-      `[Modal Logic] لم يتم العثور على عنصر النافذة بالمعرف: ${modalId}`
-    );
-    return null;
-  }
-
-  // دالة لإغلاق النافذة المنبثقة
-  const close = () => {
-    modalElement.style.display = "none";
-    document.body.classList.remove("modal-open");
-    // استدعاء دالة رد النداء (callback) عند الإغلاق إذا تم توفيرها
-    if (typeof options.onClose === "function") {
-      options.onClose();
+    const modalElement = document.getElementById(modalId);
+    if (!modalElement) {
+        console.error(
+            `[Modal Logic] لم يتم العثور على عنصر النافذة بالمعرف: ${modalId}`
+        );
+        return null;
     }
-  };
 
-  // دالة لفتح النافذة المنبثقة
-  const open = () => {
-    modalElement.style.display = "block";
-    document.body.classList.add("modal-open");
-
-    // ✅ إصلاح: ربط حدث الإغلاق بالزر والخلفية بشكل صحيح
-    const closeBtn = document.getElementById(closeBtnId);
-    if (closeBtn) closeBtn.onclick = close;
-
-    // ربط حدث النقر على النافذة نفسها (الخلفية)
-    // يتم الإغلاق فقط إذا كان النقر على الخلفية الرمادية مباشرة وليس على المحتوى الداخلي
-    modalElement.onclick = (event) => {
-      if (event.target === modalElement) close();
+    // دالة لإغلاق النافذة المنبثقة
+    const close = () => {
+        modalElement.style.display = "none";
+        document.body.classList.remove("modal-open");
+        // استدعاء دالة رد النداء (callback) عند الإغلاق إذا تم توفيرها
+        if (typeof options.onClose === "function") {
+            options.onClose();
+        }
     };
-  };
 
-  // إرجاع كائن يحتوي على دوال التحكم في النافذة
-  return { open, close, modalElement };
+    // دالة لفتح النافذة المنبثقة
+    const open = () => {
+        modalElement.style.display = "block";
+        document.body.classList.add("modal-open");
+
+        // ✅ إصلاح: ربط حدث الإغلاق بالزر والخلفية بشكل صحيح
+        const closeBtn = document.getElementById(closeBtnId);
+        if (closeBtn) closeBtn.onclick = close;
+
+        // ربط حدث النقر على النافذة نفسها (الخلفية)
+        // يتم الإغلاق فقط إذا كان النقر على الخلفية الرمادية مباشرة وليس على المحتوى الداخلي
+        modalElement.onclick = (event) => {
+            if (event.target === modalElement) close();
+        };
+    };
+
+    // إرجاع كائن يحتوي على دوال التحكم في النافذة
+    return { open, close, modalElement };
 }
 /**
  * @file js/user-dashboard.js
@@ -70,160 +70,112 @@ function setupModalLogic(modalId, closeBtnId, options = {}) {
  * @requires module:js/messaging-system - لاستخدام `requestNavigation`.
  */
 function updateViewForLoggedInUser() {
-  // التحقق مما إذا كان هناك مستخدم مسجل. إذا لم يكن كذلك، يتم توجيهه إلى صفحة تسجيل الدخول.
-  if (!userSession) {
-    // إذا لم يتم العثور على المستخدم، ربما تم الوصول إلى الصفحة مباشرة
+    // التحقق مما إذا كان هناك مستخدم مسجل. إذا لم يكن كذلك، يتم توجيهه إلى صفحة تسجيل الدخول.
+    if (!userSession) {
+        // إذا لم يتم العثور على المستخدم، ربما تم الوصول إلى الصفحة مباشرة
 
-    return;
-  }
+        return;
+    }
 
-  // عرض رسالة ترحيب مخصصة باسم المستخدم
-  document.getElementById(
-    "dash-welcome-message"
-  ).textContent = `أهلاً بك، ${userSession.username}`;
+    // عرض رسالة ترحيب مخصصة باسم المستخدم
+    document.getElementById(
+        "dash-welcome-message"
+    ).textContent = `أهلاً بك، ${userSession.username}`;
 
-  // --- منطق العرض للمستخدم الضيف ---
-  if (userSession.is_guest) {
-    [
-      // ✅ تعديل: تحديث المعرفات لتبدأ بـ "dash-"
-      "dash-edit-profile-btn",
-      "dash-admin-panel-btn",
-      "dash-add-product-btn",
-      "dash-view-my-products-btn",
-      "dash-view-sales-movement-btn",
-    ].forEach((id) => {
-      const btn = document.getElementById(id);
-      if (btn) btn.style.display = "none"; // إخفاء الزر إذا كان موجودًا
-    });
-    // ربط زر تسجيل الخروج بالدالة الخاصة به
-    document
-      .getElementById("dash-logout-btn-alt")
-      .addEventListener("click", () => {
-        console.log("تم النقر على زر تسجيل الخروج.1");
-        if (typeof logout === "function") logout();
-      });
-  } else {
-    // --- منطق العرض للمستخدم المسجل (غير الضيف) ---
+    // --- منطق العرض للمستخدم الضيف ---
+    if (userSession.is_guest) {
+        [
+            // ✅ تعديل: تحديث المعرفات لتبدأ بـ "dash-"
+            "dash-edit-profile-btn",
+            "dash-admin-panel-btn",
 
-    // --- أزرار البائعين ---
-    // التحقق مما إذا كان المستخدم بائعًا أو مسؤولاً لعرض أزرار إدارة المنتجات
-    // تحقق إذا كان بائعًا أو مسؤولاً
-    if (
-      userSession.is_seller === 1 ||
-      (typeof adminPhoneNumbers !== "undefined" &&
-        adminPhoneNumbers.includes(userSession.phone))
-    ) {
-      // لا حاجة لإجراء هنا، الأزرار ظاهرة بشكل افتراضي
+            "dash-view-sales-movement-btn",
+        ].forEach((id) => {
+            const btn = document.getElementById(id);
+            if (btn) btn.style.display = "none"; // إخفاء الزر إذا كان موجودًا
+        });
+        // ربط زر تسجيل الخروج بالدالة الخاصة به
+        document
+            .getElementById("dash-logout-btn-alt")
+            .addEventListener("click", () => {
+                console.log("تم النقر على زر تسجيل الخروج.1");
+                if (typeof logout === "function") logout();
+            });
     } else {
-      // إذا لم يكن بائعًا أو مسؤولاً، يتم إخفاء أزرار إضافة وعرض المنتجات
-      document.getElementById("dash-add-product-btn").style.display = "none";
-      document.getElementById("dash-view-my-products-btn").style.display =
-        "none";
+        // --- منطق العرض للمستخدم المسجل (غير الضيف) ---
+
+        // --- أزرار البائعين ---
+        // التحقق مما إذا كان المستخدم بائعًا أو مسؤولاً لعرض أزرار إدارة المنتجات
+        // تحقق إذا كان بائعًا أو مسؤولاً
+        if (
+            userSession.is_seller === 1 ||
+            (typeof adminPhoneNumbers !== "undefined" &&
+                adminPhoneNumbers.includes(userSession.phone))
+        ) {
+            // لا حاجة لإجراء هنا، الأزرار ظاهرة بشكل افتراضي
+        } else {
+
+        }
+
+        // --- زر لوحة تحكم المسؤول ---
+        // تحقق إذا كان مسؤولاً
+        if (
+            typeof adminPhoneNumbers !== "undefined" &&
+            adminPhoneNumbers.includes(userSession.phone)
+        ) {
+            // لا حاجة لإجراء هنا، زر المسؤول ظاهر
+        } else {
+            // إخفاء زر لوحة التحكم إذا لم يكن المستخدم مسؤولاً
+            const adminBtn = document.getElementById("dash-admin-panel-btn");
+            if (adminBtn) adminBtn.style.display = "none";
+        }
+
+        // --- زر عرض التقارير ---
+        // تحقق إذا كان مؤهلاً للتقارير
+        // (البائعون، موظفو التوصيل، والمسؤولون يمكنهم رؤية التقارير)
+        if (
+            userSession.is_seller === 1 ||
+            userSession.is_seller === 2 ||
+            (typeof adminPhoneNumbers !== "undefined" &&
+                adminPhoneNumbers.includes(userSession.phone))
+        ) {
+            // لا حاجة لإجراء هنا، زر التقارير ظاهر
+        } else {
+            // إخفاء زر التقارير لباقي المستخدمين
+            document.getElementById("dash-view-sales-movement-btn").style.display =
+                "none";
+        }
+        // --- ربط الأحداث بالأزرار ---
+
+        // 1. إعداد زر تسجيل الخروج
+        document
+            .getElementById("dash-logout-btn-alt")
+            .addEventListener("click", () => {
+                console.log("تم النقر على زر تسجيل الخروج.2");
+
+                logout();
+            });
+
+        // 2. إعداد زر تعديل الملف الشخصي
+        // عند النقر عليه، يتم طلب الانتقال إلى صفحة تعديل الملف الشخصي مع تمرير بيانات المستخدم
+        document
+            .getElementById("dash-edit-profile-btn")
+
+            .addEventListener("click", () =>
+                mainLoader(
+                    "pages/profile-modal.html",
+                    "index-user-container",
+                    0,
+                    undefined,
+                    "showHomeIcon",
+                    true
+                )
+            );
+
+
     }
-
-    // --- زر لوحة تحكم المسؤول ---
-    // تحقق إذا كان مسؤولاً
-    if (
-      typeof adminPhoneNumbers !== "undefined" &&
-      adminPhoneNumbers.includes(userSession.phone)
-    ) {
-      // لا حاجة لإجراء هنا، زر المسؤول ظاهر
-    } else {
-      // إخفاء زر لوحة التحكم إذا لم يكن المستخدم مسؤولاً
-      const adminBtn = document.getElementById("dash-admin-panel-btn");
-      if (adminBtn) adminBtn.style.display = "none";
-    }
-
-    // --- زر عرض التقارير ---
-    // تحقق إذا كان مؤهلاً للتقارير
-    // (البائعون، موظفو التوصيل، والمسؤولون يمكنهم رؤية التقارير)
-    if (
-      userSession.is_seller === 1 ||
-      userSession.is_seller === 2 ||
-      (typeof adminPhoneNumbers !== "undefined" &&
-        adminPhoneNumbers.includes(userSession.phone))
-    ) {
-      // لا حاجة لإجراء هنا، زر التقارير ظاهر
-    } else {
-      // إخفاء زر التقارير لباقي المستخدمين
-      document.getElementById("dash-view-sales-movement-btn").style.display =
-        "none";
-    }
-    // --- ربط الأحداث بالأزرار ---
-
-    // 1. إعداد زر تسجيل الخروج
-    document
-      .getElementById("dash-logout-btn-alt")
-      .addEventListener("click", () => {
-        console.log("تم النقر على زر تسجيل الخروج.2");
-
-        logout();
-      });
-
-    // 2. إعداد زر تعديل الملف الشخصي
-    // عند النقر عليه، يتم طلب الانتقال إلى صفحة تعديل الملف الشخصي مع تمرير بيانات المستخدم
-    document
-      .getElementById("dash-edit-profile-btn")
-
-      .addEventListener("click", () =>
-        mainLoader(
-          "pages/profile-modal.html",
-          "index-user-container",
-          0,
-          undefined,
-          "showHomeIcon",
-          true
-        )
-      );
-
-    // ✅ جديد: إعداد زر إضافة منتج
-    const addProductBtn = document.getElementById("dash-add-product-btn");
-    if (addProductBtn) {
-      addProductBtn.addEventListener("click", showAddProductModal);
-    }
-
-    // ✅ جديد: إعداد زر عرض منتجاتي
-    const viewMyProductsBtn = document.getElementById(
-      "dash-view-my-products-btn"
-    );
-    if (viewMyProductsBtn) {
-      viewMyProductsBtn.addEventListener("click", async () => {
-        console.log(myProducts);
-        mainLoader(
-          "pages/product2Me.html",
-          "index-myProducts-container",
-          0,
-          undefined,
-          "showHomeIcon",
-          true
-        );
-      });
-    }
-  }
 }
 
-/**
- * @description يعرض نافذة منبثقة لاختيار الفئة الرئيسية والفرعية قبل إضافة منتج جديد.
- * @async
- * @function showAddProductModal
- * @returns {Promise<void>}
- */
-async function showAddProductModal() {
-  try {
 
-    const result = await CategoryModal.show();
-    if (result.status === 'success') {
-      console.log('تم الاختيار:', result.mainId, result.subId);
-    mainCategorySelectToAdd = result.mainId; //الفئه الرئيسية المختارة عند اضافة منتج
-    subCategorySelectToAdd = result.subId; //الفئه الفرعية المختارة عند اضافة منتج
-    productAddLayout();
-    }
-
-
-  } catch (error) {
-    console.error("خطأ في عرض نافذة إضافة المنتج:", error);
-    Swal.fire("خطأ", "حدث خطأ أثناء محاولة عرض النافذة.", "error");
-  }
-}
 
 updateViewForLoggedInUser();

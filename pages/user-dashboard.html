@@ -1,93 +1,97 @@
 <link rel="stylesheet" href="../style/user-dashboard.css" />
 <style>
-  /*
+    /*
   * ========================================
   * Modern Styles for User Dashboard
   * ========================================
   */
 
-  /* --- Page Body and Welcome Message --- */
-  body {
-    /* خلفية متدرجة ناعمة */
-    background: linear-gradient(
-      180deg,
-      var(--bg-color-light, #f8f9fa) 0%,
-      var(--border-color-soft, #eef2f7) 100%
-    );
-    padding: 20px;
-    font-family: "Tajawal", sans-serif;
-  }
+    /* --- Page Body and Welcome Message --- */
+    body {
+        /* خلفية متدرجة ناعمة */
+        background: linear-gradient(180deg,
+                var(--bg-color-light, #f8f9fa) 0%,
+                var(--border-color-soft, #eef2f7) 100%);
+        padding: 20px;
+        font-family: "Tajawal", sans-serif;
+    }
 
-  #dash-welcome-message {
-    text-align: center;
-    color: var(--dark-blue, #03478f);
-    font-size: clamp(24px, 5vw, 32px); /* حجم خط متجاوب */
-    font-weight: 700;
-    margin-bottom: 40px;
-    animation: fadeInDown 0.5s ease-out;
-  }
+    #dash-welcome-message {
+        text-align: center;
+        color: var(--dark-blue, #03478f);
+        font-size: clamp(24px, 5vw, 32px);
+        /* حجم خط متجاوب */
+        font-weight: 700;
+        margin-bottom: 40px;
+        animation: fadeInDown 0.5s ease-out;
+    }
 
-  /* --- Action Buttons Grid --- */
-  .dash-action-buttons {
-    display: grid;
-    /* إنشاء عمودين متساويين، مع عرض أدنى 150 بكسل لكل زر */
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 20px; /* مسافة بين الأزرار */
-    max-width: 800px;
-    margin: 0 auto; /* توسيط الحاوية */
-    animation: fadeInUp 0.6s ease-out 0.2s;
-    animation-fill-mode: both; /* لضمان بقاء الحالة النهائية للحركة */
-  }
+    /* --- Action Buttons Grid --- */
+    .dash-action-buttons {
+        display: grid;
+        /* إنشاء عمودين متساويين، مع عرض أدنى 150 بكسل لكل زر */
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px;
+        /* مسافة بين الأزرار */
+        max-width: 800px;
+        margin: 0 auto;
+        /* توسيط الحاوية */
+        animation: fadeInUp 0.6s ease-out 0.2s;
+        animation-fill-mode: both;
+        /* لضمان بقاء الحالة النهائية للحركة */
+    }
 
-  /* --- Button Styling --- */
-  .dash-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px; /* مسافة بين الأيقونة والنص */
-    padding: 25px 15px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--dark-blue, #03478f);
-    background-color: var(--bg-color-white, #fff);
-    border: 1px solid var(--border-color-soft, #eef2f7);
-    border-radius: 15px; /* حواف أكثر دائرية */
-    cursor: pointer;
-    text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease,
-      border-color 0.2s ease;
-    box-shadow: var(--shadow-soft);
-  }
+    /* --- Button Styling --- */
+    .dash-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        /* مسافة بين الأيقونة والنص */
+        padding: 25px 15px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--dark-blue, #03478f);
+        background-color: var(--bg-color-white, #fff);
+        border: 1px solid var(--border-color-soft, #eef2f7);
+        border-radius: 15px;
+        /* حواف أكثر دائرية */
+        cursor: pointer;
+        text-align: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease,
+            border-color 0.2s ease;
+        box-shadow: var(--shadow-soft);
+    }
 
-  .dash-button i {
-    font-size: 2rem; /* تكبير حجم الأيقونة */
-    color: var(--primary-color, #007bff);
-  }
+    .dash-button i {
+        font-size: 2rem;
+        /* تكبير حجم الأيقونة */
+        color: var(--primary-color, #007bff);
+    }
 
-  .dash-button:active {
-    transform: scale(0.96);
-    box-shadow: var(--shadow-interactive);
-    border-color: var(--primary-color-light);
-  }
+    .dash-button:active {
+        transform: scale(0.96);
+        box-shadow: var(--shadow-interactive);
+        border-color: var(--primary-color-light);
+    }
 
-  /* تمييز زر تسجيل الخروج */
-  #dash-logout-btn-alt {
-    background-color: var(--danger-color-light, #ffeeee);
-    border-color: var(--danger-color, #dc3545);
-  }
+    /* تمييز زر تسجيل الخروج */
+    #dash-logout-btn-alt {
+        background-color: var(--danger-color-light, #ffeeee);
+        border-color: var(--danger-color, #dc3545);
+    }
 
-  #dash-logout-btn-alt i {
-    color: var(--danger-color, #dc3545);
-  }
-
+    #dash-logout-btn-alt i {
+        color: var(--danger-color, #dc3545);
+    }
 </style>
 
 <!-- حاوية لعرض الهيدر بشكل ديناميكي -->
 <div id="dash-header-container" style="height: 70px"></div>
 
 <div id="dash-profile-modal-container" class="modal">
-  <!-- سيتم ملء محتوى تعديل الملف الشخصي هنا -->
+    <!-- سيتم ملء محتوى تعديل الملف الشخصي هنا -->
 </div>
 
 
@@ -95,32 +99,21 @@
 <!-- حاوية رئيسية للأزرار مقسمة إلى مجموعات -->
 <!-- ✅ تعديل: حاوية شبكية لجميع الأزرار -->
 <div id="dash-action-buttons" class="dash-action-buttons">
-  <!-- أزرار المستخدم العام -->
-  <button id="dash-edit-profile-btn" class="dash-button">
-    <i class="fas fa-user-cog"></i> تعديل البيانات
-  </button>
+    <!-- أزرار المستخدم العام -->
+    <button id="dash-edit-profile-btn" class="dash-button">
+        <i class="fas fa-user-cog"></i> تعديل البيانات
+    </button>
 
-  <!-- أزرار البائع -->
-  <button id="dash-add-product-btn" class="dash-button">
-    <i class="fas fa-plus"></i> إضافة منتج
-  </button>
-  <button id="dash-view-my-products-btn" class="dash-button">
-    <i class="fas fa-archive"></i> منتجاتي
-  </button>
-  <!-- أزرار التقارير -->
-  <button id="dash-view-sales-movement-btn" class="dash-button">
-    <i class="fas fa-dolly-flatbed"></i> حركة المشتريات
-  </button>
 
-  <!-- أزرار المسؤول -->
-  <button id="dash-admin-panel-btn" class="dash-button">
-    <i class="fas fa-user-shield"></i> لوحة المسؤول
-  </button>
+    <!-- أزرار المسؤول -->
+    <button id="dash-admin-panel-btn" class="dash-button">
+        <i class="fas fa-user-shield"></i> لوحة المسؤول
+    </button>
 
-  <!-- زر الخروج -->
-  <button id="dash-logout-btn-alt" class="dash-button">
-    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
-  </button>
+    <!-- زر الخروج -->
+    <button id="dash-logout-btn-alt" class="dash-button">
+        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+    </button>
 </div>
 
 <!-- ✅ جديد: ربط ملف الجافاسكريبت الخاص بالصفحة -->
@@ -129,6 +122,6 @@
 
 <script>
 
-     insertUniqueSnapshot("../pages/header.html", "dash-header-container", 300);
+    insertUniqueSnapshot("../pages/header.html", "dash-header-container", 300);
 
 </script>

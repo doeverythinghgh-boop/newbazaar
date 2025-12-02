@@ -83,6 +83,7 @@ function addToCart(product, quantity, note = '') {
       text: 'لا يمكنك شراء منتجاتك الخاصة',
       confirmButtonText: 'موافق'
     });
+    containerGoBack();
     return false;
   }
 

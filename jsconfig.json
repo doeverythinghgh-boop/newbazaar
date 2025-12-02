@@ -74,6 +74,7 @@
     "**/test/*",
     "**/coverage/*"
   ],
+  
   /* إعدادات خاصة بالمشروع */
   "typeAcquisition": {
     "enable": true,

@@ -13,11 +13,11 @@
  * @see localStorage
  */
 function getCartStorageKey() {
-
-  if (userSession && window.userSession.user_key) {
-    return `cart_${window.userSession.user_key}`; // ربط السلة بالـ user_key
+  return "cart_682dri6b0";
+  if (window.userSession && window.userSession.user_key) {
+    console.log(`cart_${window.userSession.user_key}`);
+    return "cart_682dri6b0";// `cart_${window.userSession.user_key}`; // ربط السلة بالـ user_key
   }
-
   return null; // لا يوجد مستخدم، لا توجد سلة
 }
 
@@ -29,11 +29,17 @@ function getCartStorageKey() {
  */
 function getCart() {
   const CART_STORAGE_KEY = getCartStorageKey();
-  if (!CART_STORAGE_KEY) return []; // لا ترجع أي سلة إذا لم يكن المستخدم مسجلاً
+  if (!CART_STORAGE_KEY) return [];
 
   try {
     const cartJson = localStorage.getItem(CART_STORAGE_KEY);
-    return cartJson ? JSON.parse(cartJson) : [];
+    const cart = cartJson ? JSON.parse(cartJson) : [];
+    
+    // إضافة ملاحظة افتراضية إذا لم تكن موجودة
+    return cart.map(item => ({
+      ...item,
+      note: item.note || ''
+    }));
   } catch (error) {
     console.error("خطأ في قراءة السلة من LocalStorage:", error);
     return [];
@@ -49,7 +55,7 @@ function getCart() {
  */
 function saveCart(cart) {
   const CART_STORAGE_KEY = getCartStorageKey();
-  if (!CART_STORAGE_KEY) return; // لا تحفظ أي سلة إذا لم يكن المستخدم مسجلاً
+  if (!CART_STORAGE_KEY) return;
 
   try {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
@@ -62,25 +68,39 @@ function saveCart(cart) {
 
 /**
  * @description يضيف منتجًا إلى السلة، أو يقوم بتحديث كميته إذا كان المنتج موجودًا بالفعل.
- *   يعرض رسالة تأكيد للمستخدم بعد الإضافة أو التحديث.
  * @function addToCart
- * @param {Object} product - كائن المنتج المراد إضافته، يحتوي على تفاصيل المنتج مثل `product_key` و `productName`.
+ * @param {Object} product - كائن المنتج المراد إضافته.
  * @param {number} quantity - الكمية المراد إضافتها للمنتج.
- * @returns {void}
- * @see getCart
- * @see saveCart
+ * @param {string} note - ملاحظة للمنتج (اختياري).
+ * @returns {boolean} - true إذا تمت الإضافة بنجاح، false إذا كان البائع هو نفسه المستخدم.
  */
-function addToCart(product, quantity) {
+function addToCart(product, quantity, note = '') {
+  // منع المستخدم من الشراء من نفسه
+  if (window.userSession && window.userSession.user_key === product.seller_key) {
+    window.Swal.fire({
+      icon: 'error',
+      title: 'عذراً',
+      text: 'لا يمكنك شراء منتجاتك الخاصة',
+      confirmButtonText: 'موافق'
+    });
+    return false;
+  }
+
   const cart = getCart();
   const existingProductIndex = cart.findIndex(item => item.product_key === product.product_key);
 
   if (existingProductIndex > -1) {
     // المنتج موجود، قم بتحديث الكمية
     cart[existingProductIndex].quantity += quantity;
+    if (note) cart[existingProductIndex].note = note;
   } else {
     // المنتج غير موجود، أضفه كعنصر جديد
-    // ✅ إصلاح: التأكد من أن product_key موجود دائمًا في الكائن المحفوظ
-    const newCartItem = { ...product, quantity };
+    const newCartItem = {
+      ...product,
+      quantity,
+      note,
+      addedDate: new Date().toISOString() // إضافة تاريخ الإضافة
+    };
     if (!newCartItem.product_key && product.product_key) {
       newCartItem.product_key = product.product_key;
     }
@@ -89,15 +109,14 @@ function addToCart(product, quantity) {
 
   saveCart(cart);
 
-  // ✅ تعديل: إظهار رسالة منبثقة قياسية بدلاً من رسالة "toast"
   window.Swal.fire({
     icon: 'success',
     title: `تمت إضافة "${product.productName}" إلى السلة`,
     text: 'يمكنك متابعة التسوق.',
     confirmButtonText: 'موافق'
   });
-  mainLoader("./pages/home.html", "index-home-container", 0, undefined, "hiddenHomeIcon", false);
-
+  
+  return true;
 }
 
 /**
@@ -105,8 +124,6 @@ function addToCart(product, quantity) {
  * @function removeFromCart
  * @param {string} productKey - المفتاح الفريد للمنتج المراد إزالته من السلة.
  * @returns {void}
- * @see getCart
- * @see saveCart
  */
 function removeFromCart(productKey) {
   let cart = getCart();
@@ -115,13 +132,11 @@ function removeFromCart(productKey) {
 }
 
 /**
- * @description يحدث كمية منتج معين في السلة. إذا كانت الكمية الجديدة صفرًا أو أقل، يتم إزالة المنتج من السلة.
+ * @description يحدث كمية منتج معين في السلة.
  * @function updateCartQuantity
- * @param {string} productKey - المفتاح الفريد للمنتج المراد تحديث كميته.
+ * @param {string} productKey - المفتاح الفريد للمنتج.
  * @param {number} newQuantity - الكمية الجديدة للمنتج.
  * @returns {void}
- * @see getCart
- * @see saveCart
  */
 function updateCartQuantity(productKey, newQuantity) {
   const cart = getCart();
@@ -131,7 +146,6 @@ function updateCartQuantity(productKey, newQuantity) {
     if (newQuantity > 0) {
       cart[productIndex].quantity = newQuantity;
     } else {
-      // إذا كانت الكمية صفرًا أو أقل، قم بإزالة المنتج
       cart.splice(productIndex, 1);
     }
     saveCart(cart);
@@ -139,10 +153,26 @@ function updateCartQuantity(productKey, newQuantity) {
 }
 
 /**
- * @description يفرغ السلة بالكامل عن طريق حفظ مصفوفة فارغة بدلاً من السلة الحالية.
+ * @description يحدث ملاحظة منتج في السلة.
+ * @function updateCartItemNote
+ * @param {string} productKey - المفتاح الفريد للمنتج.
+ * @param {string} note - الملاحظة الجديدة.
+ * @returns {void}
+ */
+function updateCartItemNote(productKey, note) {
+  const cart = getCart();
+  const productIndex = cart.findIndex(item => item.product_key === productKey);
+
+  if (productIndex > -1) {
+    cart[productIndex].note = note;
+    saveCart(cart);
+  }
+}
+
+/**
+ * @description يفرغ السلة بالكامل.
  * @function clearCart
  * @returns {void}
- * @see saveCart
  */
 function clearCart() {
   saveCart([]);
@@ -151,8 +181,7 @@ function clearCart() {
 /**
  * @description يحسب العدد الإجمالي للوحدات من جميع المنتجات في السلة.
  * @function getCartItemCount
- * @returns {number} - إجمالي عدد الوحدات (الكميات المجمعة) لجميع المنتجات في السلة.
- * @see getCart
+ * @returns {number} - إجمالي عدد الوحدات.
  */
 function getCartItemCount() {
   const cart = getCart();
@@ -160,13 +189,48 @@ function getCartItemCount() {
 }
 
 /**
- * @description يحدث شارة عدد عناصر السلة في الواجهة الرسومية (UI) لتعكس العدد الحالي للمنتجات في السلة.
+ * @description يحسب المجموع الكلي لسعر المنتجات في السلة.
+ * @function getCartTotalPrice
+ * @returns {number} - المجموع الكلي.
+ */
+function getCartTotalPrice() {
+  const cart = getCart();
+  return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+}
+
+/**
+ * @description يحسب إجمالي التوفير من الخصومات.
+ * @function getCartTotalSavings
+ * @returns {number} - إجمالي التوفير.
+ */
+function getCartTotalSavings() {
+  const cart = getCart();
+  return cart.reduce((total, item) => {
+    if (item.original_price && item.original_price > item.price) {
+      return total + ((item.original_price - item.price) * item.quantity);
+    }
+    return total;
+  }, 0);
+}
+
+/**
+ * @description يبحث عن منتج في السلة.
+ * @function findInCart
+ * @param {string} productKey - المفتاح الفريد للمنتج.
+ * @returns {Object|null} - المنتج إذا وجد، وإلا null.
+ */
+function findInCart(productKey) {
+  const cart = getCart();
+  return cart.find(item => item.product_key === productKey) || null;
+}
+
+/**
+ * @description يحدث شارة عدد عناصر السلة في الواجهة الرسومية.
  * @function updateCartBadge
  * @returns {void}
- * @see getCartItemCount
  */
 function updateCartBadge() {
-  const cartBadge = document.getElementById('cart-badge');
+  const cartBadge = document.getElementById('xx');
   if (!cartBadge) return;
 
   const count = getCartItemCount();
@@ -177,3 +241,9 @@ function updateCartBadge() {
     cartBadge.style.display = 'none';
   }
 }
+
+// الاستماع لحدث تحديث السلة لتحديث الشارة تلقائياً
+window.addEventListener('cartUpdated', updateCartBadge);
+
+// تحديث الشارة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', updateCartBadge);

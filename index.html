@@ -173,7 +173,7 @@
     <div id="index-user-container"></div>
     <div id="index-product-container"></div>
     <div id="index-cardPackage-container"></div>
-<div id="index-myProducts-container"></div>
+    <div id="index-myProducts-container"></div>
     <!---region main javaScript files---->
     <script src="js/auth.js" id="index-script-auth-js"></script>
     <script src="js/config.js"></script>
@@ -230,8 +230,8 @@
             document
                 .getElementById("index-cart-btn")
                 .addEventListener("click", () =>
-                
-                          mainLoader("./pages/cardPackage.html","index-cardPackage-container",0,undefined,"hiddenHomeIcon",true)
+
+                    mainLoader("./pages/cardPackage.html", "index-cardPackage-container", 0, undefined, "showHomeIcon", true)
 
                 );
             document
@@ -294,8 +294,7 @@
             }
             //#endregion
         });
-        //initSmartHistory();
-        //addHistoryControls();
+
     </script>
 </body>
 

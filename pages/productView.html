@@ -469,7 +469,7 @@
         try {
             productView_domElements.addToCartBtn.onclick = async () => {
 
-                if (Number(userSession.is_seller) > -1) {
+                if (userSession && Number(userSession.is_seller) > -1) {
                     console.log("[productView_] المستخدم مسجل، جاري الإضافة للسلة...");
                     const quantity = parseInt(productView_domElements.selectedQuantityInput.value, 10);
 
@@ -495,7 +495,7 @@
                         customClass: { popup: 'fullscreen-swal' }, // تطبيق النمط المخصص
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = "login.html"; // توجيه المستخدم
+                    mainLoader("./pages/login.html","index-user-container",0,undefined,"hiddenLoginIcon",true  );
                         }
                     });
                 }

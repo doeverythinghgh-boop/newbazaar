@@ -114,8 +114,12 @@ function addToCart(product, quantity, note = '') {
     title: `تمت إضافة "${product.productName}" إلى السلة`,
     text: 'يمكنك متابعة التسوق.',
     confirmButtonText: 'موافق'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      profileGoBack("index-product-container");
+    //  initializeGoBackHandler();
+    }
   });
-  
   return true;
 }
 
@@ -230,6 +234,7 @@ function findInCart(productKey) {
  * @returns {void}
  */
 function updateCartBadge() {
+  console.log('updateCartBadge');
   const cartBadge = document.getElementById('xx');
   if (!cartBadge) return;
 

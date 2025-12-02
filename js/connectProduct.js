@@ -394,7 +394,8 @@ function populateProductDetails(productData, onCloseCallback, options = {}) {
       }).then((result) => {
         if (result.isConfirmed) {
           console.log("[Modal] User chose to log in. Redirecting...");
-          window.location.href = "login.html"; // توجيه المستخدم لصفحة تسجيل الدخول
+                    mainLoader("./pages/login.html","index-user-container",0,undefined,"hiddenLoginIcon",true  );
+
         }
       });
     }

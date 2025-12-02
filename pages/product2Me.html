@@ -223,7 +223,7 @@
 
   .modal-content {
     background: transparent;
-    
+
     max-width: 500px;
     width: 100%;
     max-height: 90vh;
@@ -522,7 +522,7 @@
     }
 
     console.log("%c[Products] Editing product:", "color: blue;", product);
-    const result = await CategoryModal.show(product.MainCategory, product.SubCategory,"سوق المنتج");
+    const result = await CategoryModal.show(product.MainCategory, product.SubCategory, "سوق المنتج");
     if (result.status === 'success') {
       console.log('تم الاختيار:', result.mainId, result.subId);
 
@@ -540,41 +540,41 @@
   /**
    * دالة حذف المنتج
    */
-  async function deleteProduct( productId) {
-      const product = myProducts.find((p) => p.id === productId);
-      console.log("%c[Products] Deleting product:", "color: red;", product);
-  Swal.fire({
-    title: 'هل أنت متأكد؟',
-    text: `سيتم حذف المنتج "${product.productName}" بشكل نهائي. لا يمكن التراجع عن هذا الإجراء.`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'نعم، احذفه!',
-    cancelButtonText: 'إلغاء',
-    showLoaderOnConfirm: true,
-    preConfirm: async () => {
-      try {
-        if (product.ImageName) {
-          const imageNames = product.ImageName.split(',').filter(name => name);
-          if (imageNames.length > 0) {
-            await Promise.all(imageNames.map(name =>
-              deleteFile2cf(name).catch(err => console.error(`[Delete] Failed to delete image ${name}:`, err))
-            ));
+  async function deleteProduct(productId) {
+    const product = myProducts.find((p) => p.id === productId);
+    console.log("%c[Products] Deleting product:", "color: red;", product);
+    Swal.fire({
+      title: 'هل أنت متأكد؟',
+      text: `سيتم حذف المنتج "${product.productName}" بشكل نهائي. لا يمكن التراجع عن هذا الإجراء.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'نعم، احذفه!',
+      cancelButtonText: 'إلغاء',
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        try {
+          if (product.ImageName) {
+            const imageNames = product.ImageName.split(',').filter(name => name);
+            if (imageNames.length > 0) {
+              await Promise.all(imageNames.map(name =>
+                deleteFile2cf(name).catch(err => console.error(`[Delete] Failed to delete image ${name}:`, err))
+              ));
+            }
           }
+          const dbResult = await deleteProduct_(product.product_key);
+          console.log("%c[Products] Deleting product:", "color: red;", dbResult);
+          if (dbResult && dbResult.error) throw new Error(dbResult.error);
+          return true;
+        } catch (error) {
+          Swal.showValidationMessage(`فشل الحذف: ${error.message}`);
+          return false;
         }
-        const dbResult = await deleteProduct_(product.product_key);
-        console.log("%c[Products] Deleting product:", "color: red;", dbResult);
-        if (dbResult && dbResult.error) throw new Error(dbResult.error);
-        return true;
-      } catch (error) {
-        Swal.showValidationMessage(`فشل الحذف: ${error.message}`);
-        return false;
-      }
-    },
-    allowOutsideClick: () => !Swal.isLoading()
-  }).then((result) => {
-    if (result.isConfirmed) {
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.isConfirmed) {
         // حذف المنتج من البيانات
         const index = myProducts.findIndex((p) => p.id === productId);
         if (index > -1) {
@@ -585,10 +585,10 @@
         loadProducts();
 
         Swal.fire("تم الحذف!", "تم حذف المنتج بنجاح", "success");
-    
-    }
-  });
-}
+
+      }
+    });
+  }
   /**
    * دالة البحث والتصفية
    */
@@ -642,4 +642,64 @@
   window.editProduct = editProduct;
   window.deleteProduct = deleteProduct;
   loadProducts();
+</script>
+
+Swal.fire("تم الحذف!", "تم حذف المنتج بنجاح", "success");
+
+}
+});
+}
+/**
+* دالة البحث والتصفية
+*/
+function filterProducts() {
+const searchTerm = searchInput.value.toLowerCase();
+const mainCategory = mainCategoryFilter.value;
+const subCategory = subCategoryFilter.value;
+
+const filteredProducts = myProducts.filter((product) => {
+const matchesSearch =
+!searchTerm ||
+product.productName.toLowerCase().includes(searchTerm) ||
+(product.product_description &&
+product.product_description.toLowerCase().includes(searchTerm));
+
+const matchesMainCategory =
+!mainCategory || product.MainCategory.toString() === mainCategory;
+
+const matchesSubCategory =
+!subCategory || product.SubCategory.toString() === subCategory;
+
+return matchesSearch && matchesMainCategory && matchesSubCategory;
+});
+
+if (filteredProducts.length === 0) {
+showEmptyState();
+} else {
+renderProducts(filteredProducts);
+loadingState.style.display = "none";
+emptyState.style.display = "none";
+}
+}
+
+// أحداث DOM
+document.addEventListener("DOMContentLoaded", function () {
+loadProducts();
+
+// حدث البحث
+searchForm.addEventListener("submit", function (e) {
+e.preventDefault();
+filterProducts();
+});
+
+// أحداث التصفية الفورية
+searchInput.addEventListener("input", filterProducts);
+mainCategoryFilter.addEventListener("change", filterProducts);
+subCategoryFilter.addEventListener("change", filterProducts);
+});
+
+// جعل الدوال متاحة عالمياً
+window.editProduct = editProduct;
+window.deleteProduct = deleteProduct;
+loadProducts();
 </script>

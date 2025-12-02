@@ -16,7 +16,8 @@
     <!-- ✅ ربط ملف المتغيرات لاستخدامها في الأنماط الداخلية -->
     <link rel="stylesheet" href="style/variables.css" />
     <script src="/js/cloudFileManager.js"></script>
-    <script src="/js/carpageUser.js"></script>
+    <script src="/js/cardPackage.js"></script>
+    <script src="js/forms.js"></script>
     <!-- ربط ملف الأنماط الخارجي -->
     <style>
         html,
@@ -171,6 +172,7 @@
     <div id="index-search-container"></div>
     <div id="index-user-container"></div>
     <div id="index-product-container"></div>
+    <div id="index-cardPackage-container"></div>
 <div id="index-myProducts-container"></div>
     <!---region main javaScript files---->
     <script src="js/auth.js" id="index-script-auth-js"></script>
@@ -228,7 +230,9 @@
             document
                 .getElementById("index-cart-btn")
                 .addEventListener("click", () =>
-                    handleProtectedLinkClick("./pages/cart.html")
+                
+                          mainLoader("./pages/cardPackage.html","index-cardPackage-container",0,undefined,"hiddenHomeIcon",true)
+
                 );
             document
                 .getElementById("index-gifts-btn")
@@ -290,6 +294,8 @@
             }
             //#endregion
         });
+        //initSmartHistory();
+        //addHistoryControls();
     </script>
 </body>
 

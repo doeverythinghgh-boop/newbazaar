@@ -32,7 +32,6 @@
   --border-color-strong: #b0b7bc; /* لون إطار أقوى قليلاً للتمييز */
 
   --font-primary: "Tajawal", sans-serif;
-  --font-secondary: "Orbitron", sans-serif;
 
   --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.05);
   --shadow-interactive: 0 4px 12px rgba(0, 0, 0, 0.1); /* ظل تفاعلي للأزرار */

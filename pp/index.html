@@ -1,125 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة الطلبات - الصفحة الرئيسية</title>
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/theme.css">
-</head>
-<body>
-    <div class="container">
-        <header style="text-align: center; padding: 3rem 1rem; margin-bottom: 3rem;">
-            <h1 style="font-size: 2.5rem; color: var(--color-primary); margin-bottom: 1rem;">
-                نظام إدارة الطلبات
-            </h1>
-            <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 800px; margin: 0 auto;">
-                نظام متكامل لإدارة حالة الطلبات، البائعين، وخدمات التوصيل مع دعم كامل للصلاحيات والأدوار المختلفة
-            </p>
-        </header>
-
-        <main>
-            <div class="card" style="max-width: 900px; margin: 0 auto;">
-                <h2 style="text-align: center; margin-bottom: 2rem; color: var(--text-primary);">
-                    صفحات المشروع
-                </h2>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                    <a href="pages/order-view.html" class="card" style="text-decoration: none; display: block; transition: transform 0.3s ease;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
-                            <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">شريط التقدم</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                                عرض حالة الطلب والخطوات الرئيسية مع ملخص الطلب
-                            </p>
-                        </div>
-                    </a>
-
-                    <a href="pages/vendor-details.html" class="card" style="text-decoration: none; display: block; transition: transform 0.3s ease;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🏪</div>
-                            <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">تفاصيل البائعين</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                                عرض بيانات البائعين والخطوات الفرعية لكل بائع
-                            </p>
-                        </div>
-                    </a>
-
-                    <a href="pages/delivery-options.html" class="card" style="text-decoration: none; display: block; transition: transform 0.3s ease;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🚚</div>
-                            <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">خدمات التوصيل</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                                إدارة خدمات التوصيل لكل بائع واختيار الخدمة المعتمدة
-                            </p>
-                        </div>
-                    </a>
-
-                    <a href="pages/test-lab.html" class="card" style="text-decoration: none; display: block; transition: transform 0.3s ease;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🧪</div>
-                            <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">لوحة الاختبار</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                                مركز التحكم الكامل لتجربة جميع الوظائف والميزات
-                            </p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="card" style="max-width: 900px; margin: 2rem auto;">
-                <h2 style="margin-bottom: 1.5rem; color: var(--text-primary);">نصائح للاستخدام</h2>
-                <ul style="line-height: 2;">
-                    <li>ابدأ من <strong>لوحة الاختبار</strong> لتعيين البيانات الأولية والأدوار</li>
-                    <li>استخدم <strong>شريط التقدم</strong> لمتابعة حالة الطلب الكاملة</li>
-                    <li>راجع <strong>تفاصيل البائعين</strong> لمعرفة حالة كل بائع والخطوات الفرعية</li>
-                    <li>قم بإدارة <strong>خدمات التوصيل</strong> لكل بائع واختر الخدمة المناسبة</li>
-                    <li>يمكنك تغيير الدور من لوحة الاختبار لتجربة الصلاحيات المختلفة</li>
-                </ul>
-            </div>
-
-            <div class="card" style="max-width: 900px; margin: 2rem auto; background: var(--bg-secondary);">
-                <h3 style="margin-bottom: 1rem; color: var(--text-primary);">الأدوار المدعومة</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                    <div>
-                        <strong style="color: var(--color-primary);">المشتري:</strong>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
-                            تعديل الكميات المطلوبة فقط
-                        </p>
-                    </div>
-                    <div>
-                        <strong style="color: var(--color-primary);">البائع:</strong>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
-                            تعديل الكميات المتوفرة وتغيير الحالة من REVIEW إلى CONFIRMED
-                        </p>
-                    </div>
-                    <div>
-                        <strong style="color: var(--color-primary);">شركة الشحن:</strong>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
-                            إدارة خدمات التوصيل وتغيير حالات SHIPPED و DELIVERED
-                        </p>
-                    </div>
-                    <div>
-                        <strong style="color: var(--color-primary);">الإدارة:</strong>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
-                            جميع الصلاحيات بما فيها إلغاء ورفض وإرجاع الطلبات
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <footer style="text-align: center; padding: 2rem 1rem; margin-top: 3rem; color: var(--text-secondary);">
-            <p>© 2024 نظام إدارة الطلبات - جميع الحقوق محفوظة</p>
-        </footer>
-    </div>
-
-    <style>
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-    </style>
-</body>
-</html>
-

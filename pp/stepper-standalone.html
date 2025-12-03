@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شريط التقدم - صفحة متكاملة</title>
+    <style>
+        /* ============================================
+           Reset & Base Styles
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', 'Tahoma', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            direction: rtl;
+            text-align: right;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: #0066cc;
+        }
+
+        /* ============================================
+           CSS Variables (Theme)
+           ============================================ */
+        :root {
+            --color-primary: #0066cc;
+            --color-review: #ffa500;
+            --color-confirmed: #4caf50;
+            --color-shipped: #2196f3;
+            --color-delivered: #00bcd4;
+            --color-cancelled: #f44336;
+            --color-rejected: #e91e63;
+            --color-returned: #9c27b0;
+            --color-full: #4caf50;
+            --color-partial: #ff9800;
+            --color-fail: #f44336;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-light: #e0e0e0;
+            --radius-lg: 8px;
+            --radius-full: 50%;
+            --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --transition-normal: 0.3s ease;
+        }
+
+        /* ============================================
+           Stepper Styles
+           ============================================ */
+        .stepper-container {
+            width: 100%;
+            padding: 2rem 1rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+
+        .stepper-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+
+        .step-item {
+            position: relative;
+            flex: 1;
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            right: 50%;
+            width: 100%;
+            height: 3px;
+            background: var(--border-light);
+            z-index: 1;
+            transition: background var(--transition-normal);
+        }
+
+        .step-item.completed:not(:last-child)::after {
+            background: var(--color-confirmed);
+        }
+
+        .step-item.active:not(:last-child)::after {
+            background: linear-gradient(to left, var(--color-confirmed) 0%, var(--border-light) 100%);
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-full);
+            background: var(--bg-secondary);
+            border: 3px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 3;
+            transition: all var(--transition-normal);
+            cursor: pointer;
+        }
+
+        .step-item.active .step-circle {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: #ffffff;
+            transform: scale(1.1);
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
+        }
+
+        .step-item.completed .step-circle {
+            background: var(--color-confirmed);
+            border-color: var(--color-confirmed);
+            color: #ffffff;
+        }
+
+        .step-item.review .step-circle {
+            background: var(--color-review);
+            border-color: var(--color-review);
+            color: #ffffff;
+        }
+
+        .step-item.confirmed .step-circle {
+            background: var(--color-confirmed);
+            border-color: var(--color-confirmed);
+            color: #ffffff;
+        }
+
+        .step-item.shipped .step-circle {
+            background: var(--color-shipped);
+            border-color: var(--color-shipped);
+            color: #ffffff;
+        }
+
+        .step-item.delivered .step-circle {
+            background: var(--color-delivered);
+            border-color: var(--color-delivered);
+            color: #ffffff;
+        }
+
+        .step-item.cancelled .step-circle {
+            background: var(--color-cancelled);
+            border-color: var(--color-cancelled);
+            color: #ffffff;
+        }
+
+        .step-item.rejected .step-circle {
+            background: var(--color-rejected);
+            border-color: var(--color-rejected);
+            color: #ffffff;
+        }
+
+        .step-item.returned .step-circle {
+            background: var(--color-returned);
+            border-color: var(--color-returned);
+            color: #ffffff;
+        }
+
+        .step-circle:hover {
+            transform: scale(1.15);
+        }
+
+        .step-circle:focus {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .step-label {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            transition: color var(--transition-normal);
+        }
+
+        .step-item.active .step-label {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .step-item.completed .step-label {
+            color: var(--color-confirmed);
+        }
+
+        .step-description {
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 150px;
+        }
+
+        .step-vendors {
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .step-vendors.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .vendors-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .vendor-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            border-right: 4px solid var(--border-light);
+            transition: all var(--transition-normal);
+        }
+
+        .vendor-item:hover {
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            transform: translateX(-3px);
+        }
+
+        .vendor-item.full {
+            border-right-color: var(--color-full);
+        }
+
+        .vendor-item.partial {
+            border-right-color: var(--color-partial);
+        }
+
+        .vendor-item.fail {
+            border-right-color: var(--color-fail);
+        }
+
+        .order-summary {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+        }
+
+        .summary-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .summary-item {
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stepper-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .step-item {
+                flex-direction: row;
+                justify-content: flex-start;
+                min-width: auto;
+                padding: 0.5rem 0;
+            }
+            
+            .step-item:not(:last-child)::after {
+                display: none;
+            }
+            
+            .step-item::before {
+                content: '';
+                position: absolute;
+                right: 25px;
+                top: 50px;
+                bottom: -10px;
+                width: 2px;
+                background: var(--border-light);
+            }
+            
+            .step-item:last-child::before {
+                display: none;
+            }
+            
+            .step-item.completed::before {
+                background: var(--color-confirmed);
+            }
+            
+            .step-circle {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+                margin-left: 1rem;
+            }
+            
+            .step-label {
+                margin-top: 0;
+                text-align: right;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>شريط التقدم - حالة الطلب</h1>
+        <div id="user-role-info" style="text-align: center; margin-bottom: 1rem; padding: 0.75rem; background: #e3f2fd; border-radius: 6px; color: #1976d2; font-weight: 500;"></div>
+        <main>
+            <div id="stepper-container" class="stepper-container"></div>
+        </main>
+    </div>
+
+    <script>
+        /* ============================================
+           Order Status Map - سيتم تحميله من JSON
+           ============================================ */
+        let OrderStatusMap = {};
+
+        /* ============================================
+           Helper Functions
+           ============================================ */
+        function getStatusById(statusId) {
+            return OrderStatusMap[statusId] || null;
+        }
+
+        function getAllStatuses() {
+            return Object.values(OrderStatusMap).sort((a, b) => a.order - b.order);
+        }
+
+        function isValidStatus(statusId) {
+            return statusId in OrderStatusMap;
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('ar-SA').format(num);
+        }
+
+        function getElement(id) {
+            return document.getElementById(id);
+        }
+
+        /* ============================================
+           عرض معلومات دور المستخدم
+           ============================================ */
+        function displayUserRoleInfo() {
+            console.log('  └─ 👤 displayUserRoleInfo: بدء عرض معلومات الدور...');
+            const roleInfoElement = getElement('user-role-info');
+            if (!roleInfoElement) {
+                console.error('  └─ ❌ عنصر user-role-info غير موجود');
+                return;
+            }
+
+            // التحقق من وجود البيانات
+            if (!appData.userRoles) {
+                console.warn('  └─ ⚠️ userRoles غير موجود في appData');
+                roleInfoElement.innerHTML = `
+                    <strong>دور المستخدم:</strong> البيانات غير محملة
+                `;
+                return;
+            }
+
+            // التحقق من وجود الدور الحالي في userRoles
+            if (!currentUserRole) {
+                console.warn('  └─ ⚠️ currentUserRole غير محدد');
+                roleInfoElement.innerHTML = `
+                    <strong>دور المستخدم:</strong> غير محدد
+                `;
+                return;
+            }
+
+            // البحث عن معلومات الدور
+            const roleInfo = appData.userRoles[currentUserRole];
+            
+            if (roleInfo) {
+                console.log(`  └─ ✅ تم العثور على معلومات الدور: ${roleInfo.name}`);
+                roleInfoElement.innerHTML = `
+                    <strong>دور المستخدم الحالي:</strong> ${roleInfo.name} 
+                    <span style="margin: 0 0.5rem;">|</span>
+                    <span style="font-size: 0.9rem; color: #555;">${roleInfo.description}</span>
+                `;
+                console.log(`  └─ ✅ تم عرض معلومات الدور في الصفحة`);
+            } else {
+                // في حالة عدم وجود الدور، عرض رسالة خطأ
+                console.warn(`  └─ ⚠️ الدور "${currentUserRole}" غير موجود في userRoles. الأدوار المتاحة:`, Object.keys(appData.userRoles));
+                roleInfoElement.innerHTML = `
+                    <strong>دور المستخدم:</strong> ${currentUserRole} (غير موجود في البيانات)
+                `;
+            }
+        }
+
+        function createElement(tag, attributes = {}) {
+            const element = document.createElement(tag);
+            Object.keys(attributes).forEach(key => {
+                if (key === 'className') {
+                    element.className = attributes[key];
+                } else {
+                    element.setAttribute(key, attributes[key]);
+                }
+            });
+            return element;
+        }
+
+        /* ============================================
+           بيانات من ملف JSON
+           ============================================ */
+        let appData = {
+            ui: {},
+            orderStatuses: {},
+            userRoles: {},
+            order: {},
+            vendors: [],
+            summary: {},
+            deliveryServices: {},
+            vendorStatusLabels: {},
+            subStepStatusLabels: {}
+        };
+        
+        /* ============================================
+           دور المستخدم الحالي - سيتم تحميله من JSON
+           ============================================ */
+        let currentUserRole = 'BUYER';
+
+        /* ============================================
+           جلب البيانات من ملف JSON
+           ============================================ */
+        async function loadData() {
+            try {
+                console.log('🚀 [1/8] بدء تحميل البيانات من stepper-data.json...');
+                const response = await fetch('stepper-data.json');
+                if (!response.ok) {
+                    throw new Error(appData.ui.messages?.fetchError || 'فشل في جلب البيانات');
+                }
+                console.log('✅ [2/8] تم جلب ملف JSON بنجاح');
+                const data = await response.json();
+                console.log('✅ [3/8] تم تحليل بيانات JSON بنجاح');
+                appData = data;
+                
+                // تحويل orderStatuses إلى OrderStatusMap
+                console.log('📋 [4/8] تحويل orderStatuses إلى OrderStatusMap...');
+                OrderStatusMap = {};
+                Object.keys(data.orderStatuses).forEach(key => {
+                    OrderStatusMap[key] = data.orderStatuses[key];
+                });
+                console.log(`✅ تم تحويل ${Object.keys(OrderStatusMap).length} حالة طلب`);
+                
+                // تحديث العنوان
+                if (data.ui && data.ui.title) {
+                    console.log('📝 [5/8] تحديث عنوان الصفحة...');
+                    const titleElement = document.querySelector('h1');
+                    if (titleElement) {
+                        titleElement.textContent = data.ui.title;
+                        console.log(`✅ العنوان: "${data.ui.title}"`);
+                    }
+                }
+                
+                // تعيين الحالة الحالية
+                console.log('📊 [6/8] تعيين حالة الطلب الحالية...');
+                currentOrderStatus = data.order.currentStatus || 'REVIEW';
+                console.log(`✅ الحالة الحالية: ${currentOrderStatus}`);
+                
+                // تعيين دور المستخدم الحالي من JSON
+                console.log('👤 [7/8] تعيين دور المستخدم الحالي...');
+                // يجب أن تكون القيمة مطابقة لمفتاح في userRoles (مثل: "BUYER", "VENDOR", "SHIPPER", "ADMIN")
+                if (data.currentUserRole) {
+                    currentUserRole = data.currentUserRole;
+                    console.log(`📌 الدور من JSON: "${currentUserRole}"`);
+                    // التحقق من وجود الدور في userRoles
+                    if (data.userRoles && !data.userRoles[currentUserRole]) {
+                        console.warn(`⚠️ تحذير: الدور "${currentUserRole}" غير موجود في userRoles. الأدوار المتاحة:`, Object.keys(data.userRoles));
+                        console.warn(`⚠️ سيتم استخدام "BUYER" كقيمة افتراضية.`);
+                        currentUserRole = 'BUYER';
+                    } else {
+                        const roleInfo = data.userRoles[currentUserRole];
+                        console.log(`✅ الدور موجود: "${roleInfo.name}" - ${roleInfo.description}`);
+                    }
+                } else {
+                    console.warn('⚠️ تحذير: currentUserRole غير موجود في JSON. سيتم استخدام "BUYER" كقيمة افتراضية.');
+                    currentUserRole = 'BUYER'; // القيمة الافتراضية
+                }
+                
+                // التأكد من أن appData يحتوي على currentUserRole (للاستخدام المستقبلي)
+                appData.currentUserRole = currentUserRole;
+                
+                // عرض معلومات دور المستخدم
+                console.log('📱 [8/8] عرض معلومات دور المستخدم في الصفحة...');
+                displayUserRoleInfo();
+                
+                // عرض شريط التقدم
+                console.log('🎨 بدء عرض شريط التقدم...');
+                renderStepper();
+                console.log('✅ تم تحميل الصفحة بنجاح!');
+            } catch (error) {
+                console.error('خطأ في جلب البيانات:', error);
+                // عرض رسالة خطأ للمستخدم
+                const container = getElement('stepper-container');
+                if (container) {
+                    const errorMsg = appData.ui?.messages?.loadingError || 'حدث خطأ في تحميل البيانات';
+                    const fileNotFoundMsg = appData.ui?.messages?.fileNotFound || 'تأكد من وجود ملف stepper-data.json في نفس المجلد';
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #f44336;">
+                            <h3>${errorMsg}</h3>
+                            <p>${error.message}</p>
+                            <p style="font-size: 0.9rem; color: #666; margin-top: 1rem;">
+                                ${fileNotFoundMsg}
+                            </p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        /* ============================================
+           Stepper Functions
+           ============================================ */
+        let currentOrderStatus = 'REVIEW';
+
+        function setCurrentOrderStatus(statusId) {
+            console.log(`🔄 setCurrentOrderStatus: محاولة تغيير الحالة إلى ${statusId}`);
+            if (!isValidStatus(statusId)) {
+                const errorMsg = appData.ui?.messages?.invalidStatus || 'حالة الطلب غير صحيحة';
+                console.error(`  └─ ❌ الحالة غير صحيحة: ${statusId}`);
+                alert(errorMsg);
+                return false;
+            }
+            const oldStatus = currentOrderStatus;
+            currentOrderStatus = statusId;
+            console.log(`  └─ ✅ تم تغيير الحالة من "${oldStatus}" إلى "${statusId}"`);
+            // تحديث البيانات في appData
+            if (appData.order) {
+                appData.order.currentStatus = statusId;
+                appData.order.lastUpdated = new Date().toISOString();
+                console.log(`  └─ 📝 تم تحديث appData.order.currentStatus`);
+            }
+            console.log(`  └─ 🎨 إعادة عرض شريط التقدم...`);
+            renderStepper();
+            return true;
+        }
+
+        function renderStepper() {
+            console.log('  └─ 📊 renderStepper: بدء عرض شريط التقدم...');
+            const container = getElement('stepper-container');
+            if (!container) {
+                console.error('  └─ ❌ renderStepper: حاوية stepper-container غير موجودة');
+                return;
+            }
+
+            const allStatuses = getAllStatuses();
+            console.log(`  └─ 📋 تم الحصول على ${allStatuses.length} حالة طلب`);
+            const currentStatus = getStatusById(currentOrderStatus);
+            console.log(`  └─ 🎯 الحالة الحالية: ${currentStatus?.name || currentOrderStatus} (${currentOrderStatus})`);
+
+            // Create stepper wrapper
+            let wrapper = container.querySelector('.stepper-wrapper');
+            if (!wrapper) {
+                console.log('  └─ 🆕 إنشاء stepper-wrapper جديد');
+                wrapper = createElement('div', { className: 'stepper-wrapper' });
+                container.appendChild(wrapper);
+            } else {
+                console.log('  └─ 🔄 تنظيف stepper-wrapper الموجود');
+                wrapper.innerHTML = '';
+            }
+
+            // Create step items
+            console.log(`  └─ 🎨 إنشاء ${allStatuses.length} عنصر خطوة...`);
+            allStatuses.forEach((status, index) => {
+                console.log(`    └─ [${index + 1}/${allStatuses.length}] إنشاء خطوة: ${status.name} (${status.id})`);
+                const stepItem = createStepItem(status, index, allStatuses.length);
+                wrapper.appendChild(stepItem);
+            });
+            console.log(`  └─ ✅ تم إنشاء جميع عناصر الخطوات (${allStatuses.length} خطوة)`);
+
+            // Add order summary
+            console.log('  └─ 📊 عرض ملخص الطلب...');
+            renderOrderSummary(container);
+            console.log('  └─ ✅ تم عرض شريط التقدم بنجاح');
+        }
+
+        function createStepItem(status, index, totalSteps) {
+            const stepItem = createElement('div', {
+                className: 'step-item',
+                'data-status': status.id
+            });
+
+            // Determine step state
+            const currentStatus = getStatusById(currentOrderStatus);
+            let stepClass = '';
+            if (status.order < currentStatus.order) {
+                stepClass = 'completed';
+            } else if (status.order === currentStatus.order) {
+                stepClass = 'active';
+            }
+            stepClass += ` ${status.id.toLowerCase()}`;
+
+            stepItem.className = `step-item ${stepClass}`;
+            
+            // Log step state
+            if (stepClass.includes('active')) {
+                console.log(`      └─ ✅ ${status.name}: نشط (active)`);
+            } else if (stepClass.includes('completed')) {
+                console.log(`      └─ ✓ ${status.name}: مكتمل (completed)`);
+            } else {
+                console.log(`      └─ ○ ${status.name}: قيد الانتظار (pending)`);
+            }
+
+            // Step circle
+            const circle = createElement('div', {
+                className: 'step-circle',
+                'aria-label': status.name,
+                role: 'button',
+                tabIndex: '0'
+            });
+            circle.textContent = status.icon;
+
+            // Add click handler
+            circle.addEventListener('click', () => {
+                handleStepClick(status.id);
+            });
+
+            circle.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleStepClick(status.id);
+                }
+            });
+
+            // Step label
+            const label = createElement('div', { className: 'step-label' });
+            label.textContent = status.name;
+
+            // Step description
+            const description = createElement('div', { className: 'step-description' });
+            description.textContent = status.description;
+
+            // Append to step item
+            stepItem.appendChild(circle);
+            stepItem.appendChild(label);
+            stepItem.appendChild(description);
+
+            return stepItem;
+        }
+
+        function handleStepClick(statusId) {
+            console.log(`🖱️ النقر على خطوة: ${statusId}`);
+            if (setCurrentOrderStatus(statusId)) {
+                console.log(`  └─ ✅ تم تغيير الحالة إلى: ${statusId}`);
+                // Show vendors if status is CONFIRMED or later
+                if (statusId === 'CONFIRMED' || getStatusById(statusId).order > 2) {
+                    console.log(`  └─ 📋 عرض قائمة البائعين للخطوة: ${statusId}`);
+                    showVendorsForStep(statusId);
+                } else {
+                    console.log(`  └─ 🔒 إخفاء قائمة البائعين (الحالة قبل CONFIRMED)`);
+                    hideVendorsForStep();
+                }
+            } else {
+                console.log(`  └─ ❌ فشل في تغيير الحالة إلى: ${statusId}`);
+            }
+        }
+
+        function showVendorsForStep(statusId) {
+            console.log(`  └─ 📋 showVendorsForStep: عرض البائعين للخطوة ${statusId}`);
+            const allStepItems = document.querySelectorAll('.step-item');
+            console.log(`    └─ 🔄 إخفاء قوائم البائعين في جميع الخطوات (${allStepItems.length} خطوة)`);
+            allStepItems.forEach(item => {
+                const vendorsSection = item.querySelector('.step-vendors');
+                if (vendorsSection) {
+                    vendorsSection.classList.remove('show');
+                }
+            });
+
+            const currentStepItem = document.querySelector(`[data-status="${statusId}"]`);
+            if (!currentStepItem) {
+                console.error(`    └─ ❌ لم يتم العثور على عنصر الخطوة: ${statusId}`);
+                return;
+            }
+
+            let vendorsSection = currentStepItem.querySelector('.step-vendors');
+            if (!vendorsSection) {
+                console.log(`    └─ 🆕 إنشاء قسم البائعين الجديد`);
+                vendorsSection = createVendorsSection();
+                currentStepItem.appendChild(vendorsSection);
+            } else {
+                console.log(`    └─ 🔄 استخدام قسم البائعين الموجود`);
+            }
+
+            renderVendorsList(vendorsSection);
+            vendorsSection.classList.add('show');
+            console.log(`    └─ ✅ تم عرض قائمة البائعين`);
+        }
+
+        function hideVendorsForStep() {
+            console.log(`  └─ 🔒 hideVendorsForStep: إخفاء جميع قوائم البائعين`);
+            const allVendorsSections = document.querySelectorAll('.step-vendors');
+            console.log(`    └─ تم العثور على ${allVendorsSections.length} قسم بائعين`);
+            allVendorsSections.forEach(section => {
+                section.classList.remove('show');
+            });
+            console.log(`    └─ ✅ تم إخفاء جميع قوائم البائعين`);
+        }
+
+        function createVendorsSection() {
+            console.log(`      └─ 🆕 createVendorsSection: إنشاء قسم البائعين`);
+            const section = createElement('div', { className: 'step-vendors' });
+            const list = createElement('ul', { className: 'vendors-list' });
+            section.appendChild(list);
+            console.log(`      └─ ✅ تم إنشاء قسم البائعين`);
+            return section;
+        }
+
+        function renderVendorsList(container) {
+            const list = container.querySelector('.vendors-list');
+            if (!list) return;
+
+            list.innerHTML = '';
+
+            if (!appData.vendors || appData.vendors.length === 0) {
+                list.innerHTML = '<li style="text-align: center; color: #666; padding: 1rem;">لا توجد بائعين</li>';
+                return;
+            }
+
+            appData.vendors.forEach(vendor => {
+                const item = createElement('li', {
+                    className: `vendor-item ${vendor.status.toLowerCase()}`
+                });
+
+                const vendorName = createElement('strong');
+                vendorName.textContent = vendor.name;
+
+                const vendorStatus = createElement('span');
+                vendorStatus.style.marginRight = '1rem';
+                vendorStatus.style.color = '#666';
+                const statusLabel = appData.vendorStatusLabels?.[vendor.status] || vendor.statusLabel || vendor.status;
+                vendorStatus.textContent = `(${statusLabel})`;
+
+                item.appendChild(vendorName);
+                item.appendChild(vendorStatus);
+                list.appendChild(item);
+            });
+        }
+
+        function renderOrderSummary(container) {
+            console.log('  └─ 📊 renderOrderSummary: بدء عرض ملخص الطلب...');
+            let summary = container.querySelector('.order-summary');
+            if (!summary) {
+                console.log('  └─ 🆕 إنشاء عنصر order-summary جديد');
+                summary = createElement('div', { className: 'order-summary' });
+                container.appendChild(summary);
+            }
+
+            const orderData = appData.summary || {};
+            const labels = appData.ui?.labels || {};
+            
+            console.log('  └─ 📋 بيانات الملخص:', {
+                totalRequested: orderData.totalRequested,
+                totalVendors: orderData.totalVendors,
+                statusCounts: orderData.statusCounts
+            });
+
+            summary.innerHTML = `
+                <div class="summary-title">${appData.ui?.summaryTitle || 'ملخص الطلب'}</div>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">${labels.totalRequested || 'المنتجات المطلوبة'}</div>
+                        <div class="summary-value">${formatNumber(orderData.totalRequested || 0)}</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">${labels.totalVendors || 'عدد البائعين'}</div>
+                        <div class="summary-value">${orderData.totalVendors || 0}</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">${labels.fullSuccess || 'نجاح كامل'}</div>
+                        <div class="summary-value" style="color: var(--color-full)">${orderData.statusCounts?.FULL || 0}</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">${labels.partialSuccess || 'نجاح جزئي'}</div>
+                        <div class="summary-value" style="color: var(--color-partial)">${orderData.statusCounts?.PARTIAL || 0}</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">${labels.failed || 'فشل'}</div>
+                        <div class="summary-value" style="color: var(--color-fail)">${orderData.statusCounts?.FAIL || 0}</div>
+                    </div>
+                </div>
+            `;
+            console.log('  └─ ✅ تم عرض ملخص الطلب بنجاح');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('═══════════════════════════════════════════════════════');
+            console.log('🚀 بدء تحميل صفحة شريط التقدم...');
+            console.log('═══════════════════════════════════════════════════════');
+            loadData();
+        });
+    </script>
+</body>
+</html>
+

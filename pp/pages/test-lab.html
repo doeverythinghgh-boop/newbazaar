@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الاختبار - نظام إدارة الطلبات</title>
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/theme.css">
+    <link rel="stylesheet" href="../assets/css/stepper.css">
+    <link rel="stylesheet" href="../assets/css/test-panel.css">
+</head>
+<body>
+    <div class="container">
+        <header class="test-panel-header">
+            <h1 class="test-panel-title">لوحة الاختبار</h1>
+            <p class="test-panel-subtitle">مركز التحكم الكامل لتجربة جميع الوظائف والميزات</p>
+            <a href="../index.html" style="display: inline-block; margin-top: 1rem; color: var(--color-primary);">
+                ← العودة للصفحة الرئيسية
+            </a>
+        </header>
+
+        <main>
+            <!-- User Role Selector -->
+            <div class="control-section">
+                <div class="section-header">اختيار دور المستخدم</div>
+                <div class="role-selector">
+                    <div class="role-option">
+                        <input type="radio" name="user-role" id="role-buyer" value="buyer" checked>
+                        <label for="role-buyer" class="role-label">
+                            <input type="radio" class="role-radio" checked style="display: none;">
+                            مشتري
+                        </label>
+                    </div>
+                    <div class="role-option">
+                        <input type="radio" name="user-role" id="role-vendor" value="vendor">
+                        <label for="role-vendor" class="role-label">
+                            <input type="radio" class="role-radio" style="display: none;">
+                            بائع
+                        </label>
+                    </div>
+                    <div class="role-option">
+                        <input type="radio" name="user-role" id="role-shipper" value="shipper">
+                        <label for="role-shipper" class="role-label">
+                            <input type="radio" class="role-radio" style="display: none;">
+                            شركة شحن
+                        </label>
+                    </div>
+                    <div class="role-option">
+                        <input type="radio" name="user-role" id="role-admin" value="admin">
+                        <label for="role-admin" class="role-label">
+                            <input type="radio" class="role-radio" style="display: none;">
+                            إدارة
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vendor Count Control -->
+            <div class="control-section">
+                <div class="section-header">عدد البائعين</div>
+                <div class="vendor-count-control">
+                    <label class="count-label">عدد البائعين في الطلب:</label>
+                    <input type="number" id="vendor-count" class="count-input" value="1" min="1">
+                    <div class="count-buttons">
+                        <button class="btn-count decrease" id="decrease-count">-</button>
+                        <button class="btn-count increase" id="increase-count">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vendor Data Editors -->
+            <div class="control-section">
+                <div class="section-header">بيانات البائعين</div>
+                <div id="vendors-editor-container"></div>
+            </div>
+
+            <!-- Delivery Services Editors -->
+            <div class="control-section">
+                <div class="section-header">خدمات التوصيل</div>
+                <div id="delivery-editor-container"></div>
+            </div>
+
+            <!-- Order Status Control -->
+            <div class="control-section">
+                <div class="section-header">حالة الطلب الحالية</div>
+                <div class="status-control">
+                    <div class="status-option">
+                        <input type="radio" name="order-status" id="status-review" value="REVIEW" checked>
+                        <label for="status-review" class="status-label">
+                            <input type="radio" class="status-radio" checked style="display: none;">
+                            مراجعة
+                        </label>
+                    </div>
+                    <div class="status-option">
+                        <input type="radio" name="order-status" id="status-confirmed" value="CONFIRMED">
+                        <label for="status-confirmed" class="status-label">
+                            <input type="radio" class="status-radio" style="display: none;">
+                            مؤكد
+                        </label>
+                    </div>
+                    <div class="status-option">
+                        <input type="radio" name="order-status" id="status-shipped" value="SHIPPED">
+                        <label for="status-shipped" class="status-label">
+                            <input type="radio" class="status-radio" style="display: none;">
+                            شُحن
+                        </label>
+                    </div>
+                    <div class="status-option">
+                        <input type="radio" name="order-status" id="status-delivered" value="DELIVERED">
+                        <label for="status-delivered" class="status-label">
+                            <input type="radio" class="status-radio" style="display: none;">
+                            تم التسليم
+                        </label>
+                    </div>
+                    <div class="status-option">
+                        <input type="radio" name="order-status" id="status-cancelled" value="CANCELLED">
+                        <label for="status-cancelled" class="status-label">
+                            <input type="radio" class="status-radio" style="display: none;">
+                            ملغي
+                        </label>
+                    </div>
+                    <div class="status-option">
+                        <input type="radio" name="order-status" id="status-rejected" value="REJECTED">
+                        <label for="status-rejected" class="status-label">
+                            <input type="radio" class="status-radio" style="display: none;">
+                            مرفوض
+                        </label>
+                    </div>
+                    <div class="status-option">
+                        <input type="radio" name="order-status" id="status-returned" value="RETURNED">
+                        <label for="status-returned" class="status-label">
+                            <input type="radio" class="status-radio" style="display: none;">
+                            مرتجع
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="panel-actions">
+                <button class="btn-apply" id="btn-apply-changes">تطبيق التغييرات</button>
+                <button class="btn-reset" id="btn-reset">إعادة ضبط</button>
+                <button class="btn-simulate" id="btn-simulate-shortage">محاكاة نقص تلقائي</button>
+            </div>
+
+            <!-- Live Preview -->
+            <div class="live-preview">
+                <div class="preview-title">معاينة مباشرة - شريط التقدم</div>
+                <div id="stepper-container" class="stepper-container"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/order-status-map.js"></script>
+    <script src="../assets/js/user-roles.js"></script>
+    <script src="../assets/js/vendors.js"></script>
+    <script src="../assets/js/delivery.js"></script>
+    <script src="../assets/js/stepper.js"></script>
+    <script src="../assets/js/test-panel.js"></script>
+</body>
+</html>
+

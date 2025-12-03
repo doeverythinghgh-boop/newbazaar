@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل البائعين - نظام إدارة الطلبات</title>
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/theme.css">
+    <link rel="stylesheet" href="../assets/css/vendor.css">
+</head>
+<body>
+    <div class="container">
+        <header class="vendors-header">
+            <h1 class="vendors-title">تفاصيل البائعين</h1>
+            <p class="vendors-subtitle">عرض بيانات البائعين والخطوات الفرعية لكل بائع</p>
+            <a href="../index.html" style="display: inline-block; margin-top: 1rem; color: var(--color-primary);">
+                ← العودة للصفحة الرئيسية
+            </a>
+        </header>
+
+        <main class="vendors-container">
+            <div id="vendors-list-container"></div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/order-status-map.js"></script>
+    <script src="../assets/js/user-roles.js"></script>
+    <script src="../assets/js/vendors.js"></script>
+    <script src="../assets/js/delivery.js"></script>
+
+    <script>
+        /**
+         * Render all vendor cards
+         */
+        function renderVendorCards() {
+            try {
+                const container = Utils.getElement('vendors-list-container');
+                if (!container) return;
+
+                container.innerHTML = '';
+
+                const vendors = getAllVendors();
+                vendors.forEach(vendor => {
+                    const card = createVendorCard(vendor);
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error rendering vendor cards:', error);
+            }
+        }
+
+        /**
+         * Create vendor card
+         */
+        function createVendorCard(vendor) {
+            try {
+                const card = Utils.createElement('div', {
+                    className: `vendor-card ${vendor.statusPerVendor.toLowerCase()}`
+                });
+
+                // Header
+                const header = Utils.createElement('div', { className: 'vendor-header' });
+                header.innerHTML = `
+                    <div class="vendor-name">${vendor.vendorName}</div>
+                    <div class="vendor-status-badge ${vendor.statusPerVendor.toLowerCase()}">
+                        ${vendor.statusPerVendor === 'FULL' ? 'كامل' : vendor.statusPerVendor === 'PARTIAL' ? 'جزئي' : 'فشل'}
+                    </div>
+                `;
+
+                // Info Grid
+                const info = Utils.createElement('div', { className: 'vendor-info' });
+                const missingQty = Math.max(0, vendor.requestedQty - vendor.availableQty);
+                info.innerHTML = `
+                    <div class="info-item">
+                        <div class="info-label">الكمية المطلوبة</div>
+                        <div class="info-value highlight">${Utils.formatNumber(vendor.requestedQty)}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">الكمية المتوفرة</div>
+                        <div class="info-value ${vendor.availableQty >= vendor.requestedQty ? 'highlight' : 'warning'}">${Utils.formatNumber(vendor.availableQty)}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">الكمية الناقصة</div>
+                        <div class="info-value ${missingQty > 0 ? 'error' : 'highlight'}">${Utils.formatNumber(missingQty)}</div>
+                    </div>
+                `;
+
+                // Sub Steps
+                const subStepsSection = Utils.createElement('div', { className: 'sub-steps-section' });
+                const subStepsTitle = Utils.createElement('div', { className: 'sub-steps-title' });
+                subStepsTitle.textContent = 'الخطوات الفرعية';
+
+                const subStepsList = Utils.createElement('ul', { className: 'sub-steps-list' });
+                
+                if (vendor.subSteps && vendor.subSteps.length > 0) {
+                    vendor.subSteps.forEach(step => {
+                        const stepItem = Utils.createElement('li', {
+                            className: `sub-step-item ${step.status}`
+                        });
+                        stepItem.innerHTML = `
+                            <div class="sub-step-icon">${step.icon}</div>
+                            <div class="sub-step-content">
+                                <div class="sub-step-title">${step.title}</div>
+                                <div class="sub-step-description">${step.description}</div>
+                                ${step.timestamp ? `<div class="sub-step-time">${Utils.formatDate(step.timestamp)}</div>` : ''}
+                            </div>
+                        `;
+                        subStepsList.appendChild(stepItem);
+                    });
+                } else {
+                    subStepsList.innerHTML = '<li style="text-align: center; color: var(--text-secondary); padding: 1rem;">لا توجد خطوات فرعية</li>';
+                }
+
+                subStepsSection.appendChild(subStepsTitle);
+                subStepsSection.appendChild(subStepsList);
+
+                // Actions (if has permission)
+                let actionsSection = null;
+                if (canEditVendor(vendor.vendorId)) {
+                    actionsSection = Utils.createElement('div', { className: 'vendor-actions' });
+                    actionsSection.innerHTML = `
+                        <button class="btn-edit" onclick="editVendor('${vendor.vendorId}')">تعديل</button>
+                        <button class="btn-save hidden" onclick="saveVendor('${vendor.vendorId}')">حفظ</button>
+                        <button class="btn-cancel hidden" onclick="cancelEditVendor('${vendor.vendorId}')">إلغاء</button>
+                    `;
+                }
+
+                // Assemble card
+                card.appendChild(header);
+                card.appendChild(info);
+                card.appendChild(subStepsSection);
+                if (actionsSection) {
+                    card.appendChild(actionsSection);
+                }
+
+                return card;
+            } catch (error) {
+                console.error('Error creating vendor card:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Edit vendor
+         */
+        function editVendor(vendorId) {
+            try {
+                const vendor = getVendorById(vendorId);
+                if (!vendor) {
+                    Utils.showWarning('البائع غير موجود', 'error');
+                    return;
+                }
+
+                // This is a simplified version - in a real app, you'd make fields editable
+                Utils.showWarning('وظيفة التعديل متاحة في لوحة الاختبار', 'warning');
+            } catch (error) {
+                console.error('Error editing vendor:', error);
+                Utils.showWarning('حدث خطأ في تعديل البائع', 'error');
+            }
+        }
+
+        /**
+         * Save vendor
+         */
+        function saveVendor(vendorId) {
+            try {
+                // Implementation for saving vendor
+                Utils.showSuccess('تم حفظ التغييرات');
+            } catch (error) {
+                console.error('Error saving vendor:', error);
+            }
+        }
+
+        /**
+         * Cancel edit
+         */
+        function cancelEditVendor(vendorId) {
+            try {
+                renderVendorCards();
+            } catch (error) {
+                console.error('Error canceling edit:', error);
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Initialize default data
+                initVendorsData(2);
+                const vendors = getAllVendors();
+                
+                // Update sub steps for all vendors
+                vendors.forEach(vendor => {
+                    updateVendorSubSteps(vendor.vendorId);
+                });
+
+                renderVendorCards();
+            } catch (error) {
+                console.error('Error initializing vendor details:', error);
+            }
+        });
+
+        // Listen for vendor updates
+        document.addEventListener('vendorUpdated', () => {
+            try {
+                renderVendorCards();
+            } catch (error) {
+                console.error('Error handling vendor update:', error);
+            }
+        });
+    </script>
+</body>
+</html>
+

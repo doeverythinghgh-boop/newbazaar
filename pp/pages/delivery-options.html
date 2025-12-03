@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خدمات التوصيل - نظام إدارة الطلبات</title>
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/theme.css">
+    <link rel="stylesheet" href="../assets/css/delivery.css">
+</head>
+<body>
+    <div class="container">
+        <header class="delivery-header">
+            <h1 class="delivery-title">خدمات التوصيل</h1>
+            <p class="delivery-subtitle">إدارة خدمات التوصيل لكل بائع واختيار الخدمة المعتمدة</p>
+            <a href="../index.html" style="display: inline-block; margin-top: 1rem; color: var(--color-primary);">
+                ← العودة للصفحة الرئيسية
+            </a>
+        </header>
+
+        <main class="delivery-container">
+            <div id="delivery-list-container"></div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/order-status-map.js"></script>
+    <script src="../assets/js/user-roles.js"></script>
+    <script src="../assets/js/vendors.js"></script>
+    <script src="../assets/js/delivery.js"></script>
+
+    <script>
+        /**
+         * Render all delivery cards
+         */
+        function renderDeliveryCards() {
+            try {
+                const container = Utils.getElement('delivery-list-container');
+                if (!container) return;
+
+                container.innerHTML = '';
+
+                const vendors = getAllVendors();
+                vendors.forEach(vendor => {
+                    const card = createDeliveryCard(vendor);
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error rendering delivery cards:', error);
+            }
+        }
+
+        /**
+         * Create delivery card
+         */
+        function createDeliveryCard(vendor) {
+            try {
+                const delivery = getDeliveryForVendor(vendor.vendorId);
+                
+                // Initialize if not exists
+                if (!delivery) {
+                    initDeliveryData([vendor]);
+                    return createDeliveryCard(vendor);
+                }
+
+                const card = Utils.createElement('div', {
+                    className: `delivery-card ${delivery.services.length === 0 ? 'no-services' : ''}`
+                });
+
+                // Header
+                const header = Utils.createElement('div', { className: 'delivery-card-header' });
+                header.innerHTML = `
+                    <div class="delivery-vendor-name">${vendor.vendorName}</div>
+                    <div class="delivery-status-indicator ${delivery.services.length === 0 ? 'no-services' : ''}">
+                        ${delivery.services.length === 0 ? 'لا توجد خدمات' : `${delivery.services.length} خدمة`}
+                    </div>
+                `;
+
+                // Services Section
+                const servicesSection = Utils.createElement('div', { className: 'services-section' });
+                const servicesTitle = Utils.createElement('div', { className: 'services-title' });
+                servicesTitle.textContent = 'خدمات التوصيل المتاحة';
+
+                const servicesList = Utils.createElement('ul', { className: 'services-list' });
+
+                if (delivery.services.length === 0) {
+                    // No services warning
+                    const warning = Utils.createElement('div', { className: 'no-services-warning' });
+                    warning.innerHTML = `
+                        <div class="warning-icon">✖</div>
+                        <div class="warning-text">لا توجد خدمات توصيل</div>
+                        <div class="warning-description">لم يتم العثور على خدمات توصيل متاحة لهذا البائع</div>
+                    `;
+                    servicesSection.appendChild(warning);
+                } else if (delivery.services.length > 1) {
+                    // Multiple services info
+                    const info = Utils.createElement('div', { className: 'multiple-services-info' });
+                    info.innerHTML = `
+                        <div class="info-icon">ℹ</div>
+                        <div class="info-text">يوجد ${delivery.services.length} خدمات توصيل متاحة - يرجى اختيار واحدة</div>
+                    `;
+                    servicesSection.appendChild(info);
+                }
+
+                // Services list
+                delivery.services.forEach(service => {
+                    const serviceItem = Utils.createElement('li', {
+                        className: `service-item ${service.isSelected ? 'selected' : ''}`
+                    });
+                    serviceItem.innerHTML = `
+                        <input type="radio" 
+                               name="delivery-${vendor.vendorId}" 
+                               value="${service.serviceId}"
+                               class="service-radio"
+                               ${service.isSelected ? 'checked' : ''}
+                               onchange="selectService('${vendor.vendorId}', '${service.serviceId}')">
+                        <div class="service-info">
+                            <div>
+                                <div class="service-name">${service.serviceName}</div>
+                                <div class="service-details">خدمة توصيل متاحة</div>
+                            </div>
+                            <div class="service-price">${Utils.formatNumber(service.servicePrice)} ر.س</div>
+                        </div>
+                    `;
+                    servicesList.appendChild(serviceItem);
+                });
+
+                servicesSection.appendChild(servicesTitle);
+                if (delivery.services.length > 0) {
+                    servicesSection.appendChild(servicesList);
+                }
+
+                // Delivery Sub Steps
+                const subStepsSection = Utils.createElement('div', { className: 'delivery-sub-steps' });
+                const subStepsTitle = Utils.createElement('div', { className: 'delivery-sub-steps-title' });
+                subStepsTitle.textContent = 'خطوات التوصيل';
+
+                const subStepsList = Utils.createElement('ul', { className: 'delivery-sub-steps-list' });
+
+                if (delivery.subSteps && delivery.subSteps.length > 0) {
+                    delivery.subSteps.forEach(step => {
+                        const stepItem = Utils.createElement('li', {
+                            className: `delivery-sub-step-item ${step.status}`
+                        });
+                        stepItem.innerHTML = `
+                            <div class="delivery-sub-step-icon">${step.icon}</div>
+                            <div class="delivery-sub-step-content">
+                                <div class="delivery-sub-step-title">${step.title}</div>
+                                <div class="delivery-sub-step-description">${step.description}</div>
+                            </div>
+                        `;
+                        subStepsList.appendChild(stepItem);
+                    });
+                } else {
+                    updateDeliverySubSteps(vendor.vendorId);
+                    const updatedDelivery = getDeliveryForVendor(vendor.vendorId);
+                    if (updatedDelivery && updatedDelivery.subSteps) {
+                        updatedDelivery.subSteps.forEach(step => {
+                            const stepItem = Utils.createElement('li', {
+                                className: `delivery-sub-step-item ${step.status}`
+                            });
+                            stepItem.innerHTML = `
+                                <div class="delivery-sub-step-icon">${step.icon}</div>
+                                <div class="delivery-sub-step-content">
+                                    <div class="delivery-sub-step-title">${step.title}</div>
+                                    <div class="delivery-sub-step-description">${step.description}</div>
+                                </div>
+                            `;
+                            subStepsList.appendChild(stepItem);
+                        });
+                    }
+                }
+
+                subStepsSection.appendChild(subStepsTitle);
+                subStepsSection.appendChild(subStepsList);
+
+                // Actions
+                let actionsSection = null;
+                if (hasPermission('canEditDelivery')) {
+                    actionsSection = Utils.createElement('div', { className: 'delivery-actions' });
+                    actionsSection.innerHTML = `
+                        <button class="btn-select-service" 
+                                onclick="selectFirstService('${vendor.vendorId}')"
+                                ${delivery.services.length === 0 ? 'disabled' : ''}>
+                            ${delivery.selectedServiceId ? 'تغيير الخدمة' : 'اختيار خدمة'}
+                        </button>
+                    `;
+                }
+
+                // Assemble card
+                card.appendChild(header);
+                card.appendChild(servicesSection);
+                card.appendChild(subStepsSection);
+                if (actionsSection) {
+                    card.appendChild(actionsSection);
+                }
+
+                return card;
+            } catch (error) {
+                console.error('Error creating delivery card:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Select service
+         */
+        function selectService(vendorId, serviceId) {
+            try {
+                if (selectDeliveryService(vendorId, serviceId)) {
+                    renderDeliveryCards();
+                    Utils.showSuccess('تم اختيار خدمة التوصيل');
+                }
+            } catch (error) {
+                console.error('Error selecting service:', error);
+            }
+        }
+
+        /**
+         * Select first service
+         */
+        function selectFirstService(vendorId) {
+            try {
+                const delivery = getDeliveryForVendor(vendorId);
+                if (delivery && delivery.services.length > 0) {
+                    selectService(vendorId, delivery.services[0].serviceId);
+                }
+            } catch (error) {
+                console.error('Error selecting first service:', error);
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Initialize default data
+                initVendorsData(2);
+                const vendors = getAllVendors();
+                initDeliveryData(vendors);
+                
+                // Initialize default services
+                vendors.forEach(vendor => {
+                    initDefaultServices(vendor.vendorId, 2);
+                });
+
+                renderDeliveryCards();
+            } catch (error) {
+                console.error('Error initializing delivery options:', error);
+            }
+        });
+
+        // Listen for delivery updates
+        document.addEventListener('deliveryUpdated', () => {
+            try {
+                renderDeliveryCards();
+            } catch (error) {
+                console.error('Error handling delivery update:', error);
+            }
+        });
+
+        document.addEventListener('deliveryServiceSelected', () => {
+            try {
+                renderDeliveryCards();
+            } catch (error) {
+                console.error('Error handling service selection:', error);
+            }
+        });
+    </script>
+</body>
+</html>
+

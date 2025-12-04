@@ -16,12 +16,14 @@
             {
                 "product_key": "product_key_2",
                 "quantity": 1,
-                "seller_key": "seller_key_2",
+                "seller_key": "seller_key_1",
                 "supplier_delivery": {
-                    "delivery_key": "delivery_key_2"
+                    "delivery_key": [
+                        "delivery_key_2",
+                        "delivery_key_3"
+                    ]
                 }
-            }
-            ,
+            },
             {
                 "product_key": "product_key_3",
                 "quantity": 1,

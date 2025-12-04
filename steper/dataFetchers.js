@@ -1,15 +1,23 @@
 /**
  * @file dataFetchers.js
- * @description دوال جلب البيانات الأساسية (Core Data Fetchers).
+ * @description وحدة جلب البيانات (Data Fetching Module).
+ * يحتوي هذا الملف على الدوال المسؤولة عن جلب البيانات الأساسية للتطبيق من ملفات JSON المحلية.
+ * يتم استخدام `fetch` API لجلب البيانات بشكل غير متزامن.
  */
 
 /**
- * @description يجلب ملف الإعدادات والتحكم.
- * @returns {Promise<Object>} وعد (Promise) بكائن بيانات التحكم.
+ * @function fetchControlData
+ * @description تقوم هذه الدالة بجلب ملف `control.json`.
+ * يحتوي هذا الملف على إعدادات التحكم، تعريف الخطوات، وبيانات المستخدم الحالي.
+ * 
+ * @returns {Promise<Object>} وعد (Promise) يتم حله (resolves) بكائن بيانات التحكم عند نجاح الطلب.
+ * 
+ * @throws {Error} يرمي خطأ إذا فشل طلب الشبكة أو لم يكن الرد ناجحاً (not ok).
  */
 export function fetchControlData() {
     try {
-        // استخدام `no-cache` لضمان الحصول على أحدث البيانات
+        // استخدام `cache: "no-cache"` يضمن أن المتصفح يطلب الملف من الخادم دائماً ولا يعتمد على النسخة المخبأة،
+        // مما يضمن الحصول على أحدث البيانات في كل مرة يتم فيها تحميل الصفحة.
         return fetch("./control.json", { cache: "no-cache" }).then((response) => {
             if (!response.ok) {
                 throw new Error(`Error fetching control data: ${response.statusText}`);
@@ -18,18 +26,23 @@ export function fetchControlData() {
         });
     } catch (fetchError) {
         console.error("Error in fetchControlData:", fetchError);
-        // رمي الخطأ مرة أخرى ليتم التقاطه في Promise.all
+        // إعادة رمي الخطأ ليتم التعامل معه في المكان الذي استدعى هذه الدالة (عادة في main.js)
         throw fetchError;
     }
 }
 
 /**
- * @description يجلب ملف الطلبات.
- * @returns {Promise<Object>} وعد (Promise) بكائن بيانات الطلبات.
+ * @function fetchOrdersData
+ * @description تقوم هذه الدالة بجلب ملف `orders_.json`.
+ * يحتوي هذا الملف على قائمة الطلبات وتفاصيلها (المنتجات، البائعين، حالة التوصيل).
+ * 
+ * @returns {Promise<Object>} وعد (Promise) يتم حله بكائن بيانات الطلبات (مصفوفة عادة).
+ * 
+ * @throws {Error} يرمي خطأ إذا فشل الطلب.
  */
 export function fetchOrdersData() {
     try {
-        // استخدام `no-cache` لضمان الحصول على أحدث البيانات
+        // جلب البيانات مع منع التخزين المؤقت (Caching)
         return fetch("./orders_.json", { cache: "no-cache" }).then((response) => {
             if (!response.ok) {
                 throw new Error(`Error fetching orders data: ${response.statusText}`);
@@ -38,7 +51,6 @@ export function fetchOrdersData() {
         });
     } catch (fetchError) {
         console.error("Error in fetchOrdersData:", fetchError);
-        // رمي الخطأ مرة أخرى ليتم التقاطه في Promise.all
         throw fetchError;
     }
 }

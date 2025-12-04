@@ -8,6 +8,7 @@
   --primary-color: #007bff; /* Main blue color */
   --primary-color-light: #e6f2ff; /* Lighter version for glows and effects */
   --dark-blue: #03478f; /* Darker shade of blue for headings and important text */
+  --accent-color: #ade9bb; /* لون مميز جديد (أخضر فاتح) */
   --success-color: #28a745;
   --danger-color: #dc3545;
   --danger-color-dark: #ef4444;

@@ -549,7 +549,7 @@
             <h2 id="cartPage_emptyCartTitle">سلة المشتريات فارغة</h2>
             <p id="cartPage_emptyCartMessage">لم تقم بإضافة أي منتجات إلى سلة المشتريات بعد. ابدأ التسوق الآن لإضافة
                 منتجات رائعة!</p>
-            <a href="#" class="cartPage_continue-shopping" id="cartPage_continueShoppingBtn" onclick="history.back()">
+            <a href="#" class="cartPage_continue-shopping" id="cartPage_continueShoppingBtn" onclick="mainLoader('./pages/home.html', 'index-home-container', 0, undefined, 'hiddenHomeIcon',false); return false;">
                 <i class="fas fa-store"></i> متابعة التسوق
             </a>
         </div>
@@ -743,8 +743,22 @@
                             const cartPage_cart = getCart();
                             const cartPage_product = cartPage_cart.find(item => item.product_key === cartPage_productKey);
 
-                            if (cartPage_product && confirm(`هل أنت متأكد من حذف "${cartPage_product.productName}" من السلة؟`)) {
-                                removeFromCart(cartPage_productKey);
+                            if (cartPage_product) {
+                                Swal.fire({
+                                    title: 'هل أنت متأكد؟',
+                                    text: `سيتم حذف المنتج "${cartPage_product.productName}" من سلة المشتريات.`,
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: 'نعم، احذفه!',
+                                    cancelButtonText: 'إلغاء'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        removeFromCart(cartPage_productKey);
+                                        Swal.fire('تم الحذف!', 'تم حذف المنتج من السلة بنجاح.', 'success');
+                                    }
+                                });
                             }
                         }
 
@@ -764,7 +778,7 @@
                 });
 
                 // تحديث الكمية عند تغيير المدخل
-                document.addEventListener('change', function (e) {
+                document.addEventListener('blur', function (e) {
                     try {
                         if (e.target.classList.contains('cartPage_quantity-input')) {
                             const cartPage_productKey = e.target.dataset.productKey;
@@ -788,7 +802,7 @@
                     } catch (error) {
                         console.error('حدث خطأ أثناء تغيير الكمية:', error);
                     }
-                });
+                }, true); // استخدام true لتفعيل "event capturing"
 
                 // تفريغ السلة
                 document.getElementById('cartPage_clearCartBtn').addEventListener('click', function () {
@@ -808,7 +822,8 @@
                         if (cartPage_cart.length === 0) {
                             return;
                         }
-                        // منطق إتمام الشراء هنا
+                    // منطق إتمام الشراء هنا
+
                     } catch (error) {
                         console.error('حدث خطأ أثناء إتمام الشراء:', error);
                     }

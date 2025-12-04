@@ -1,7 +1,7 @@
 /**
  * @file js/cardPackage.js
  * @description وحدة لإدارة سلة المشتريات.
- * 
+ *
  * توفر هذه الوحدة مجموعة من الدوال للتعامل مع سلة المشتريات المحفوظة في LocalStorage.
  * تشمل العمليات: الإضافة، الحذف، تحديث الكمية، جلب محتويات السلة، وحساب الإجمالي.
  */
@@ -13,9 +13,8 @@
  * @see localStorage
  */
 function getCartStorageKey() {
-
   if (window.userSession && window.userSession.user_key) {
-    console.log(`cart_${window.userSession.user_key}`);
+
     return `cart_${window.userSession.user_key}`; // ربط السلة بالـ user_key
   }
   return null; // لا يوجد مستخدم، لا توجد سلة
@@ -34,11 +33,11 @@ function getCart() {
   try {
     const cartJson = localStorage.getItem(CART_STORAGE_KEY);
     const cart = cartJson ? JSON.parse(cartJson) : [];
-    
+
     // إضافة ملاحظة افتراضية إذا لم تكن موجودة
-    return cart.map(item => ({
+    return cart.map((item) => ({
       ...item,
-      note: item.note || ''
+      note: item.note || "",
     }));
   } catch (error) {
     console.error("خطأ في قراءة السلة من LocalStorage:", error);
@@ -60,7 +59,7 @@ function saveCart(cart) {
   try {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
     // إرسال حدث مخصص لإعلام أجزاء أخرى من التطبيق بتحديث السلة
-    window.dispatchEvent(new CustomEvent('cartUpdated'));
+    window.dispatchEvent(new CustomEvent("cartUpdated"));
   } catch (error) {
     console.error("خطأ في حفظ السلة في LocalStorage:", error);
   }
@@ -74,21 +73,26 @@ function saveCart(cart) {
  * @param {string} note - ملاحظة للمنتج (اختياري).
  * @returns {boolean} - true إذا تمت الإضافة بنجاح، false إذا كان البائع هو نفسه المستخدم.
  */
-function addToCart(product, quantity, note = '') {
+function addToCart(product, quantity, note = "") {
   // منع المستخدم من الشراء من نفسه
-  if (window.userSession && window.userSession.user_key === product.seller_key) {
+  if (
+    window.userSession &&
+    window.userSession.user_key === product.seller_key
+  ) {
     window.Swal.fire({
-      icon: 'error',
-      title: 'عذراً',
-      text: 'لا يمكنك شراء منتجاتك الخاصة',
-      confirmButtonText: 'موافق'
+      icon: "error",
+      title: "عذراً",
+      text: "لا يمكنك شراء منتجاتك الخاصة",
+      confirmButtonText: "موافق",
     });
     containerGoBack();
     return false;
   }
 
   const cart = getCart();
-  const existingProductIndex = cart.findIndex(item => item.product_key === product.product_key);
+  const existingProductIndex = cart.findIndex(
+    (item) => item.product_key === product.product_key
+  );
 
   if (existingProductIndex > -1) {
     // المنتج موجود، قم بتحديث الكمية
@@ -100,7 +104,7 @@ function addToCart(product, quantity, note = '') {
       ...product,
       quantity,
       note,
-      addedDate: new Date().toISOString() // إضافة تاريخ الإضافة
+      addedDate: new Date().toISOString(), // إضافة تاريخ الإضافة
     };
     if (!newCartItem.product_key && product.product_key) {
       newCartItem.product_key = product.product_key;
@@ -111,13 +115,13 @@ function addToCart(product, quantity, note = '') {
   saveCart(cart);
 
   window.Swal.fire({
-    icon: 'success',
+    icon: "success",
     title: `تمت إضافة "${product.productName}" إلى السلة`,
-    text: 'يمكنك متابعة التسوق.',
-    confirmButtonText: 'موافق'
+    text: "يمكنك متابعة التسوق.",
+    confirmButtonText: "موافق",
   }).then((result) => {
     if (result.isConfirmed) {
-    containerGoBack();
+      containerGoBack();
     }
   });
   return true;
@@ -131,7 +135,7 @@ function addToCart(product, quantity, note = '') {
  */
 function removeFromCart(productKey) {
   let cart = getCart();
-  cart = cart.filter(item => item.product_key !== productKey);
+  cart = cart.filter((item) => item.product_key !== productKey);
   saveCart(cart);
 }
 
@@ -144,7 +148,9 @@ function removeFromCart(productKey) {
  */
 function updateCartQuantity(productKey, newQuantity) {
   const cart = getCart();
-  const productIndex = cart.findIndex(item => item.product_key === productKey);
+  const productIndex = cart.findIndex(
+    (item) => item.product_key === productKey
+  );
 
   if (productIndex > -1) {
     if (newQuantity > 0) {
@@ -165,7 +171,9 @@ function updateCartQuantity(productKey, newQuantity) {
  */
 function updateCartItemNote(productKey, note) {
   const cart = getCart();
-  const productIndex = cart.findIndex(item => item.product_key === productKey);
+  const productIndex = cart.findIndex(
+    (item) => item.product_key === productKey
+  );
 
   if (productIndex > -1) {
     cart[productIndex].note = note;
@@ -199,7 +207,7 @@ function getCartItemCount() {
  */
 function getCartTotalPrice() {
   const cart = getCart();
-  return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  return cart.reduce((total, item) => total + item.price * item.quantity, 0);
 }
 
 /**
@@ -211,7 +219,7 @@ function getCartTotalSavings() {
   const cart = getCart();
   return cart.reduce((total, item) => {
     if (item.original_price && item.original_price > item.price) {
-      return total + ((item.original_price - item.price) * item.quantity);
+      return total + (item.original_price - item.price) * item.quantity;
     }
     return total;
   }, 0);
@@ -225,7 +233,7 @@ function getCartTotalSavings() {
  */
 function findInCart(productKey) {
   const cart = getCart();
-  return cart.find(item => item.product_key === productKey) || null;
+  return cart.find((item) => item.product_key === productKey) || null;
 }
 
 /**
@@ -234,21 +242,36 @@ function findInCart(productKey) {
  * @returns {void}
  */
 function updateCartBadge() {
-  console.log('updateCartBadge');
-  const cartBadge = document.getElementById('xx');
-  if (!cartBadge) return;
+  // استهداف زر السلة الرئيسي
+  const cartButton = document.getElementById("index-cart-btn");
+  if (!cartButton) {
+    console.warn("updateCartBadge: لم يتم العثور على زر السلة 'index-cart-btn'.");
+    return;
+  }
 
+  const badgeId = 'cart-item-count-badge';
+  let badge = document.getElementById(badgeId);
   const count = getCartItemCount();
+
+  // إذا لم تكن الشارة موجودة، قم بإنشائها وإضافتها إلى زر السلة
+  if (!badge) {
+    badge = document.createElement('span');
+    badge.id = badgeId;
+    badge.className = 'cart-badge'; // تطبيق الأنماط العصرية
+    cartButton.appendChild(badge);
+  }
+
+  // تحديث محتوى الشارة وإظهارها أو إخفائها بناءً على عدد المنتجات
   if (count > 0) {
-    cartBadge.textContent = count;
-    cartBadge.style.display = 'flex';
+    badge.textContent = count;
+    badge.style.display = 'flex'; // إظهار الشارة
   } else {
-    cartBadge.style.display = 'none';
+    badge.style.display = 'none'; // إخفاء الشارة إذا كانت السلة فارغة
   }
 }
 
 // الاستماع لحدث تحديث السلة لتحديث الشارة تلقائياً
-window.addEventListener('cartUpdated', updateCartBadge);
+window.addEventListener("cartUpdated", updateCartBadge);
 
 // تحديث الشارة عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', updateCartBadge);
+document.addEventListener("DOMContentLoaded", updateCartBadge);

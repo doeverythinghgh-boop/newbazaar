@@ -1,7 +1,6 @@
 {
   "currentUser": {
-    "idUser": "xxxx",
-    "type": "seller"
+    "idUser": "seller_key_1"
   },
   "users": [
     {
@@ -29,10 +28,6 @@
       ]
     }
   ],
-  "currentStep": {
-    "id": "step-shipped",
-    "status": "active"
-  },
   "steps": [
     {
       "id": "step-review",

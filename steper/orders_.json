@@ -7,10 +7,43 @@
         "order_items": [
             {
                 "product_key": "product_key_1",
-                "quantity": 2,
+                "quantity": 1,
                 "seller_key": "seller_key_1",
                 "supplier_delivery": {
                     "delivery_key": "delivery_key_1"
+                }
+            },
+            {
+                "product_key": "product_key_2",
+                "quantity": 1,
+                "seller_key": "seller_key_2",
+                "supplier_delivery": {
+                    "delivery_key": "delivery_key_2"
+                }
+            }
+            ,
+            {
+                "product_key": "product_key_3",
+                "quantity": 1,
+                "seller_key": "seller_key_1",
+                "supplier_delivery": {
+                    "delivery_key": "delivery_key_2"
+                }
+            }
+        ]
+    },
+    {
+        "order_key": "order_key_2",
+        "user_key": "user_key_2",
+        "order_status": "2#2025-11-25T20:44:58.333Z",
+        "created_at": "2025-11-25 18:24:00",
+        "order_items": [
+            {
+                "product_key": "product_key_2",
+                "quantity": 2,
+                "seller_key": "seller_key_2",
+                "supplier_delivery": {
+                    "delivery_key": "delivery_key_2"
                 }
             }
         ]

@@ -1,513 +1,102 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شريط التقدم</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" />
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<html lang="ar" dir="rtl" id="html-root">
+<head id="head-section">
+    <meta charset="UTF-8" id="meta-charset">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" id="meta-viewport">
+    <title id="page-title">شريط التقدم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet" id="font-link">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" id="fontawesome-link">
 
-        html {
-            font-size: 16px;
-        }
+    <link rel="stylesheet" href="style.css" id="main-stylesheet">
 
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            min-height: 100vh;
-            padding: 2rem 1rem;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 80%, rgba(255, 179, 102, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-            padding: 3rem 2rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 
-                        0 0 1px rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-        }
-
-        h1 {
-            text-align: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 3.5rem;
-            font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        /* ============================================
-           متغيرات الألوان
-           ============================================ */
-        :root {
-            --color-primary: #667eea;
-            --color-review: #ff9a76;
-            --color-confirmed: #4caf50;
-            --color-shipped: #00d4ff;
-            --color-delivered: #1abc9c;
-            --color-cancelled: #ff6b6b;
-            --color-rejected: #e74c3c;
-            --color-returned: #9b59b6;
-            --color-full: #4caf50;
-            --color-partial: #ffa500;
-            --color-fail: #f44336;
-            --bg-primary: #ffffff;
-            --bg-secondary: #f5f5f5;
-            --text-primary: #2d3436;
-            --text-secondary: #636e72;
-            --border-light: #e0e6f2;
-            --transition-normal: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* ============================================
-           شريط التقدم (Stepper)
-           ============================================ */
-        .stepper-container {
-            width: 100%;
-            padding: 1.5rem 0;
-        }
-
-        .stepper-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 0;
-            position: relative;
-            padding: 1rem 1.5rem;
-        }
-
-        .step-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-            transition: all var(--transition-normal);
-        }
-
-        .step-item:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            top: 27px;
-            left: -50%;
-            width: 100%;
-            height: 3px;
-            background: var(--border-light);
-            z-index: -1;
-            transition: all var(--transition-normal);
-        }
-
-        .step-item.completed:not(:last-child)::after {
-            background: linear-gradient(90deg, var(--color-confirmed) 0%, var(--color-confirmed) 100%);
-            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
-        }
-
-        .step-item.active:not(:last-child)::after {
-            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary) 100%);
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .step-circle {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #f5f6fa 0%, #e9ecf8 100%);
-            border: 3px solid var(--border-light);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            position: relative;
-            z-index: 3;
-            transition: all var(--transition-normal);
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .step-circle i {
-            font-size: 1.3rem;
-        }
-
-        .step-circle::before {
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            display: inline-block;
-        }
-
-        .step-item.active .step-circle {
-            background: linear-gradient(135deg, var(--color-primary) 0%, #8b9ef5 100%);
-            border-color: var(--color-primary);
-            color: #ffffff;
-            transform: scale(1.12);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35), 
-                        0 0 0 4px rgba(102, 126, 234, 0.15);
-        }
-
-        .step-item.completed .step-circle {
-            background: linear-gradient(135deg, var(--color-confirmed) 0%, #66bb6a 100%);
-            border-color: var(--color-confirmed);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
-        }
-
-        .step-item.review .step-circle {
-            background: linear-gradient(135deg, var(--color-review) 0%, #ffb085 100%);
-            border-color: var(--color-review);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(255, 154, 118, 0.2);
-        }
-
-        .step-item.confirmed .step-circle {
-            background: linear-gradient(135deg, var(--color-confirmed) 0%, #66bb6a 100%);
-            border-color: var(--color-confirmed);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
-        }
-
-        .step-item.shipped .step-circle {
-            background: linear-gradient(135deg, var(--color-shipped) 0%, #4dd9ff 100%);
-            border-color: var(--color-shipped);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
-        }
-
-        .step-item.delivered .step-circle {
-            background: linear-gradient(135deg, var(--color-delivered) 0%, #3ec8af 100%);
-            border-color: var(--color-delivered);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(26, 188, 156, 0.2);
-        }
-
-        .step-item.cancelled .step-circle {
-            background: linear-gradient(135deg, var(--color-cancelled) 0%, #ff8a8a 100%);
-            border-color: var(--color-cancelled);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
-        }
-
-        .step-item.rejected .step-circle {
-            background: linear-gradient(135deg, var(--color-rejected) 0%, #f36258 100%);
-            border-color: var(--color-rejected);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
-        }
-
-        .step-item.returned .step-circle {
-            background: linear-gradient(135deg, var(--color-returned) 0%, #b378cc 100%);
-            border-color: var(--color-returned);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(155, 89, 182, 0.2);
-        }
-
-        /* IMPORTANT: Hover effects are intentionally removed from this file.
-           Do NOT add `:hover` rules here because this UI must behave
-           consistently on touch devices and when keyboard navigation is used.
-           Hover styles were removed to avoid inconsistent UX across devices.
-           If you need interactive feedback, prefer focus/active styles or
-           explicit JavaScript-driven visual changes that also handle touch.
-        */
-
-        /* ...existing code... */
-
-        .step-circle:focus {
-            outline: 3px solid var(--color-primary);
-            outline-offset: 3px;
-        }
-
-        /* Pulse Animation */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-
-        .step-label {
-            margin-top: 1rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-            transition: color var(--transition-normal);
-        }
-
-        .step-item.active .step-label {
-            color: var(--color-primary);
-            font-weight: 700;
-        }
-
-        .step-item.completed .step-label {
-            color: var(--color-confirmed);
-        }
-
-        .step-description {
-            margin-top: 0.35rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-align: center;
-            max-width: 150px;
-            line-height: 1.4;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .container {
-                padding: 2.5rem 1.5rem;
-            }
-
-            h1 {
-                font-size: 2.1rem;
-                margin-bottom: 3rem;
-            }
-            
-            .step-item {
-                width: calc(100% / 6);
-                min-width: 100px;
-            }
-            
-            .step-circle {
-                width: 50px;
-                height: 50px;
-                font-size: 1.1rem;
-            }
-
-            .step-circle i {
-                font-size: 1.1rem;
-            }
-            
-            .step-label {
-                font-size: 0.9rem;
-                margin-top: 0.8rem;
-            }
-            
-            .step-description {
-                font-size: 0.8rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 2rem 1rem;
-                border-radius: 16px;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-                margin-bottom: 2.5rem;
-            }
-
-            .stepper-wrapper {
-                overflow-x: auto;
-                justify-content: flex-start;
-                padding-bottom: 1rem;
-                padding: 1rem 0.5rem;
-                scroll-behavior: smooth;
-            }
-
-            .stepper-wrapper::-webkit-scrollbar {
-                height: 4px;
-            }
-
-            .stepper-wrapper::-webkit-scrollbar-track {
-                background: var(--bg-secondary);
-                border-radius: 10px;
-            }
-
-            .stepper-wrapper::-webkit-scrollbar-thumb {
-                background: var(--color-primary);
-                border-radius: 10px;
-            }
-            
-            .step-item {
-                width: auto;
-                flex: 0 0 115px;
-            }
-            
-            .step-item:not(:last-child)::after {
-                width: 90%;
-            }
-
-            .step-circle {
-                width: 45px;
-                height: 45px;
-                font-size: 1rem;
-            }
-
-            .step-circle i {
-                font-size: 1rem;
-            }
-            
-            .step-label {
-                font-size: 0.8rem;
-                margin-top: 0.7rem;
-            }
-            
-            .step-description {
-                font-size: 0.75rem;
-                max-width: 95px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .container {
-                padding: 1.5rem 1rem;
-                border-radius: 14px;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-                margin-bottom: 2rem;
-            }
-
-            .stepper-container {
-                padding: 0.75rem 0;
-            }
-
-            .stepper-wrapper {
-                gap: 0.5rem;
-                padding: 0.75rem 0;
-            }
-            
-            .step-item {
-                flex: 0 0 100px;
-                gap: 0;
-            }
-            
-            .step-circle {
-                width: 40px;
-                height: 40px;
-                font-size: 0.9rem;
-            }
-
-            .step-circle i {
-                font-size: 0.9rem;
-            }
-            
-            .step-label {
-                font-size: 0.7rem;
-                margin-top: 0.5rem;
-            }
-            
-            .step-description {
-                display: none;
-            }
-
-            .step-item:not(:last-child)::after {
-                display: none;
-            }
-       }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="./script.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" id="sweetalert-script"></script>
+    <script src="./main.js" type="module" id="main-script"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>شريط التقدم</h1>
-        <main>
+<body id="body-content">
+    <div class="container" id="main-container">
+        <h1 id="main-heading">شريط التقدم</h1>
+        <!-- عرض معلومات المستخدم الحالي -->
+        <div id="current-user-info" class="current-user-info">
+            <span id="user-id-label">المعرف: <span id="display-user-id"></span></span>
+            <span id="user-type-label">النوع: <span id="display-user-type"></span></span>
+        </div>
+        <main id="main-content">
                 <!-- الشريط الرئيسي للحالات الأساسية -->
-                <div class="stepper-container">
-                    <div class="stepper-wrapper">
+                <div class="stepper-container" id="primary-stepper-container">
+                    <div class="stepper-wrapper" id="primary-stepper-wrapper">
                         <!-- الخطوة 1: مراجعة -->
-                        <div id="step-review" class="step-item completed review">
-                            <div class="step-circle">
-                                <i class="fas fa-clipboard-list"></i>
+                        <div id="step-review" class="step-item review">
+                            <div class="step-circle" id="step-review-circle">
+                                <i class="fas fa-clipboard-list" id="step-review-icon"></i>
                             </div>
-                            <div class="step-label">مراجعة</div>
-                            <div class="step-description">الطلب قيد المراجعة</div>
+                            <div class="step-label" id="step-review-label">مراجعة</div>
+                            <div class="step-description" id="step-review-description">الطلب قيد المراجعة</div>
                         </div>
 
                         <!-- الخطوة 2: مؤكد -->
-                        <div id="step-confirmed" class="step-item completed confirmed">
-                            <div class="step-circle">
-                                <i class="fas fa-check-circle"></i>
+                        <div id="step-confirmed" class="step-item confirmed">
+                            <div class="step-circle" id="step-confirmed-circle">
+                                <i class="fas fa-check-circle" id="step-confirmed-icon"></i>
                             </div>
-                            <div class="step-label">مؤكد</div>
-                            <div class="step-description">تم تأكيد الطلب</div>
+                            <div class="step-label" id="step-confirmed-label">مؤكد</div>
+                            <div class="step-description" id="step-confirmed-description">تم تأكيد الطلب</div>
                         </div>
 
                         <!-- الخطوة 3: شُحن (نشطة) -->
-                        <div id="step-shipped" class="step-item active shipped">
-                            <div class="step-circle">
-                                <i class="fas fa-truck"></i>
+                        <div id="step-shipped" class="step-item shipped">
+                            <div class="step-circle" id="step-shipped-circle">
+                                <i class="fas fa-truck" id="step-shipped-icon"></i>
                             </div>
-                            <div class="step-label">شُحن</div>
-                            <div class="step-description">تم شحن الطلب</div>
+                            <div class="step-label" id="step-shipped-label">شُحن</div>
+                            <div class="step-description" id="step-shipped-description">تم شحن الطلب</div>
                         </div>
 
                         <!-- الخطوة 4: تم التسليم -->
                         <div id="step-delivered" class="step-item delivered">
-                            <div class="step-circle">
-                                <i class="fas fa-box-open"></i>
+                            <div class="step-circle" id="step-delivered-circle">
+                                <i class="fas fa-box-open" id="step-delivered-icon"></i>
                             </div>
-                            <div class="step-label">تم التسليم</div>
-                            <div class="step-description">تم تسليم الطلب</div>
+                            <div class="step-label" id="step-delivered-label">تم التسليم</div>
+                            <div class="step-description" id="step-delivered-description">تم تسليم الطلب</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- حاوية رسالة عدم السماح -->
+                <div id="permission-denied-message" class="alert-message"></div>
+
                 <!-- شريط منفصل للحالات النهائية -->
-                <div class="stepper-container" style="margin-top: 2.5rem;">
-                    <div class="stepper-wrapper" style="justify-content: center; gap: 0rem;">
+                <div class="stepper-container" style="margin-top: 2.5rem;" id="secondary-stepper-container">
+                    <div class="stepper-wrapper" style="justify-content: center; gap: 0rem;" id="secondary-stepper-wrapper">
                         <!-- ملغي -->
                         <div id="step-cancelled" class="step-item cancelled">
-                            <div class="step-circle">
-                                <i class="fas fa-ban"></i>
+                            <div class="step-circle" id="step-cancelled-circle">
+                                <i class="fas fa-ban" id="step-cancelled-icon"></i>
                             </div>
-                            <div class="step-label">ملغي</div>
-                            <div class="step-description">تم إلغاء الطلب</div>
+                            <div class="step-label" id="step-cancelled-label">ملغي</div>
+                            <div class="step-description" id="step-cancelled-description">تم إلغاء الطلب</div>
                         </div>
 
                         <!-- مرفوض -->
                         <div id="step-rejected" class="step-item rejected">
-                            <div class="step-circle">
-                                <i class="fas fa-times-circle"></i>
+                            <div class="step-circle" id="step-rejected-circle">
+                                <i class="fas fa-times-circle" id="step-rejected-icon"></i>
                             </div>
-                            <div class="step-label">مرفوض</div>
-                            <div class="step-description">تم رفض الطلب</div>
+                            <div class="step-label" id="step-rejected-label">مرفوض</div>
+                            <div class="step-description" id="step-rejected-description">تم رفض الطلب</div>
                         </div>
 
                         <!-- مرتجع -->
                         <div id="step-returned" class="step-item returned">
-                            <div class="step-circle">
-                                <i class="fas fa-undo"></i>
+                            <div class="step-circle" id="step-returned-circle">
+                                <i class="fas fa-undo" id="step-returned-icon"></i>
                             </div>
-                            <div class="step-label">مرتجع</div>
-                            <div class="step-description">تم إرجاع الطلب</div>
+                            <div class="step-label" id="step-returned-label">مرتجع</div>
+                            <div class="step-description" id="step-returned-description">تم إرجاع الطلب</div>
                         </div>
                     </div>
                 </div>
         </main>
     </div>
 </body>
-
 </html>

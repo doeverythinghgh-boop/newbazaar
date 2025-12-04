@@ -40,7 +40,8 @@ async function sendOrder2Excution() {
   const cart = getCart();
 
   // التحقق من الشروط
-  if (userSession && Number(userSession.is_seller) >= 0) {
+
+  if (!userSession || !Number(userSession.is_seller) < 0) {
     Swal.fire({
       title: "مطلوب التسجيل",
       text: "لإتمام عملية الشراء، يجب عليك تسجيل الدخول أو إنشاء حساب جديد.",
@@ -124,12 +125,12 @@ async function sendOrder2Excution() {
     const allTokens = [
       ...new Set([...(sellerTokens || [])]),
     ];
-
+try{
     // 4. إرسال الإشعارات باستخدام الدالة العامة
     const title = "طلب شراء جديد";
     const body = `تم استلام طلب شراء جديد رقم #${createdOrderKey}. يرجى المراجعة.`;
     await sendNotificationsToTokens(allTokens, title, body);
-
+}catch(error){console.log(error);}
     console.log(
       "[Checkout] نجاح! تم تأكيد الطلب من قبل المستخدم وإنشاءه بنجاح."
     );
@@ -137,7 +138,6 @@ async function sendOrder2Excution() {
 
     // ✅ إصلاح: عرض رسالة النجاح، وبعد إغلاقها، يتم إعادة رسم نافذة السلة لتظهر فارغة.
     Swal.fire("تم إتمام طلبك بنجاح 🎉").then(() => {
-      showCartModal(); // إعادة رسم المودال ليظهر فارغًا
     });
   } else if (result.value && result.value.error) {
     console.error("[Checkout] فشل! الخادم أعاد خطأ:", result.value.error);

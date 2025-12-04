@@ -497,6 +497,7 @@
 </style>
 
 
+
 <body>
     <div id="header-container10" style="height: 70px;margin-left: 20px;margin-right: 20px;"></div>
     <div class="cartPage_container" id="cartPage_mainContainer">
@@ -806,24 +807,33 @@
 
                 // تفريغ السلة
                 document.getElementById('cartPage_clearCartBtn').addEventListener('click', function () {
-                    try {
-                        if (confirm('هل أنت متأكد من تفريغ سلة المشتريات بالكامل؟')) {
+                     Swal.fire({
+                        title: 'هل أنت متأكد؟',
+                        text: "سيتم تفريغ سلة المشتريات بالكامل!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'نعم، قم بالتفريغ!',
+                        cancelButtonText: 'إلغاء'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
                             clearCart();
+                            // عرض رسالة نجاح بعد التفريغ
+                            Swal.fire('تم التفريغ!', 'تم تفريغ سلة المشتريات بنجاح.', 'success');
                         }
-                    } catch (error) {
-                        console.error('حدث خطأ أثناء تفريغ السلة:', error);
-                    }
+                    });
                 });
 
                 // إتمام الشراء
-                document.getElementById('cartPage_checkoutBtn').addEventListener('click', function () {
+                document.getElementById('cartPage_checkoutBtn').addEventListener('click',async function () {
                     try {
                         const cartPage_cart = getCart();
                         if (cartPage_cart.length === 0) {
                             return;
                         }
                     // منطق إتمام الشراء هنا
-
+await sendOrder2Excution();
                     } catch (error) {
                         console.error('حدث خطأ أثناء إتمام الشراء:', error);
                     }

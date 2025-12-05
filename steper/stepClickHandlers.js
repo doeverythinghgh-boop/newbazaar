@@ -36,7 +36,7 @@ export function addStepClickListeners(
     try {
         // تحديد جميع العناصر التي تحمل الكلاس .step-item
         const stepItems = document.querySelectorAll(".step-item");
-        
+
         stepItems.forEach((stepItem) => {
             stepItem.addEventListener("click", () => {
                 const stepId = stepItem.id;
@@ -58,38 +58,38 @@ export function addStepClickListeners(
                             isBuyerReviewModificationLocked
                         );
                         break;
-                        
+
                     case "step-confirmed":
                         // خطوة التأكيد: خاصة بالبائع لتأكيد توفر المنتجات
                         if (userType === "seller")
                             showSellerConfirmationProductsAlert(data, ordersData);
                         break;
-                        
+
                     case "step-shipped":
                         // خطوة الشحن: للبائع أو الساعي لعرض ما تم شحنه
                         if (userType === "seller" || userType === "courier")
                             showShippingInfoAlert(data, ordersData);
                         break;
-                        
+
                     case "step-cancelled":
                         // خطوة الإلغاء: تعرض المنتجات التي ألغاها المشتري
                         showUnselectedProductsAlert(data, ordersData);
                         break;
-                        
+
                     case "step-rejected":
                         // خطوة الرفض: تعرض المنتجات التي رفضها البائع
                         showSellerRejectedProductsAlert(data, ordersData);
                         break;
-                        
+
                     case "step-delivered":
                         // خطوة التسليم: للمشتري لتأكيد الاستلام أو الساعي للمتابعة
                         if (userType === "buyer" || userType === "courier")
                             showDeliveryConfirmationAlert(data, ordersData);
                         break;
-                        
+
                     case "step-returned":
                         // خطوة الإرجاع: تعرض المنتجات التي تم إرجاعها
-                        showReturnedProductsAlert(data);
+                        showReturnedProductsAlert(data, ordersData);
                         break;
                 }
             });

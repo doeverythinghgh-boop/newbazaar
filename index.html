@@ -282,9 +282,9 @@
                 .addEventListener("click", handleSearchButtonClick);
             document
                 .getElementById("index-sales-movement-btn")
-                .addEventListener("click", () =>
-                    handleProtectedLinkClick("./pages/sales-movement.html")
-                );
+                .addEventListener("click", () => {
+                    mainLoader("./pages/sales-movement.html","index-myProducts-container",0,undefined,"showHomeIcon",true)
+                });
             document
                 .getElementById("index-cart-btn")
                 .addEventListener("click", () =>

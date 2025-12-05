@@ -146,17 +146,17 @@
 
 /* تأثير نبض لخطوة "ملغي" عند وجود منتجات ملغاة */
 .step-item.cancelled.has-cancelled-products .step-circle {
-    animation: shake 1s ease-in-out infinite;
+    animation: shake 2s ease-in-out infinite;
 }
 
 /* تأثير اهتزاز لخطوة "مرفوض" عند وجود منتجات مرفوضة */
 .step-item.rejected.has-rejected-products .step-circle {
-    animation: shake 1s ease-in-out infinite;
+    animation: shake 2s ease-in-out infinite;
 }
 
 /* تأثير اهتزاز لخطوة "مرتجع" عند وجود منتجات مرتجعة */
 .step-item.returned.has-returned-products .step-circle {
-    animation: shake 1s ease-in-out infinite;
+    animation: shake 2s ease-in-out infinite;
 }
 
 /* مرفوض */
@@ -212,6 +212,6 @@
     font-size: 0.85rem;
     color: var(--text-secondary);
     text-align: center;
-    max-width: 150px;
+    width: 100%;
     line-height: 1.4;
 }

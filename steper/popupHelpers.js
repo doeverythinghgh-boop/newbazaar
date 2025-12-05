@@ -7,6 +7,7 @@
 
 import {
     saveStepState,
+    loadStepState,
 } from "./stateManagement.js";
 import {
     updateCurrentStepFromState,
@@ -26,7 +27,7 @@ import {
  * 
  * @param {object} controlData - بيانات التحكم التي تحتوي على تعريف الخطوات.
  */
-export function addStatusToggleListener(controlData) {
+export function addStatusToggleListener(controlData, ordersData) {
     try {
         const checkbox = document.getElementById("modal-step-status-checkbox");
         if (!checkbox) return;
@@ -40,7 +41,7 @@ export function addStatusToggleListener(controlData) {
                 const currentStep = controlData.steps.find(
                     (s) => s.id === stepIdToActivate
                 );
-                
+
                 if (!currentStep) {
                     checkboxElement.checked = false;
                     return;
@@ -50,34 +51,29 @@ export function addStatusToggleListener(controlData) {
                 const basicSteps = ["step-review", "step-confirmed", "step-shipped", "step-delivered"];
                 // المراحل النهائية/الفرعية (لا تخضع لنفس قواعد الترتيب الصارم بالضرورة، لكن هنا للذكر)
                 const finalSteps = ["step-cancelled", "step-rejected", "step-returned"];
-                
+
                 // التحقق من منطق التسلسل للمراحل الأساسية
                 if (basicSteps.includes(stepIdToActivate)) {
                     // الحصول على رقم المرحلة النشطة حالياً من التخزين
-                    const savedCurrentStep = localStorage.getItem("current_step_state");
+                    const savedCurrentStep = loadStepState("current_step");
                     let currentActiveStepNo = 0;
-                    
+
                     if (savedCurrentStep) {
-                        try {
-                            const parsedStep = JSON.parse(savedCurrentStep);
-                            currentActiveStepNo = parseInt(parsedStep.stepNo) || 0;
-                        } catch (e) {
-                            currentActiveStepNo = 0;
-                        }
+                        currentActiveStepNo = parseInt(savedCurrentStep.stepNo) || 0;
                     }
-                    
+
                     const requestedStepNo = parseInt(currentStep.no);
-                    
+
                     // القاعدة: يجب أن تكون المرحلة المطلوبة هي (المرحلة الحالية + 1)
                     if (requestedStepNo !== currentActiveStepNo + 1) {
                         let errorMessage = "";
-                        
+
                         if (requestedStepNo <= currentActiveStepNo) {
                             errorMessage = "لا يمكن الرجوع إلى مرحلة سابقة. يجب التقدم بالترتيب فقط.";
                         } else {
                             errorMessage = `يجب تفعيل المراحل بالترتيب. المرحلة التالية المتاحة هي رقم ${currentActiveStepNo + 1}.`;
                         }
-                        
+
                         // عرض رسالة خطأ ومنع التفعيل
                         Swal.fire({
                             title: "تنبيه",
@@ -86,7 +82,7 @@ export function addStatusToggleListener(controlData) {
                             confirmButtonText: "حسنًا",
                             customClass: { popup: "fullscreen-swal" },
                         });
-                        
+
                         checkboxElement.checked = false; // إلغاء التحديد
                         return;
                     }
@@ -117,7 +113,7 @@ export function addStatusToggleListener(controlData) {
                                 status: "active",
                             });
                             // تحديث الواجهة فوراً
-                            updateCurrentStepFromState(controlData);
+                            updateCurrentStepFromState(controlData, ordersData);
                             Swal.close(); // إغلاق النافذة المنبثقة
                         }
                     } else {

@@ -14,6 +14,7 @@ import {
     determineUserType,
     determineCurrentStepId,
 } from "./roleAndStepDetermination.js";
+import { initializeState } from "./stateManagement.js";
 import { updateCurrentStepFromState } from "./uiUpdates.js";
 import { addStepClickListeners } from "./stepClickHandlers.js";
 
@@ -32,10 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(([controlData, ordersData]) => {
             try {
                 // --- مرحلة التهيئة (Initialization Phase) ---
+                initializeState();
 
                 // 1. استخراج معرف المستخدم من البيانات
                 const userId = controlData.currentUser.idUser;
-                
+
                 // 2. تحديد نوع المستخدم (Admin, Buyer, Seller, Courier)
                 const userType = determineUserType(userId, ordersData, controlData);
 
@@ -58,18 +60,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 // 4. تحديث كائن المستخدم بالنوع المحدد
                 controlData.currentUser.type = userType;
 
-                // 5. عرض معلومات المستخدم في الواجهة (لأغراض التوضيح والتصحيح)
-                const userIdElement = document.getElementById("display-user-id");
-                const userTypeElement = document.getElementById("display-user-type");
-
-                if (userIdElement) userIdElement.textContent = userId;
-                if (userTypeElement) userTypeElement.textContent = userType;
+                // 5. عرض معلومات المستخدم في عنوان المتصفح
+                const originalTitle = document.title;
+                document.title = `[User: ${userId} | Type: ${userType}] - ${originalTitle}`;
 
                 console.log(`User type determined as: ${userType}`);
 
                 // 6. تحديث الواجهة لتعكس الخطوة الحالية
-                updateCurrentStepFromState(controlData); 
-                
+                updateCurrentStepFromState(controlData, ordersData);
+
                 // 7. تفعيل التفاعل: إضافة مستمعي النقرات للخطوات
                 addStepClickListeners(
                     controlData,

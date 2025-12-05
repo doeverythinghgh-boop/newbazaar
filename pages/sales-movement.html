@@ -1,0 +1,1015 @@
+<style>
+    .salesMovement_container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .salesMovement_filterContainer {
+        margin-bottom: 20px;
+    }
+
+    .salesMovement_radioGroup {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 12px 0;
+        table-layout: fixed;
+    }
+
+    .salesMovement_radioGroup tr {
+        width: 100%;
+    }
+
+    .salesMovement_radioOption {
+        position: relative;
+        width: 33.333%;
+        padding: 0;
+    }
+
+    .salesMovement_radioOption input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .salesMovement_radioLabel {
+        display: block;
+        padding: 15px 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-sizing: border-box;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .salesMovement_radioLabel::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        transition: width 0.3s ease;
+        z-index: 0;
+    }
+
+    .salesMovement_radioLabel span {
+        position: relative;
+        z-index: 1;
+    }
+
+    .salesMovement_radioOption input[type="radio"]:checked+.salesMovement_radioLabel {
+        border-color: #667eea;
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .salesMovement_radioOption input[type="radio"]:checked+.salesMovement_radioLabel::before {
+        width: 100%;
+    }
+
+    .salesMovement_radioLabel:hover {
+        border-color: #667eea;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+    }
+
+    .salesMovement_radioOption input[type="radio"]:checked+.salesMovement_radioLabel:hover {
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* ========================================
+       Orders Container & Cards Styling
+       ======================================== */
+
+    .salesMovement_ordersContainer {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        width: 100%;
+    }
+
+    .salesMovement_orderCard {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid transparent;
+    }
+
+    .salesMovement_orderCard::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .salesMovement_orderCard:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        border-color: #667eea;
+    }
+
+    .salesMovement_orderCard:active {
+        transform: translateY(-2px);
+    }
+
+    .salesMovement_cardHeader {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .salesMovement_cardIcon {
+        font-size: 24px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .salesMovement_cardTitle {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .salesMovement_cardBody {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .salesMovement_cardInfo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .salesMovement_cardInfo span:first-child {
+        font-weight: 500;
+        color: #667eea;
+    }
+
+    .salesMovement_cardInfo span:last-child {
+        color: #333;
+    }
+
+    /* حالة التحميل */
+    .salesMovement_loading {
+        text-align: center;
+        padding: 40px;
+        font-size: 18px;
+        color: #667eea;
+        animation: salesMovement_pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes salesMovement_pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    /* حالة فارغة */
+    .salesMovement_emptyState {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+
+    .salesMovement_emptyState .salesMovement_emptyIcon {
+        font-size: 64px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .salesMovement_emptyState .salesMovement_emptyText {
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    /* ========================================
+       Modal/Popup Styling
+       ======================================== */
+
+    .salesMovement_modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+        animation: salesMovement_fadeIn 0.3s ease;
+    }
+
+    .salesMovement_modal.salesMovement_show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @keyframes salesMovement_fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .salesMovement_modalContent {
+        background: white;
+        border-radius: 20px;
+        /*padding: 25px;*/
+        max-width: 90%;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+        animation: salesMovement_slideUp 0.3s ease;
+    }
+
+    @keyframes salesMovement_slideUp {
+        from {
+            transform: translateY(50px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .salesMovement_closeBtn {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 0 auto 10px auto;
+        display: flex;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 28px;
+        color: white;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .salesMovement_closeBtn:hover {
+        transform: rotate(90deg) scale(1.1);
+        box-shadow: 0 6px 15px rgba(102, 126, 234, 0.5);
+    }
+
+    .salesMovement_closeBtn:active {
+        transform: rotate(90deg) scale(0.95);
+    }
+
+    .salesMovement_modalBody {
+        margin-top: 0;
+        min-height: 70vh;
+        /*max-height: min-content;*/
+    }
+
+    .salesMovement_modalTitle {
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #667eea;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .salesMovement_modalSection {
+        margin-bottom: 25px;
+    }
+
+    .salesMovement_modalSectionTitle {
+        font-size: 18px;
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .salesMovement_modalInfo {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .salesMovement_modalInfo:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+
+    .salesMovement_modalInfoLabel {
+        font-weight: 500;
+        color: #666;
+    }
+
+    .salesMovement_modalInfoValue {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .salesMovement_productItem {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 12px;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .salesMovement_productItem:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+
+    .salesMovement_productName {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .salesMovement_productDetails {
+        display: flex;
+        gap: 15px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .salesMovement_productDetails span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* ========================================
+       Responsive Design - Media Queries
+       ======================================== */
+
+    /* شاشات صغيرة جداً (هواتف صغيرة) - أقل من 360px */
+    @media screen and (max-width: 359px) {
+        .salesMovement_container {
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .salesMovement_filterContainer {
+            margin-bottom: 15px;
+        }
+
+        .salesMovement_radioGroup {
+            border-spacing: 6px 0;
+        }
+
+        .salesMovement_radioOption {
+            width: 33.333%;
+        }
+
+        .salesMovement_radioLabel {
+            padding: 10px 8px;
+            font-size: 13px;
+            border-radius: 8px;
+            min-height: 45px;
+        }
+
+        .salesMovement_radioLabel span {
+            font-size: 13px;
+        }
+
+        .salesMovement_ordersContainer {
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .salesMovement_orderCard {
+            padding: 15px;
+        }
+
+        .salesMovement_modalContent {
+            width: 95%;
+            padding: 20px;
+        }
+    }
+
+    /* هواتف محمولة صغيرة - من 360px إلى 479px */
+    @media screen and (min-width: 360px) and (max-width: 479px) {
+        .salesMovement_container {
+            padding: 18px;
+            border-radius: 12px;
+        }
+
+        .salesMovement_filterContainer {
+            margin-bottom: 16px;
+        }
+
+        .salesMovement_radioGroup {
+            border-spacing: 8px 0;
+        }
+
+        .salesMovement_radioOption {
+            width: 33.333%;
+        }
+
+        .salesMovement_radioLabel {
+            padding: 11px 10px;
+            font-size: 14px;
+            border-radius: 10px;
+            min-height: 48px;
+        }
+
+        .salesMovement_ordersContainer {
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+    }
+
+    /* هواتف محمولة متوسطة - من 480px إلى 767px */
+    @media screen and (min-width: 480px) and (max-width: 767px) {
+        .salesMovement_container {
+            padding: 22px;
+            border-radius: 13px;
+        }
+
+        .salesMovement_filterContainer {
+            margin-bottom: 18px;
+        }
+
+        .salesMovement_radioGroup {
+            border-spacing: 8px 0;
+        }
+
+        .salesMovement_radioOption {
+            width: 33.333%;
+        }
+
+        .salesMovement_radioLabel {
+            padding: 12px 10px;
+            font-size: 14px;
+            border-radius: 11px;
+            min-height: 50px;
+        }
+
+        .salesMovement_ordersContainer {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 18px;
+        }
+    }
+
+    /* أجهزة لوحية صغيرة (Portrait) - من 768px إلى 991px */
+    @media screen and (min-width: 768px) and (max-width: 991px) {
+        .salesMovement_container {
+            padding: 25px;
+            border-radius: 14px;
+        }
+
+        .salesMovement_filterContainer {
+            margin-bottom: 19px;
+        }
+
+        .salesMovement_radioGroup {
+            gap: 12px;
+        }
+
+        .salesMovement_radioLabel {
+            padding: 15px 20px;
+            font-size: 16px;
+            border-radius: 12px;
+            min-height: 54px;
+        }
+
+        .salesMovement_ordersContainer {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+    }
+
+    /* أجهزة لوحية كبيرة وشاشات صغيرة - من 992px إلى 1199px */
+    @media screen and (min-width: 992px) and (max-width: 1199px) {
+        .salesMovement_container {
+            padding: 28px;
+        }
+
+        .salesMovement_radioLabel {
+            font-size: 16.5px;
+            min-height: 56px;
+        }
+    }
+
+    /* شاشات كبيرة - من 1200px إلى 1599px */
+    @media screen and (min-width: 1200px) and (max-width: 1599px) {
+        .salesMovement_container {
+            padding: 30px;
+        }
+
+        .salesMovement_radioLabel {
+            font-size: 17px;
+            min-height: 58px;
+        }
+    }
+
+    /* شاشات كبيرة جداً - أكبر من 1600px */
+    @media screen and (min-width: 1600px) {
+        .salesMovement_container {
+            padding: 35px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .salesMovement_radioLabel {
+            padding: 18px 25px;
+            font-size: 18px;
+            min-height: 60px;
+        }
+
+        .salesMovement_radioGroup {
+            gap: 15px;
+        }
+    }
+
+    /* تحسينات للأجهزة اللمسية */
+    @media (hover: none) and (pointer: coarse) {
+        .salesMovement_radioLabel {
+            min-height: 50px;
+            padding: 15px 20px;
+        }
+
+        .salesMovement_radioLabel:active {
+            transform: scale(0.98);
+        }
+    }
+
+    /* وضع الشاشة الأفقي للهواتف */
+    @media screen and (max-width: 767px) and (orientation: landscape) {
+        .salesMovement_container {
+            padding: 15px 25px;
+        }
+
+        .salesMovement_radioGroup {
+            border-spacing: 8px 0;
+        }
+
+        .salesMovement_radioOption {
+            width: 33.333%;
+        }
+
+        .salesMovement_radioLabel {
+            padding: 10px 12px;
+            min-height: 42px;
+            font-size: 13px;
+        }
+    }
+</style>
+
+
+<body>
+    <div class="salesMovement_container">
+
+        <div class="salesMovement_filterContainer">
+            <table class="salesMovement_radioGroup">
+                <tr>
+                    <td class="salesMovement_radioOption">
+                        <input type="radio" id="salesMovement_buyer" name="salesMovement_userType" value="buyer">
+                        <label for="salesMovement_buyer" class="salesMovement_radioLabel">
+                            <span>🛒 مشتري</span>
+                        </label>
+                    </td>
+                    <td class="salesMovement_radioOption">
+                        <input type="radio" id="salesMovement_seller" name="salesMovement_userType" value="seller">
+                        <label for="salesMovement_seller" class="salesMovement_radioLabel">
+                            <span>🏪 بائع</span>
+                        </label>
+                    </td>
+                    <td class="salesMovement_radioOption">
+                        <input type="radio" id="salesMovement_delivery" name="salesMovement_userType" value="delivery">
+                        <label for="salesMovement_delivery" class="salesMovement_radioLabel">
+                            <span>🚚 توصيل</span>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- حاوية عرض الطلبات -->
+        <div id="salesMovement_ordersContainer" class="salesMovement_ordersContainer">
+            <!-- سيتم إضافة بطاقات الطلبات هنا ديناميكياً -->
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة لعرض تفاصيل الطلب -->
+    <div id="salesMovement_orderModal" class="salesMovement_modal">
+        <div class="salesMovement_modalContent">
+            <button class="salesMovement_closeBtn" id="salesMovement_closeModal">
+                <span>×</span>
+            </button>
+            <div id="salesMovement_modalBody" class="salesMovement_modalBody">
+                <!-- سيتم إضافة تفاصيل الطلب هنا ديناميكياً -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const salesMovement_STORAGE_KEY = 'sales_movement_user_type';
+        const salesMovement_radioButtons = document.querySelectorAll('input[name="salesMovement_userType"]');
+
+        // دالة لجلب الطلبات بناءً على نوع المستخدم
+        async function salesMovement_fetchOrders(salesMovement_userType) {
+            try {
+                // عرض حالة التحميل
+                salesMovement_showLoading();
+
+                let salesMovement_url = '';
+                let salesMovement_userKey = userSession.user_key;
+                let salesMovement_role = '';
+
+                // تحديد المعاملات بناءً على نوع المستخدم
+                switch (salesMovement_userType) {
+                    case 'buyer':
+                        salesMovement_role = 'purchaser';
+                        salesMovement_url = `${baseURL}/api/user-all-orders?user_key=${salesMovement_userKey}&role=${salesMovement_role}`;
+                        console.log('جاري جلب طلبات المشتري...');
+                        break;
+                    case 'seller':
+                        salesMovement_role = 'seller';
+                        salesMovement_url = `${baseURL}/api/user-all-orders?user_key=${salesMovement_userKey}&role=${salesMovement_role}`;
+                        console.log('جاري جلب طلبات البائع...');
+                        break;
+                    case 'delivery':
+                        salesMovement_role = 'delivery';
+                        salesMovement_url = `${baseURL}/api/user-all-orders?user_key=${salesMovement_userKey}&role=${salesMovement_role}`;
+                        console.log('جاري جلب طلبات خدمة التوصيل...');
+                        break;
+                    default:
+                        console.log('نوع مستخدم غير صالح');
+                        return;
+                }
+
+                try {
+                    console.log('URL:', salesMovement_url);
+                    const salesMovement_response = await fetch(salesMovement_url);
+
+                    if (!salesMovement_response.ok) {
+                        throw new Error(`HTTP error! status: ${salesMovement_response.status}`);
+                    }
+
+                    const salesMovement_data = await salesMovement_response.json();
+                    console.log('تم جلب البيانات بنجاح:', salesMovement_data);
+
+                    // يمكنك هنا معالجة البيانات وعرضها
+                    salesMovement_displayOrders(salesMovement_data);
+
+                } catch (salesMovement_error) {
+                    console.error('حدث خطأ أثناء جلب البيانات:', salesMovement_error);
+                }
+            } catch (salesMovement_error) {
+                console.error('حدث خطأ في دالة fetchOrders:', salesMovement_error);
+            }
+        }
+
+        // دالة لعرض الطلبات
+        function salesMovement_displayOrders(salesMovement_data) {
+            try {
+                const salesMovement_container = document.getElementById('salesMovement_ordersContainer');
+
+                // إخفاء حالة التحميل
+                salesMovement_hideLoading();
+
+                // التحقق من وجود بيانات
+                if (!salesMovement_data || salesMovement_data.length === 0) {
+                    salesMovement_container.innerHTML = `
+                        <div class="salesMovement_emptyState">
+                            <div class="salesMovement_emptyIcon">📦</div>
+                            <div class="salesMovement_emptyText">لا توجد طلبات حالياً</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // ترتيب الطلبات حسب التاريخ (الأحدث أولاً)
+                const salesMovement_sortedOrders = [...salesMovement_data].sort((a, b) => {
+                    return new Date(b.created_at) - new Date(a.created_at);
+                });
+
+                console.log('عرض الطلبات:', salesMovement_sortedOrders);
+
+                // إنشاء HTML للطلبات
+                let salesMovement_cardsHTML = '';
+
+                salesMovement_sortedOrders.forEach((salesMovement_order, salesMovement_index) => {
+                    const salesMovement_productCount = salesMovement_order.order_items ? salesMovement_order.order_items.length : 0;
+                    const salesMovement_formattedDate = salesMovement_formatDate(salesMovement_order.created_at);
+
+                    salesMovement_cardsHTML += `
+                        <div class="salesMovement_orderCard" data-order-index="${salesMovement_index}">
+                            <div class="salesMovement_cardHeader">
+                                <span class="salesMovement_cardIcon">📋</span>
+                                <span class="salesMovement_cardTitle">طلب #${salesMovement_order.order_key}</span>
+                            </div>
+                            <div class="salesMovement_cardBody">
+                                <div class="salesMovement_cardInfo">
+                                    <span>📅 التاريخ:</span>
+                                    <span>${salesMovement_formattedDate}</span>
+                                </div>
+                                <div class="salesMovement_cardInfo">
+                                    <span>📦 عدد المنتجات:</span>
+                                    <span>${salesMovement_productCount}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                salesMovement_container.innerHTML = salesMovement_cardsHTML;
+
+                // إضافة مستمعي الأحداث للبطاقات
+                const salesMovement_cards = document.querySelectorAll('.salesMovement_orderCard');
+                salesMovement_cards.forEach((salesMovement_card) => {
+                    salesMovement_card.addEventListener('click', function () {
+                        const salesMovement_orderIndex = parseInt(this.getAttribute('data-order-index'));
+                        const salesMovement_orderData = salesMovement_sortedOrders[salesMovement_orderIndex];
+                        salesMovement_showOrderDetails(salesMovement_orderData);
+                    });
+                });
+
+            } catch (salesMovement_error) {
+                console.error('حدث خطأ في دالة displayOrders:', salesMovement_error);
+                const salesMovement_container = document.getElementById('salesMovement_ordersContainer');
+                salesMovement_container.innerHTML = `
+                    <div class="salesMovement_emptyState">
+                        <div class="salesMovement_emptyIcon">⚠️</div>
+                        <div class="salesMovement_emptyText">حدث خطأ في عرض الطلبات</div>
+                    </div>
+                `;
+            }
+        }
+
+        // دالة لحفظ الاختيار في localStorage
+        function salesMovement_saveUserTypeSelection(salesMovement_userType) {
+            try {
+                localStorage.setItem(salesMovement_STORAGE_KEY, salesMovement_userType);
+                console.log(`تم حفظ الاختيار: ${salesMovement_userType}`);
+            } catch (salesMovement_error) {
+                console.error('حدث خطأ في دالة saveUserTypeSelection:', salesMovement_error);
+            }
+        }
+
+        // دالة لاستعادة الاختيار من localStorage
+        function salesMovement_loadUserTypeSelection() {
+            try {
+                const salesMovement_savedType = localStorage.getItem(salesMovement_STORAGE_KEY);
+                if (salesMovement_savedType) {
+                    console.log(`تم استعادة الاختيار المحفوظ: ${salesMovement_savedType}`);
+                    // تحديد الراديو بوتن المناسب
+                    const salesMovement_radioToCheck = document.getElementById(`salesMovement_${salesMovement_savedType}`);
+                    if (salesMovement_radioToCheck) {
+                        salesMovement_radioToCheck.checked = true;
+                    }
+                    // جلب البيانات
+                    salesMovement_fetchOrders(salesMovement_savedType);
+                } else {
+                    console.log('لا يوجد اختيار محفوظ');
+                }
+            } catch (salesMovement_error) {
+                console.error('حدث خطأ في دالة loadUserTypeSelection:', salesMovement_error);
+            }
+        }
+
+        // الاستماع لتغيير الراديو بوتن
+        try {
+            salesMovement_radioButtons.forEach(salesMovement_radio => {
+                salesMovement_radio.addEventListener('change', function () {
+                    try {
+                        if (this.checked) {
+                            const salesMovement_selectedValue = this.value;
+                            console.log('تم اختيار:', salesMovement_selectedValue);
+
+                            // حفظ الاختيار
+                            salesMovement_saveUserTypeSelection(salesMovement_selectedValue);
+
+                            // جلب الطلبات بناءً على الاختيار
+                            salesMovement_fetchOrders(salesMovement_selectedValue);
+                        }
+                    } catch (salesMovement_error) {
+                        console.error('حدث خطأ في معالج تغيير الراديو:', salesMovement_error);
+                    }
+                });
+            });
+        } catch (salesMovement_error) {
+            console.error('حدث خطأ في إعداد مستمعي الأحداث:', salesMovement_error);
+        }
+
+        // تحميل الاختيار المحفوظ عند تحميل الصفحة
+        salesMovement_loadUserTypeSelection();
+
+        // دالة لتنسيق التاريخ بالعربية
+        function salesMovement_formatDate(salesMovement_dateString) {
+            try {
+                const salesMovement_date = new Date(salesMovement_dateString);
+
+                const salesMovement_months = [
+                    'يناير', 'فبراير', 'مارس', 'إبريل', 'مايو', 'يونيو',
+                    'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+                ];
+
+                const salesMovement_day = salesMovement_date.getDate();
+                const salesMovement_month = salesMovement_months[salesMovement_date.getMonth()];
+                const salesMovement_year = salesMovement_date.getFullYear();
+
+                let salesMovement_hours = salesMovement_date.getHours();
+                const salesMovement_minutes = salesMovement_date.getMinutes().toString().padStart(2, '0');
+                const salesMovement_ampm = salesMovement_hours >= 12 ? 'م' : 'ص';
+
+                salesMovement_hours = salesMovement_hours % 12;
+                salesMovement_hours = salesMovement_hours ? salesMovement_hours : 12;
+
+                return `${salesMovement_day} ${salesMovement_month} ${salesMovement_year} - ${salesMovement_hours}:${salesMovement_minutes} ${salesMovement_ampm}`;
+            } catch (salesMovement_error) {
+                console.error('خطأ في تنسيق التاريخ:', salesMovement_error);
+                return salesMovement_dateString;
+            }
+        }
+
+        // دالة لعرض صفحة stepper في النافذة المنبثقة
+        function salesMovement_showOrderDetails(salesMovement_orderData) {
+            try {
+                const salesMovement_modal = document.getElementById('salesMovement_orderModal');
+                const salesMovement_modalBody = document.getElementById('salesMovement_modalBody');
+
+                // تحويل بيانات الطلب إلى البنية المطلوبة في config.js
+                const salesMovement_convertedOrder = {
+                    order_key: salesMovement_orderData.order_key,
+                    user_key: salesMovement_orderData.user_key,
+                    user_name: salesMovement_orderData.user_name || '',
+                    user_phone: salesMovement_orderData.user_phone || '',
+                    user_address: salesMovement_orderData.user_address || '',
+                    order_status: salesMovement_orderData.order_status || '',
+                    created_at: salesMovement_orderData.created_at,
+                    order_items: []
+                };
+
+                // تحويل order_items مع معالجة supplier_delivery
+                if (salesMovement_orderData.order_items && salesMovement_orderData.order_items.length > 0) {
+                    salesMovement_orderData.order_items.forEach((salesMovement_item) => {
+                        const salesMovement_convertedItem = {
+                            product_key: salesMovement_item.product_key,
+                            product_name: salesMovement_item.product_name,
+                            quantity: salesMovement_item.quantity,
+                            seller_key: salesMovement_item.seller_key,
+                            supplier_delivery: null
+                        };
+
+                        // معالجة supplier_delivery
+                        if (salesMovement_item.supplier_delivery) {
+                            if (Array.isArray(salesMovement_item.supplier_delivery)) {
+                                if (salesMovement_item.supplier_delivery.length === 1) {
+                                    // عنصر واحد: تحويل إلى Object
+                                    salesMovement_convertedItem.supplier_delivery = salesMovement_item.supplier_delivery[0];
+                                } else if (salesMovement_item.supplier_delivery.length > 1) {
+                                    // أكثر من عنصر: إبقاء كـ Array
+                                    salesMovement_convertedItem.supplier_delivery = salesMovement_item.supplier_delivery;
+                                } else {
+                                    // Array فارغ
+                                    salesMovement_convertedItem.supplier_delivery = {};
+                                }
+                            } else {
+                                // إذا كان Object بالفعل
+                                salesMovement_convertedItem.supplier_delivery = salesMovement_item.supplier_delivery;
+                            }
+                        } else {
+                            salesMovement_convertedItem.supplier_delivery = {};
+                        }
+
+                        salesMovement_convertedOrder.order_items.push(salesMovement_convertedItem);
+                    });
+                }
+
+                // تعيين المتغيرات العامة لتمريرها إلى config.js
+                window.globalStepperAppData = {
+                    idUser: userSession.user_key,
+                    ordersData: [salesMovement_convertedOrder]
+                };
+
+                console.log('تم تعيين globalStepperAppData:', window.globalStepperAppData);
+
+                // إنشاء iframe لعرض صفحة stepper
+                salesMovement_modalBody.innerHTML = `
+                    <iframe 
+                        src="./steper/stepper-only.html" 
+                        style="width: 100%; height: 70vh; border: none; border-radius: 10px;"
+                        id="salesMovement_stepperIframe"
+                    ></iframe>
+                `;
+
+                // عرض النافذة المنبثقة
+                salesMovement_modal.classList.add('salesMovement_show');
+
+            } catch (salesMovement_error) {
+                console.error('خطأ في عرض صفحة stepper:', salesMovement_error);
+            }
+        }
+
+        // دالة لإظهار حالة التحميل
+        function salesMovement_showLoading() {
+            try {
+                const salesMovement_container = document.getElementById('salesMovement_ordersContainer');
+                salesMovement_container.innerHTML = `
+                    <div class="salesMovement_loading">
+                        ⏳ جاري تحميل الطلبات...
+                    </div>
+                `;
+            } catch (salesMovement_error) {
+                console.error('خطأ في عرض حالة التحميل:', salesMovement_error);
+            }
+        }
+
+        // دالة لإخفاء حالة التحميل
+        function salesMovement_hideLoading() {
+            try {
+                const salesMovement_container = document.getElementById('salesMovement_ordersContainer');
+                const salesMovement_loadingElement = salesMovement_container.querySelector('.salesMovement_loading');
+                if (salesMovement_loadingElement) {
+                    salesMovement_loadingElement.remove();
+                }
+            } catch (salesMovement_error) {
+                console.error('خطأ في إخفاء حالة التحميل:', salesMovement_error);
+            }
+        }
+
+        // إغلاق النافذة المنبثقة
+        const salesMovement_closeModalBtn = document.getElementById('salesMovement_closeModal');
+        const salesMovement_modal = document.getElementById('salesMovement_orderModal');
+
+        salesMovement_closeModalBtn.addEventListener('click', function () {
+            salesMovement_modal.classList.remove('salesMovement_show');
+        });
+
+        // إغلاق النافذة عند النقر خارجها
+        salesMovement_modal.addEventListener('click', function (salesMovement_event) {
+            if (salesMovement_event.target === salesMovement_modal) {
+                salesMovement_modal.classList.remove('salesMovement_show');
+            }
+        });
+
+
+    </script>
+</body>

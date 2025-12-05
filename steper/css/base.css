@@ -13,9 +13,9 @@ html {
 
 body {
     font-family: 'Tajawal', sans-serif; /* استخدام خط Tajawal لدعم العربية بشكل جميل */
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); /* خلفية متدرجة */
-    min-height: 100vh;
-    padding: 2rem 1rem;
+    /*background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); /* خلفية متدرجة */
+    max-height: fit-content;
+    /*padding: 2rem 1rem;*/
     position: relative;
     overflow-x: hidden;
 }
@@ -31,7 +31,7 @@ body::before {
     background: radial-gradient(circle at 20% 80%, rgba(255, 179, 102, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%);
     pointer-events: none;
-    z-index: -1;
+    z-index: 1000;
 }
 
 h1 {

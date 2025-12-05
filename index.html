@@ -74,7 +74,8 @@
             text-decoration: none;
             cursor: pointer;
             transition: transform 0.2s;
-            position: relative; /* ✅ جديد: ضروري لتحديد موضع الشارة بشكل صحيح */
+            position: relative;
+            /* ✅ جديد: ضروري لتحديد موضع الشارة بشكل صحيح */
         }
 
         /* ✅ جديد: تنسيق الأيقونة */
@@ -148,20 +149,30 @@
         /* ✅ جديد: أنماط شارة عدد المنتجات في السلة */
         .cart-badge {
             position: absolute;
-            top: -5px; /* تعديل الموضع الرأسي */
-            right: -8px; /* تعديل الموضع الأفقي */
-            background-color: var(--accent-color); /* لون الخلفية */
-            border-radius: 50%; /* لجعلها دائرية */
-            width: 18px; /* عرض الشارة */
-            height: 18px; /* ارتفاع الشارة */
-            font-size: 10px; /* حجم الخط */
+            top: -5px;
+            /* تعديل الموضع الرأسي */
+            right: -8px;
+            /* تعديل الموضع الأفقي */
+            background-color: var(--accent-color);
+            /* لون الخلفية */
+            border-radius: 50%;
+            /* لجعلها دائرية */
+            width: 18px;
+            /* عرض الشارة */
+            height: 18px;
+            /* ارتفاع الشارة */
+            font-size: 10px;
+            /* حجم الخط */
             font-weight: bold;
-            display: flex; /* لتوسيط الرقم */
+            display: flex;
+            /* لتوسيط الرقم */
             align-items: center;
             justify-content: center;
-            border: 2px solid var(--bg-color-light); /* إضافة حدود لفصلها عن الخلفية */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* ظل خفيف */
-            
+            border: 2px solid var(--bg-color-light);
+            /* إضافة حدود لفصلها عن الخلفية */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            /* ظل خفيف */
+
             /* إخفاء الشارة افتراضيًا */
             display: none;
         }
@@ -282,8 +293,8 @@
                 .addEventListener("click", handleSearchButtonClick);
             document
                 .getElementById("index-sales-movement-btn")
-                .addEventListener("click", () => {
-                    mainLoader("./pages/sales-movement.html","index-myProducts-container",0,undefined,"showHomeIcon",true)
+                .addEventListener("click", async () => {
+                    await mainLoader("./pages/sales-movement.html", "index-myProducts-container", 300, undefined, "showHomeIcon", true)
                 });
             document
                 .getElementById("index-cart-btn")

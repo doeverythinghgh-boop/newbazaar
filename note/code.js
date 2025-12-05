@@ -15,7 +15,8 @@ mainLoader(
 /////////////////////////////////////////////////////
   const user = JSON.parse(localStorage.getItem("loggedInUser"));
 
-//if (Number(userSession.is_seller) >= 1)  /////////////////////////////////////////////////////////
+//if (Number(userSession.is_seller) >= 1) 
+//  /////////////////////////////////////////////////////////
 /*console.log(
   "%c✔✔✔✔✔✔✔ تم التحميل ✔✔✔✔✔✔✔\n" +
   `pageUrl: ${pageUrl}\n` +

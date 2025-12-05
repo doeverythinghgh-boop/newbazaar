@@ -164,3 +164,39 @@ export function updateGlobalStepperAppData(newData) {
     globalStepperAppData = newData;
     console.log("Global stepper_app_data updated:", globalStepperAppData);
 }
+
+/**
+ * @description تهيئة البيانات من window.parent.globalStepperAppData إذا كانت متوفرة
+ * يتم تحديث idUser و ordersData بالقيم الحقيقية
+ */
+(function initializeFromParent() {
+    try {
+        // التحقق من وجود بيانات من النافذة الأم
+        if (window.parent && window.parent.globalStepperAppData) {
+            const parentData = window.parent.globalStepperAppData;
+
+            console.log('تم العثور على بيانات من النافذة الأم:', parentData);
+
+            // تحديث idUser
+            if (parentData.idUser) {
+                appDataControl.currentUser.idUser = parentData.idUser;
+                console.log('تم تحديث idUser إلى:', parentData.idUser);
+            }
+
+            // تحديث ordersData
+            if (parentData.ordersData && Array.isArray(parentData.ordersData)) {
+                ordersData.length = 0; // مسح البيانات الافتراضية
+                ordersData.push(...parentData.ordersData); // إضافة البيانات الحقيقية
+                console.log('تم تحديث ordersData:', ordersData);
+            }
+
+            console.log('تمت التهيئة بنجاح من البيانات الحقيقية');
+        } else {
+            console.log('لا توجد بيانات من النافذة الأم، استخدام القيم الافتراضية');
+        }
+    } catch (error) {
+        console.error('خطأ في تهيئة البيانات من النافذة الأم:', error);
+        console.log('سيتم استخدام القيم الافتراضية');
+    }
+})();
+

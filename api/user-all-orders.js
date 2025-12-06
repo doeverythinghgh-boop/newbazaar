@@ -37,7 +37,7 @@ export default async function handler(request) {
     // التحقق من وجود المعاملات المطلوبة
     if (!user_key) {
       console.error('[API: user-all-orders] خطأ: user_key مطلوب');
-      return new Response(JSON.stringify({ 
+      return new Response(JSON.stringify({
         error: 'user_key مطلوب',
         message: 'يجب توفير معرف المستخدم'
       }), {
@@ -48,7 +48,7 @@ export default async function handler(request) {
 
     if (!role) {
       console.error('[API: user-all-orders] خطأ: role مطلوب');
-      return new Response(JSON.stringify({ 
+      return new Response(JSON.stringify({
         error: 'role مطلوب',
         message: 'يجب تحديد دور المستخدم (purchaser, seller, delivery, admin)',
         valid_roles: ['purchaser', 'seller', 'delivery', 'admin']
@@ -62,7 +62,7 @@ export default async function handler(request) {
     const validRoles = ['purchaser', 'seller', 'delivery', 'admin'];
     if (!validRoles.includes(role)) {
       console.error(`[API: user-all-orders] خطأ: role غير صالح: ${role}`);
-      return new Response(JSON.stringify({ 
+      return new Response(JSON.stringify({
         error: 'role غير صالح',
         message: `الدور ${role} غير مسموح به`,
         valid_roles: validRoles
@@ -87,8 +87,8 @@ export default async function handler(request) {
 
     // بناء استعلام مفاتيح الطلبات بناءً على الدور
     console.log(`[API: user-all-orders] بناء استعلام لجمع مفاتيح الطلبات للدور: ${role}`);
-    
-    switch(role) {
+
+    switch (role) {
       case 'purchaser':
         orderKeysQuery = `SELECT order_key FROM orders WHERE user_key = ?`;
         queryArgs = [user_key];
@@ -178,7 +178,9 @@ export default async function handler(request) {
           oi.order_key,
           oi.product_key,
           oi.quantity,
+          oi.quantity,
           oi.seller_key,
+          oi.note,
           mp.productName as product_name
         FROM order_items oi
         JOIN marketplace_products mp ON oi.product_key = mp.product_key
@@ -204,9 +206,9 @@ export default async function handler(request) {
 
     if (sellerKeys.length > 0) {
       console.log(`[API: user-all-orders] جاري جلب خدمات التوصيل لـ ${sellerKeys.length} بائع`);
-      
+
       const sellerPlaceholders = sellerKeys.map(() => '?').join(',');
-      
+
       const { rows: deliveries } = await db.execute({
         sql: `
           SELECT 
@@ -242,18 +244,19 @@ export default async function handler(request) {
 
     // بناء هيكل البيانات النهائي
     console.log('[API: user-all-orders] جاري بناء هيكل البيانات النهائي...');
-    
+
     const ordersData = orders.map(order => {
       const items = itemsByOrder[order.order_key] || [];
-      
+
       const formattedItems = items.map(item => {
         const deliveries = activeDeliveries[item.seller_key] || [];
-        
+
         return {
           product_key: item.product_key,
           product_name: item.product_name,
           quantity: item.quantity,
           seller_key: item.seller_key,
+          note: item.note,
           supplier_delivery: deliveries // مصفوفة حتى لو كانت فارغة
         };
       });
@@ -281,11 +284,11 @@ export default async function handler(request) {
   } catch (error) {
     // معالجة الأخطاء
     console.error('[API: user-all-orders] خطأ فادح:', error);
-    
+
     // تحديد نوع الخطأ
     let errorMessage = 'حدث خطأ في الخادم أثناء معالجة الطلب';
     let statusCode = 500;
-    
+
     if (error.message && error.message.includes('no such table')) {
       errorMessage = 'خطأ في هيكل قاعدة البيانات: أحد الجداول مفقود';
       statusCode = 500;
@@ -300,7 +303,7 @@ export default async function handler(request) {
       statusCode = 504;
     }
 
-    return new Response(JSON.stringify({ 
+    return new Response(JSON.stringify({
       error: errorMessage,
       details: process.env.NODE_ENV === 'development' ? error.message : undefined,
       timestamp: new Date().toISOString()

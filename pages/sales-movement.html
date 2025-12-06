@@ -714,6 +714,9 @@
 
                     const salesMovement_data = await salesMovement_response.json();
                     console.log('تم جلب البيانات بنجاح:', salesMovement_data);
+                    if (salesMovement_data && salesMovement_data.length > 0) {
+                        console.log('First order items sample:', salesMovement_data[0].order_items);
+                    }
 
                     // يمكنك هنا معالجة البيانات وعرضها
                     salesMovement_displayOrders(salesMovement_data);
@@ -915,6 +918,7 @@
                             product_name: salesMovement_item.product_name,
                             quantity: salesMovement_item.quantity,
                             seller_key: salesMovement_item.seller_key,
+                            note: salesMovement_item.note || '',
                             supplier_delivery: null
                         };
 
@@ -951,6 +955,7 @@
                 };
 
                 console.log('تم تعيين globalStepperAppData من صفحة  pages_sales-movement.html   :', window.globalStepperAppData);
+                console.log('Sample item from globalStepperAppData:', window.globalStepperAppData.ordersData[0].order_items[0]);
 
                 // إنشاء iframe لعرض صفحة stepper
                 salesMovement_modalBody.innerHTML = `

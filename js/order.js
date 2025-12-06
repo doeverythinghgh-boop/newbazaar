@@ -83,7 +83,10 @@ async function sendOrder2Excution() {
     items: cart.map((item) => ({
       product_key: item.product_key,
       quantity: item.quantity,
+      product_key: item.product_key,
+      quantity: item.quantity,
       seller_key: item.seller_key, // ✅ إضافة: إرسال مفتاح البائع مع كل عنصر
+      note: item.note || "", // ✅ إضافة: إرسال الملاحظة مع كل عنصر
     })),
   };
   console.log("[Checkout] جاري إرسال بيانات الطلب:", orderData);
@@ -125,12 +128,12 @@ async function sendOrder2Excution() {
     const allTokens = [
       ...new Set([...(sellerTokens || [])]),
     ];
-try{
-    // 4. إرسال الإشعارات باستخدام الدالة العامة
-    const title = "طلب شراء جديد";
-    const body = `تم استلام طلب شراء جديد رقم #${createdOrderKey}. يرجى المراجعة.`;
-    await sendNotificationsToTokens(allTokens, title, body);
-}catch(error){console.log(error);}
+    try {
+      // 4. إرسال الإشعارات باستخدام الدالة العامة
+      const title = "طلب شراء جديد";
+      const body = `تم استلام طلب شراء جديد رقم #${createdOrderKey}. يرجى المراجعة.`;
+      await sendNotificationsToTokens(allTokens, title, body);
+    } catch (error) { console.log(error); }
     console.log(
       "[Checkout] نجاح! تم تأكيد الطلب من قبل المستخدم وإنشاءه بنجاح."
     );
@@ -152,22 +155,22 @@ try{
  * @returns {Array<string>} - قائمة بمفاتيح البائعين الفريدة المستخرجة من عناصر الطلب.
  */
 function getUniqueSellerKeys(orderData) {
-    if (!orderData || !Array.isArray(orderData.items)) {
-        console.error("Invalid order data structure provided.");
-        return [];
+  if (!orderData || !Array.isArray(orderData.items)) {
+    console.error("Invalid order data structure provided.");
+    return [];
+  }
+
+  // استخدام كائن Set لضمان أن كل مفتاح بائع يظهر مرة واحدة فقط (فريد)
+  const sellerKeys = new Set();
+
+  // المرور على كل عنصر في الطلب
+  orderData.items.forEach(item => {
+    // يتم افتراض أن كل عنصر (item) يحتوي على حقل باسم 'seller_key'
+    if (item.seller_key) {
+      sellerKeys.add(item.seller_key);
     }
-    
-    // استخدام كائن Set لضمان أن كل مفتاح بائع يظهر مرة واحدة فقط (فريد)
-    const sellerKeys = new Set(); 
-    
-    // المرور على كل عنصر في الطلب
-    orderData.items.forEach(item => {
-        // يتم افتراض أن كل عنصر (item) يحتوي على حقل باسم 'seller_key'
-        if (item.seller_key) {
-            sellerKeys.add(item.seller_key);
-        }
-    });
-    
-    // تحويل الـ Set إلى مصفوفة وإعادتها
-    return Array.from(sellerKeys);
+  });
+
+  // تحويل الـ Set إلى مصفوفة وإعادتها
+  return Array.from(sellerKeys);
 }

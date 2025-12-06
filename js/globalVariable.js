@@ -7,6 +7,7 @@ window.productTypeToAdd = null; //نوع المنتج المختار المخت�
 window.myProducts = null; //نوع المنتج المختار عند اضافة منتج
 
 function productViewLayout(View) {
+  console.log('------------------------نوع الخدمه-------------------', View);
   //في الارسال
   //productSession = [productDataForModal,{showAddToCart:true}];
   //في الاستقبال
@@ -35,20 +36,23 @@ function productViewLayout(View) {
   }
 }
 
-function productAddLayout() {
+function productAddLayout(editMode = false) {
   if (mainCategorySelectToAdd == 6) {
     productTypeToAdd = 2; //نوع المنتج خدمي
   } else {
     productTypeToAdd = 0; //نوع المنتج افتراضي
   }
-  mainLoader(
-    "./pages/productAdd.html",
-    "index-product-container",
-    0,
-    undefined,
-    "showHomeIcon",
-    true
-  );
+  if (editMode==false) {
+    mainLoader(
+      "./pages/productAdd.html",
+      "index-product-container",
+      0,
+      undefined,
+      "showHomeIcon",
+      true
+    );
+  }
+
 }
 
 function productEditLayout() {

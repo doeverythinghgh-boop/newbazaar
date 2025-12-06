@@ -93,6 +93,7 @@ export function showSellerConfirmationProductsAlert(data, ordersData) {
                     return {
                         product_key: item.product_key,
                         delivery_info: parsedDeliveryData,
+                        note: item.note || '' // Extract note
                     };
                 })
         );
@@ -161,6 +162,7 @@ export function showSellerConfirmationProductsAlert(data, ordersData) {
                 return `
                     <tr id="seller-confirmation-item-${product.product_key}">
                         <td style="padding: 8px; border: 1px solid #ddd;">${checkboxCell}</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${product.note ? product.note : '-'}</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${agentNames || '-'}</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${agentPhones || '-'}</td>
                     </tr>
@@ -173,6 +175,7 @@ export function showSellerConfirmationProductsAlert(data, ordersData) {
                         <thead>
                             <tr style="background-color: #f2f2f2;">
                                 <th style="padding: 8px; border: 1px solid #ddd;">المنتج</th>
+                                <th style="padding: 8px; border: 1px solid #ddd;">ملاحظات</th>
                                 <th style="padding: 8px; border: 1px solid #ddd;">مندوب التوصيل</th>
                                 <th style="padding: 8px; border: 1px solid #ddd;">رقم الهاتف</th>
                             </tr>

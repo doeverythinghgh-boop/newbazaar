@@ -963,7 +963,9 @@
                     console.log('[ProductForm] New images:', uploadedImageUrls);
                     console.log('[ProductForm] Images to delete:', imagesToDelete);
                     console.log('[ProductForm] All image names:', allImageNames);
-
+                    mainCategorySelectToAdd=productSession.MainCategory;
+                    subCategorySelectToAdd=productSession.SubCategory;
+                    productAddLayout(true);
                     // 4. تجميع بيانات المنتج
                     const productData = {
                         productName: normalizeArabicText(document.getElementById('product-name').value.trim()),
@@ -979,7 +981,7 @@
                         MainCategory: productSession.MainCategory || 2,
                         SubCategory: productSession.SubCategory || 3,
                         ImageIndex: allImageNames.length,
-                        serviceType: 0
+                        serviceType: productTypeToAdd
                     };
 
                     console.log('[ProductForm] Sending UPDATE request to backend with data:', productData);

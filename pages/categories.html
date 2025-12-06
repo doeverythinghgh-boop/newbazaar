@@ -865,7 +865,8 @@
         SubCategory: product.SubCategory,
         type: product.serviceType,
       };
-      productSession = [productDataForModal,{showAddToCart:true}];
+      //لا يتم اضافة showAddToCart يجب ان تحدد من الداله productViewLayout
+      productSession = [productDataForModal];
       productViewLayout(productDataForModal.type);
     } catch (error) {
       console.error(

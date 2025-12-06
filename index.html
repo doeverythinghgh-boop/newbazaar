@@ -267,10 +267,12 @@
   <div id="index-myProducts-container"></div>
   <!---region main javaScript files---->
   <script src="js/auth.js" id="index-script-auth-js"></script>
+  <!-- ملف الإعدادات العامة للمشروع (مثل baseURL) -->
   <script src="js/config.js"></script>
   <script src="js/connectUsers.js"></script>
   <script src="js/connectProduct.js"></script>
   <script src="shared/categoryModal.js"></script>
+  <!-- ملف لإدارة حالة الشبكة (متصل/غير متصل) -->
   <script src="js/network.js" id="index-script-network-js"></script>
 
   <script src="js/tools.js" id="index-script-tools-js"></script>
@@ -278,27 +280,36 @@
 
   <!---end region main javaScript files---->
   <script>
+    // دالة لإخفاء أيقونة "الرئيسية" عن طريق إضافة فئة CSS.
     function hiddenHomeIcon() {
       const homeButton = document.getElementById("index-home-btn");
       if (homeButton) {
         homeButton.classList.add("index-hidden");
       }
     }
+    // دالة لإظهار أيقونة "الرئيسية" عن طريق إزالة فئة CSS.
     function showHomeIcon() {
       const homeButton = document.getElementById("index-home-btn");
       if (homeButton) {
         homeButton.classList.remove("index-hidden");
       }
     }
+
+    // [نقطة البداية] يتم تنفيذ هذا الكود بعد تحميل محتوى DOM بالكامل.
     document.addEventListener("DOMContentLoaded", () => {
+      // [خطوة 1] قراءة بيانات المستخدم المسجل من التخزين المحلي. إذا لم توجد، تكون القيمة null.
       userSession = JSON.parse(localStorage.getItem("loggedInUser")) || null;
+      // [خطوة 2] تحديث اسم المستخدم في شريط التنقل العلوي.
       setUserNameInIndexBar();
-      updateCartBadge(); // ✅ جديد: تحديث شارة السلة فور تحميل الصفحة
+      // [خطوة 3] تحديث شارة عدد المنتجات في السلة.
+      updateCartBadge();
+      // [خطوة 4] تحميل الصفحة الرئيسية بشكل افتراضي عند فتح التطبيق.
       mainLoader(
         "./pages/home.html",
         "index-home-container",
         0,
         undefined,
+        // استدعاء دالة لإخفاء زر "الرئيسية" لأنه بالفعل في الصفحة الرئيسية.
         "hiddenHomeIcon"
       );
 
@@ -307,16 +318,21 @@
         .getElementById("index-login-btn")
         .addEventListener("click", handleLoginButtonClick);
 
+      // [خطوة 5.2] ربط زر "الرئيسية" بالدالة الخاصة به.
       document
         .getElementById("index-home-btn")
         .addEventListener("click", handleHomeButtonClick);
-      // ربط الأزرار الجديدة بالدوال الخاصة بها
+
+      // [خطوة 5.3] ربط زر "البحث" بالدالة الخاصة به.
       document
         .getElementById("index-search-btn")
         .addEventListener("click", handleSearchButtonClick);
+
+      // [خطوة 5.4] ربط زر "حركة المشتريات".
       document
         .getElementById("index-sales-movement-btn")
         .addEventListener("click", async () => {
+          // التحقق أولاً من وجود مستخدم مسجل.
           if (userSession) {
             const container = document.getElementById(
               "index-myProducts-container"
@@ -341,11 +357,7 @@
               );
             }
           } else {
-            // هذا الشرط سيتحقق إذا كان المستخدم ضيفًا أو لم يسجل دخوله على الإطلاق.
-            console.warn(
-              "[Modal] Add to cart button clicked by guest or non-logged-in user. Prompting for login/registration."
-            );
-            // إذا لم يكن المستخدم مسجلاً، أظهر رسالة تنبيه تدعوه لتسجيل الدخول.
+            // إذا لم يكن المستخدم مسجلاً، يتم عرض نافذة منبثقة تطلب منه تسجيل الدخول.
             Swal.fire({
               icon: "info",
               title: "يجب تسجيل الدخول",
@@ -355,6 +367,7 @@
               cancelButtonText: "إلغاء",
             }).then((result) => {
               if (result.isConfirmed) {
+                // إذا وافق المستخدم، يتم توجيهه إلى صفحة تسجيل الدخول.
                 console.log("[Modal] User chose to log in. Redirecting...");
                 mainLoader(
                   "./pages/login.html",
@@ -368,6 +381,8 @@
             });
           }
         });
+
+      // [خطوة 5.5] ربط زر "السلة".
       document
         .getElementById("index-cart-btn")
         .addEventListener("click", () => {
@@ -394,12 +409,15 @@
             );
           }
         });
+
+      // [خطوة 5.6] ربط زر "الهدايا".
       document
         .getElementById("index-gifts-btn")
         .addEventListener("click", () =>
           handleProtectedLinkClick("./pages/gifts.html")
         );
 
+      // دالة معالجة النقر على زر "الرئيسية".
       function handleHomeButtonClick() {
         const container = document.getElementById("index-home-container");
         if (container.innerHTML == "") {
@@ -423,10 +441,11 @@
         }
       }
 
+      // دالة معالجة النقر على زر "تسجيل الدخول / لوحة التحكم".
       function handleLoginButtonClick() {
         try {
           if (userSession) {
-            console.log("المستخدم مسجل الدخول، التوجيه إلى لوحة التحكم.");
+            // [أ] إذا كان المستخدم مسجلاً، يتم توجيهه إلى لوحة التحكم.
             // إذا كان المستخدم مسجلاً، اذهب إلى لوحة التحكم
             mainLoader(
               "pages/user-dashboard.html",
@@ -437,11 +456,7 @@
               true
             );
           } else {
-            // إذا لم يكن مسجلاً، اذهب إلى صفحة تسجيل الدخول
-            console.log(
-              "المستخدم غير مسجل الدخول، التوجيه إلى صفحة تسجيل الدخول."
-            );
-            console.log("[Login Page] المستخدم غير مؤهل للإشعارات، تم تخطي استدعاء setupFCM().");
+            // [ب] إذا لم يكن المستخدم مسجلاً، يتم توجيهه إلى صفحة تسجيل الدخول.
             mainLoader(
               "pages/login.html",
               "index-user-container",
@@ -456,6 +471,7 @@
         }
       }
 
+      // دالة معالجة النقر على زر "البحث".
       function handleSearchButtonClick() {
         const container = document.getElementById("index-search-container");
         if (container.innerHTML == "") {
@@ -479,13 +495,13 @@
         }
       }
 
-      // ✅ جديد: إعداد زر إضافة منتج
+      // [خطوة 5.7] ربط زر "إضافة منتج".
       const addProductBtn = document.getElementById("dash-add-product-btn");
       if (addProductBtn) {
         addProductBtn.addEventListener("click", showAddProductModal);
       }
 
-      // ✅ جديد: إعداد زر عرض منتجاتي
+      // [خطوة 5.8] ربط زر "منتجاتي".
       const viewMyProductsBtn = document.getElementById(
         "dash-view-my-products-btn"
       );
@@ -504,10 +520,11 @@
       }
       //#endregion
 
-      // ✅ جديد: منطق تحديد الزر النشط
+      // [خطوة 6] منطق تحديد الزر النشط في شريط التنقل.
       const headerButtons = document.querySelectorAll(".index-header-login-btn");
 
       function setActiveButton(clickedBtn) {
+        // [أ] إزالة فئة 'active' من جميع الأزرار.
         headerButtons.forEach((btn) => btn.classList.remove("active"));
         if (clickedBtn) {
           clickedBtn.classList.add("active");
@@ -515,24 +532,27 @@
       }
 
       headerButtons.forEach((btn) => {
+        // [ب] إضافة مستمع لكل زر لتطبيق الحالة النشطة عند النقر عليه.
         btn.addEventListener("click", function () {
           setActiveButton(this);
         });
       });
 
-      // تعيين الزر الرئيسي كنشط افتراضيًا
+      // [خطوة 7] تعيين زر "الرئيسية" كنشط افتراضيًا عند تحميل الصفحة.
       const homeBtn = document.getElementById("index-home-btn");
       if (homeBtn) {
         setActiveButton(homeBtn);
       }
 
-      // ✅ جديد: التحقق من وضع انتحال الشخصية (Impersonation Mode) وإظهار العلامة المائية
+      // [خطوة 8] التحقق من وضع انتحال الشخصية (عندما يتصفح مسؤول كأنه مستخدم عادي) وإظهار علامة مائية إذا كان نشطًا.
       checkImpersonationMode();
     });
 
+    // دالة للتحقق من وجود جلسة مسؤول أصلية في التخزين المحلي.
     function checkImpersonationMode() {
       const originalAdminSession = localStorage.getItem("originalAdminSession");
       if (originalAdminSession) {
+        // إذا وجدت، يتم إنشاء عنصر HTML للعلامة المائية وإضافته إلى الصفحة.
         const watermark = document.createElement("div");
         watermark.className = "admin-watermark";
         watermark.innerHTML = `

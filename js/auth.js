@@ -16,12 +16,16 @@
  * @returns {Promise<void>} - وعد (Promise) لا يُرجع قيمة عند الاكتمال.
  */
 async function waitForFcmKey(callback) {
+  // [خطوة 1] بدء عملية فحص دورية باستخدام setInterval للبحث عن المفتاح.
   const checkInterval = setInterval(() => {
+    // [خطوة 2] في كل دورة، محاولة قراءة "android_fcm_key" من التخزين المحلي.
     const key = localStorage.getItem("android_fcm_key");
 
-    // تأكد أن القيمة موجودة وليست فارغة وليست null
+    // [خطوة 3] التحقق من أن المفتاح موجود وقيمته ليست فارغة.
     if (key && key.trim() !== "") {
+      // [خطوة 4] إذا تم العثور على المفتاح، يتم إيقاف الفحص الدوري.
       clearInterval(checkInterval);
+      // [خطوة 5] استدعاء دالة الـ callback وتمرير المفتاح الذي تم العثور عليه.
       callback(key);
     }
   }, 300); // يتم الفحص كل 300 مللي ثانية
@@ -34,27 +38,30 @@ async function waitForFcmKey(callback) {
 
  */
 async function handleRevokedPermissions() {
-  // هذا المنطق خاص بالويب فقط، لا ينطبق داخل تطبيق الأندرويد.
+  // [خطوة 1] التحقق مما إذا كان الكود يعمل داخل WebView أندرويد أو إذا كانت الإشعارات غير مدعومة بالمتصفح. في هذه الحالات، لا يتم عمل أي شيء.
   if (window.Android || !("Notification" in window)) {
     return;
   }
 
+  // [خطوة 2] الحصول على حالة إذن الإشعارات الحالية من المتصفح.
   const currentPermission = Notification.permission;
+  // [خطوة 3] الحصول على توكن FCM المخزن محليًا (إن وجد).
   const fcmToken = localStorage.getItem("fcm_token");
 
-  // إذا كان الإذن 'denied' أو 'default' وما زال لدينا توكن،
-  // فهذا يعني أن المستخدم قد ألغى الإذن بعد منحه سابقًا.
+  // [خطوة 4] التحقق مما إذا كان الإذن قد تم رفضه أو لم يتم تحديده، وفي نفس الوقت لا يزال هناك توكن مخزن.
+  // هذا يعني أن المستخدم ألغى الإذن يدويًا من إعدادات المتصفح.
   if (
     (currentPermission === "denied" || currentPermission === "default") &&
     fcmToken
   ) {
     console.warn(
-      "[FCM] تم اكتشاف أن إذن الإشعارات لم يعد ممنوحًا. سيتم حذف التوكن..."
+      "[FCM] تم اكتشاف إلغاء إذن الإشعارات. سيتم حذف التوكن..."
     );
 
-
+    // [خطوة 5] التحقق من وجود جلسة مستخدم نشطة لإرسال طلب الحذف للخادم.
     if (userSession?.user_key) {
       try {
+        // [خطوة 6] إرسال طلب HTTP "DELETE" إلى الخادم لحذف التوكن من قاعدة البيانات.
         await fetch(`${baseURL}/api/tokens`, {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -73,12 +80,12 @@ async function handleRevokedPermissions() {
         );
         // ملاحظة: من الجيد هنا تسجيل هذا الخطأ في خدمة مراقبة خارجية.
       } finally {
-        // سواء نجح الحذف من الخادم أم لا، يجب إزالة التوكن المحلي.
+        // [خطوة 7] سواء نجح الحذف من الخادم أم لا، يجب دائمًا إزالة التوكن من التخزين المحلي لضمان نظافة الحالة.
         localStorage.removeItem("fcm_token");
         console.log("[FCM] تم حذف التوكن من التخزين المحلي.");
       }
     } else {
-      // إذا لم نجد مستخدمًا مسجلاً، فقط احذف التوكن المحلي.
+      // [خطوة 8] إذا لم يكن هناك مستخدم مسجل، يتم فقط حذف التوكن المحلي.
       localStorage.removeItem("fcm_token");
     }
   }
@@ -98,16 +105,16 @@ async function handleRevokedPermissions() {
  * @see setupFCM
  */
 async function initializeNotifications() {
-
+  // [خطوة 1] التأكد من وجود جلسة مستخدم مسجلة. إذا لم يكن هناك مستخدم، تتوقف الدالة.
   if (!userSession) return;
 
-
-
+  // [خطوة 2] استدعاء دالة للتحقق مما إذا كان المستخدم قد ألغى أذونات الإشعارات يدويًا.
   handleRevokedPermissions();
 
-  // الوصول إلى الخاصية من الكائن العام
+  // [خطوة 3] التحقق مما إذا كان المستخدم مؤهلاً لاستقبال الإشعارات (بائع أو له دور أعلى).
   if (Number(userSession.is_seller) >= 1) {
     console.log("[Auth] مستخدم مؤهل، جاري إعداد FCM...");
+    // [خطوة 4] (معطل حاليًا) استدعاء دالة إعداد FCM لبدء الاستماع للإشعارات.
     //await setupFCM();
   } else {
     console.log("[Auth] المستخدم (عميل عادي) غير مؤهل لاستقبال الإشعارات. تم تخطي إعداد FCM.");
@@ -122,7 +129,7 @@ async function initializeNotifications() {
  * @see clearAndNavigateToLogin
  */
 async function logout() {
-
+  // [خطوة 1] إظهار نافذة تأكيد منبثقة للمستخدم قبل تسجيل الخروج باستخدام SweetAlert.
   Swal.fire({
     title: "هل أنت متأكد؟",
     text: "سيتم تسجيل خروجك.",
@@ -132,16 +139,15 @@ async function logout() {
     cancelButtonColor: "#d33",
     confirmButtonText: "نعم، تسجيل الخروج",
     cancelButtonText: "إلغاء",
-    showLoaderOnConfirm: true,
-    // ✅ إصلاح: استخدام preConfirm لعرض أيقونة التحميل أثناء تنفيذ عملية تسجيل الخروج.
-    // هذا هو الاستخدام الصحيح لـ showLoaderOnConfirm.
+    showLoaderOnConfirm: true, // إظهار أيقونة تحميل عند الضغط على "نعم".
+    // [خطوة 2] استخدام `preConfirm` لتنفيذ عملية تسجيل الخروج غير المتزامنة.
+    // سيضمن هذا أن النافذة المنبثقة ستظل مفتوحة وتعرض مؤشر التحميل حتى تكتمل العملية.
     preConfirm: async () => {
       await clearAndNavigateToLogin();
     },
-    // منع إغلاق النافذة أثناء التحميل
+    // [خطوة 3] منع إغلاق النافذة عند النقر خارجها أثناء عملية التحميل.
     allowOutsideClick: () => !Swal.isLoading(),
   });
-  // لم نعد بحاجة إلى .then() لأن clearAndNavigateToLogin يعالج إعادة التوجيه.
 
 }
 
@@ -152,6 +158,7 @@ async function logout() {
  * @returns {void}
  */
 function clearMainContainers() {
+  // [خطوة 1] تعريف مصفوفة تحتوي على معرفات جميع الحاويات التي يجب مسحها.
   const containerIds = [
     "index-home-container",
     "index-search-container",
@@ -163,9 +170,11 @@ function clearMainContainers() {
 
   console.log("[UI] جاري مسح الحاويات الرئيسية...");
 
+  // [خطوة 2] المرور على كل معرف في المصفوفة.
   containerIds.forEach(id => {
     const container = document.getElementById(id);
     if (container) {
+      // [خطوة 3] إذا تم العثور على الحاوية، يتم تفريغ محتواها بالكامل.
       container.innerHTML = "";
     }
   });
@@ -213,7 +222,7 @@ async function clearAndNavigateToLogin() {
     }
   }*/
 
-  // 4. إعادة التوجيه إلى صفحة تسجيل الدخول
+  // [خطوة 1] استدعاء `mainLoader` لتحميل محتوى صفحة تسجيل الدخول في حاوية المستخدم الرئيسية.
   mainLoader(
     "pages/login.html",
     "index-user-container",
@@ -232,12 +241,15 @@ async function clearAndNavigateToLogin() {
  * @see addNotificationLog
  */
 function saveNotificationFromAndroid(notificationJson) {
+  // [خطوة 1] تسجيل البيانات القادمة من الأندرويد لأغراض التصحيح.
   console.log("[Auth] تم استدعاء saveNotificationFromAndroid من الأندرويد:", notificationJson);
   try {
+    // [خطوة 2] محاولة تحليل سلسلة JSON إلى كائن JavaScript.
     const notificationData = JSON.parse(notificationJson);
     const { title, body } = notificationData;
 
     if (typeof addNotificationLog === 'function') {
+      // [خطوة 3] إذا كانت دالة `addNotificationLog` متاحة، يتم استدعاؤها لحفظ الإشعار في IndexedDB.
       addNotificationLog({
         messageId: notificationData.messageId || `android_${Date.now()}`, // ✅ جديد: استخدام المعرف الفريد أو إنشاء واحد
         type: 'received',
@@ -250,9 +262,11 @@ function saveNotificationFromAndroid(notificationJson) {
       });
       console.log("[Auth] تم حفظ الإشعار من الأندرويد بنجاح في IndexedDB.");
     } else {
+      // [خطوة 4] إذا لم تكن الدالة موجودة، يتم تسجيل خطأ.
       console.error("[Auth] الدالة addNotificationLog غير موجودة. تأكد من تحميل ملف notification-db-manager.js.");
     }
   } catch (error) {
+    // [خطوة 5] في حالة حدوث أي خطأ أثناء التحليل أو الحفظ، يتم تسجيله.
     console.error("[Auth] خطأ في معالجة الإشعار القادم من الأندرويد:", error);
   }
 }

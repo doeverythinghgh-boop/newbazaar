@@ -12,41 +12,47 @@
  * @returns {{open: function(): void, close: function(): void, modalElement: HTMLElement}|null} - كائن يحتوي على دوال الفتح والإغلاق وعنصر النافذة، أو `null` إذا لم يتم العثور على عنصر النافذة.
  */
 function setupModalLogic(modalId, closeBtnId, options = {}) {
+    // [خطوة 1] البحث عن عنصر النافذة المنبثقة في DOM باستخدام المعرف المقدم.
     const modalElement = document.getElementById(modalId);
     if (!modalElement) {
+        // إذا لم يتم العثور على العنصر، يتم تسجيل خطأ وإرجاع null.
         console.error(
             `[Modal Logic] لم يتم العثور على عنصر النافذة بالمعرف: ${modalId}`
         );
         return null;
     }
 
-    // دالة لإغلاق النافذة المنبثقة
+    // [خطوة 2] تعريف دالة `close` لإغلاق النافذة.
     const close = () => {
+        // [أ] إخفاء النافذة.
         modalElement.style.display = "none";
+        // [ب] إزالة الفئة من body لمنع تجميد التمرير في الصفحة.
         document.body.classList.remove("modal-open");
-        // استدعاء دالة رد النداء (callback) عند الإغلاق إذا تم توفيرها
+        // [ج] استدعاء دالة رد الاتصال `onClose` إذا كانت موجودة.
         if (typeof options.onClose === "function") {
             options.onClose();
         }
     };
 
-    // دالة لفتح النافذة المنبثقة
+    // [خطوة 3] تعريف دالة `open` لفتح النافذة.
     const open = () => {
+        // [أ] إظهار النافذة.
         modalElement.style.display = "block";
+        // [ب] إضافة فئة إلى body لتجميد التمرير في الخلفية.
         document.body.classList.add("modal-open");
 
-        // ✅ إصلاح: ربط حدث الإغلاق بالزر والخلفية بشكل صحيح
+        // [ج] البحث عن زر الإغلاق وربط دالة `close` بحدث النقر عليه.
         const closeBtn = document.getElementById(closeBtnId);
         if (closeBtn) closeBtn.onclick = close;
 
-        // ربط حدث النقر على النافذة نفسها (الخلفية)
-        // يتم الإغلاق فقط إذا كان النقر على الخلفية الرمادية مباشرة وليس على المحتوى الداخلي
+        // [د] ربط حدث النقر على النافذة نفسها (الخلفية).
+        // يتم الإغلاق فقط إذا كان الهدف من النقر هو عنصر الخلفية نفسه (modalElement) وليس أحد أبنائه.
         modalElement.onclick = (event) => {
             if (event.target === modalElement) close();
         };
     };
 
-    // إرجاع كائن يحتوي على دوال التحكم في النافذة
+    // [خطوة 4] إرجاع كائن يحتوي على دوال التحكم (open, close) وعنصر النافذة نفسه.
     return { open, close, modalElement };
 }
 
@@ -58,8 +64,9 @@ function setupModalLogic(modalId, closeBtnId, options = {}) {
  */
 function handleAdminPanelClick() {
     try {
+        // [خطوة 1] تسجيل رسالة في الكونسول لتتبع الحدث.
         console.log("[Dashboard] تم النقر على زر لوحة تحكم المسؤول. جاري تحميل الصفحة...");
-        // استخدام mainLoader لتحميل صفحة المسؤول في الحاوية الرئيسية
+        // [خطوة 2] استخدام `mainLoader` لتحميل صفحة لوحة تحكم المسؤول في الحاوية المخصصة.
         mainLoader(
             "pages/ADMIN/adminPanel.html",
             "index-user-container",
@@ -93,22 +100,21 @@ function handleAdminPanelClick() {
  * @requires module:js/messaging-system - لاستخدام `requestNavigation`.
  */
 function updateViewForLoggedInUser() {
-    // التحقق مما إذا كان هناك مستخدم مسجل. إذا لم يكن كذلك، يتم توجيهه إلى صفحة تسجيل الدخول.
+    // [خطوة 1] التحقق من وجود جلسة مستخدم. إذا لم يكن هناك مستخدم مسجل، تتوقف الدالة.
     if (!userSession) {
-        // إذا لم يتم العثور على المستخدم، ربما تم الوصول إلى الصفحة مباشرة
-
+        // لا يتم اتخاذ أي إجراء، حيث من المفترض أن يتم التعامل مع هذا السيناريو في مكان آخر (مثل إعادة التوجيه).
         return;
     }
 
-    // عرض رسالة ترحيب مخصصة باسم المستخدم
+    // [خطوة 2] تحديث رسالة الترحيب لعرض اسم المستخدم المسجل دخوله.
     document.getElementById(
         "dash-welcome-message"
     ).textContent = `أهلاً بك، ${userSession.username}`;
 
-    // --- منطق العرض للمستخدم الضيف ---
+    // [خطوة 3] التحقق مما إذا كان المستخدم هو "ضيف".
     if (userSession.is_guest) {
+        // [خطوة 3.1] إذا كان ضيفًا، يتم إخفاء الأزرار التي لا يملك صلاحية الوصول إليها.
         [
-            // ✅ تعديل: تحديث المعرفات لتبدأ بـ "dash-"
             "dash-edit-profile-btn",
             "dash-admin-panel-btn",
 
@@ -117,7 +123,7 @@ function updateViewForLoggedInUser() {
             const btn = document.getElementById(id);
             if (btn) btn.style.display = "none"; // إخفاء الزر إذا كان موجودًا
         });
-        // ربط زر تسجيل الخروج بالدالة الخاصة به
+        // [خطوة 3.2] ربط حدث النقر على زر "تسجيل الخروج" بدالة `logout`.
         document
             .getElementById("dash-logout-btn-alt")
             .addEventListener("click", () => {
@@ -125,58 +131,51 @@ function updateViewForLoggedInUser() {
                 if (typeof logout === "function") logout();
             });
     } else {
-        // --- منطق العرض للمستخدم المسجل (غير الضيف) ---
+        // [خطوة 4] منطق العرض للمستخدم المسجل (غير الضيف).
 
-        // --- أزرار البائعين ---
-        // التحقق مما إذا كان المستخدم بائعًا أو مسؤولاً لعرض أزرار إدارة المنتجات
-        // تحقق إذا كان بائعًا أو مسؤولاً
+        // [خطوة 4.1] التحقق من صلاحيات البائع:
+        // إذا كان المستخدم بائعًا (is_seller === 1) أو مسؤولاً، فإنه يرى أزرار إدارة المنتجات (التي تكون ظاهرة افتراضيًا).
         if (
             userSession.is_seller === 1 ||
             (typeof adminPhoneNumbers !== "undefined" &&
                 adminPhoneNumbers.includes(userSession.phone))
         ) {
-            // لا حاجة لإجراء هنا، الأزرار ظاهرة بشكل افتراضي
-        } else {
-
+            // لا يوجد إجراء مطلوب هنا لأن الأزرار تكون ظاهرة بشكل افتراضي في HTML.
         }
 
-        // --- زر لوحة تحكم المسؤول ---
-        // تحقق إذا كان مسؤولاً
-        // --- زر لوحة تحكم المسؤول ---
-        // تحقق إذا كان مسؤولاً أو إذا كان مسؤولاً أصلياً يقوم بانتحال صفة مستخدم
+        // [خطوة 4.2] التحقق من صلاحيات المسؤول:
+        // يتم إظهار زر لوحة تحكم المسؤول إذا كان رقم هاتف المستخدم مدرجًا في قائمة المسؤولين،
+        // أو إذا كان هناك جلسة مسؤول أصلية مخزنة (وضع انتحال الشخصية).
         if (
             (typeof adminPhoneNumbers !== "undefined" && adminPhoneNumbers.includes(userSession.phone)) ||
-            localStorage.getItem('originalAdminSession') // ✅ جديد: التحقق من وجود جلسة مسؤول أصلية
+            localStorage.getItem('originalAdminSession')
         ) {
-            // لا حاجة لإجراء هنا، زر المسؤول ظاهر
-            // ✅ جديد: ربط حدث النقر بالزر
+            // ربط حدث النقر على زر لوحة التحكم بالدالة الخاصة به.
             const adminBtn = document.getElementById("dash-admin-panel-btn");
             if (adminBtn) adminBtn.addEventListener("click", handleAdminPanelClick);
 
         } else {
-            // إخفاء زر لوحة التحكم إذا لم يكن المستخدم مسؤولاً
+            // إذا لم يكن المستخدم مسؤولاً، يتم إخفاء زر لوحة التحكم.
             const adminBtn = document.getElementById("dash-admin-panel-btn");
             if (adminBtn) adminBtn.style.display = "none";
         }
 
-        // --- زر عرض التقارير ---
-        // تحقق إذا كان مؤهلاً للتقارير
-        // (البائعون، موظفو التوصيل، والمسؤولون يمكنهم رؤية التقارير)
+        // [خطوة 4.3] التحقق من صلاحيات عرض التقارير:
+        // إذا كان المستخدم بائعًا (1)، أو موظف توصيل (2)، أو مسؤولاً، فإنه يرى زر التقارير.
         if (
             userSession.is_seller === 1 ||
             userSession.is_seller === 2 ||
             (typeof adminPhoneNumbers !== "undefined" &&
                 adminPhoneNumbers.includes(userSession.phone))
         ) {
-            // لا حاجة لإجراء هنا، زر التقارير ظاهر
+            // لا يوجد إجراء مطلوب هنا لأن الزر ظاهر بشكل افتراضي.
         } else {
-            // إخفاء زر التقارير لباقي المستخدمين
+            // إذا لم يكن مؤهلاً، يتم إخفاء الزر (الكود معطل حاليًا).
             ///    document.getElementById("dash-view-sales-movement-btn").style.display =
             ///    "none";
         }
-        // --- ربط الأحداث بالأزرار ---
-
-        // 1. إعداد زر تسجيل الخروج
+        // [خطوة 5] ربط الأحداث العامة للأزرار لجميع المستخدمين المسجلين.
+        // [5.1] ربط زر تسجيل الخروج.
         document
             .getElementById("dash-logout-btn-alt")
             .addEventListener("click", () => {
@@ -185,8 +184,7 @@ function updateViewForLoggedInUser() {
                 logout();
             });
 
-        // 2. إعداد زر تعديل الملف الشخصي
-        // عند النقر عليه، يتم طلب الانتقال إلى صفحة تعديل الملف الشخصي مع تمرير بيانات المستخدم
+        // [5.2] ربط زر "تعديل الملف الشخصي" لتحميل صفحة التعديل.
         document
             .getElementById("dash-edit-profile-btn")
 
@@ -207,4 +205,5 @@ function updateViewForLoggedInUser() {
 
 
 
+// [خطوة أخيرة] استدعاء الدالة فور تحميل الملف لتحديث الواجهة بناءً على حالة المستخدم الحالية.
 updateViewForLoggedInUser();

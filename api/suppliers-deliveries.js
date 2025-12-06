@@ -17,9 +17,44 @@ const db = createClient({
  */
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
- 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
+
+
+/**
+ * @description تحقق من وجود مجموعة user_keys في جدول suppliers_deliveries
+ * @param {string[]} userKeys - مصفوفة مفاتيح المستخدمين للتحقق
+ * @returns {Promise<Array<{key: string, isSeller: boolean, isDelivery: boolean}>>} مصفوفة كائنات توضح دور كل مستخدم
+ */
+export async function checkUserInSuppliersDeliveries(userKeys) {
+  if (!Array.isArray(userKeys) || userKeys.length === 0) return [];
+
+  const placeholders = userKeys.map(() => '?').join(',');
+
+  const { rows } = await db.execute({
+    sql: `SELECT seller_key, delivery_key FROM suppliers_deliveries WHERE seller_key IN (${placeholders}) OR delivery_key IN (${placeholders})`,
+    args: [...userKeys, ...userKeys] // نكرر المصفوفة لأننا نستخدم الـ placeholders مرتين
+  });
+
+  // إنشاء خرائط سريعة للتحقق (Sets)
+  const sellers = new Set();
+  const deliveries = new Set();
+
+  rows.forEach(row => {
+    if (row.seller_key) sellers.add(row.seller_key);
+    if (row.delivery_key) deliveries.add(row.delivery_key);
+  });
+
+  return userKeys.map(key => ({
+    key: key,
+    isSeller: sellers.has(key),
+    isDelivery: deliveries.has(key)
+  }));
+}
+
+
+
 
 /**
  * @description نقطة نهاية API لإدارة علاقات الموردين والموزعين.
@@ -41,8 +76,61 @@ export default async function handler(request) {
     if (request.method === 'GET') {
       const url = new URL(request.url);
       const sellerKey = url.searchParams.get('sellerKey');
-      const activeOnly = url.searchParams.get('activeOnly') === 'true'; // ✅ إضافة: التحقق من وجود معامل لجلب النشطين فقط
+      const relatedTo = url.searchParams.get('relatedTo'); // ✅ معلمة جديدة لجلب العلاقات في الاتجاهين
+      const activeOnly = url.searchParams.get('activeOnly') === 'true';
 
+      // --- السيناريو الجديد: جلب كل العلاقات (بائع وموزع) لمستخدم معين ---
+      if (relatedTo) {
+        console.log(`[API] Fetching ALL relations for user: ${relatedTo}...`);
+
+        // 1. جلب الموزعين إذا كان هذا المستخدم بائعاً
+        const { rows: asSellerRows } = await db.execute({
+          sql: `
+               SELECT u.user_key, u.username, u.phone, ut.fcm_token, sd.is_active
+               FROM users u
+               JOIN suppliers_deliveries sd ON u.user_key = sd.delivery_key
+               LEFT JOIN user_tokens ut ON u.user_key = ut.user_key
+               WHERE sd.seller_key = ?
+            `,
+          args: [relatedTo]
+        });
+
+        // 2. جلب البائعين إذا كان هذا المستخدم موزعاً
+        const { rows: asDeliveryRows } = await db.execute({
+          sql: `
+               SELECT u.user_key, u.username, u.phone, ut.fcm_token, sd.is_active
+               FROM users u
+               JOIN suppliers_deliveries sd ON u.user_key = sd.seller_key
+               LEFT JOIN user_tokens ut ON u.user_key = ut.user_key
+               WHERE sd.delivery_key = ?
+            `,
+          args: [relatedTo]
+        });
+
+        const responseData = {
+          asSeller: asSellerRows.map(row => ({
+            userKey: row.user_key,
+            username: row.username,
+            phone: row.phone,
+            isActive: !!row.is_active,
+            role: 'delivery' // هذا الشخص هو موزع بالنسبة للمستخدم الحالي
+          })),
+          asDelivery: asDeliveryRows.map(row => ({
+            userKey: row.user_key,
+            username: row.username,
+            phone: row.phone,
+            isActive: !!row.is_active,
+            role: 'seller' // هذا الشخص هو بائع بالنسبة للمستخدم الحالي
+          }))
+        };
+
+        return new Response(JSON.stringify(responseData), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        });
+      }
+
+      // --- السيناريو القديم: (متوافق مع الكود السابق) ---
       if (!sellerKey) {
         console.warn('[API] Bad Request: sellerKey is missing from query parameters.');
         return new Response(JSON.stringify({ error: 'sellerKey is required' }), {
@@ -141,6 +229,25 @@ export default async function handler(request) {
 
       console.log(`%c[API] Successfully processed PUT request.`, "color: green;");
       return new Response(JSON.stringify({ success: true, message: 'Relation updated successfully.' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+    }
+
+    if (request.method === 'POST') {
+      console.log('[API] Processing POST request to check user status...');
+      const { userKeys } = await request.json();
+
+      if (!Array.isArray(userKeys)) {
+        return new Response(JSON.stringify({ error: 'userKeys must be an array' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        });
+      }
+
+      const results = await checkUserInSuppliersDeliveries(userKeys);
+
+      return new Response(JSON.stringify({ results }), {
         status: 200,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });

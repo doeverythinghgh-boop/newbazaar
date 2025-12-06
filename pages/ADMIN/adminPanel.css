@@ -50,13 +50,19 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* تنسيق حاوية الجدول */
 .admin-panel-table-container {
-    overflow-x: auto; /* لإضافة شريط تمرير أفقي عند الحاجة على الشاشات الصغيرة */
+    overflow-x: auto;
+    /* لإضافة شريط تمرير أفقي عند الحاجة على الشاشات الصغيرة */
 }
 
 /* تنسيق الجدول */
@@ -104,9 +110,55 @@
 
 /* أيقونات لتوضيح حالة التوكن */
 .admin-panel-users-tbody .has-token-true::before {
-    content: '✓ '; /* علامة صح */
+    content: '✓ ';
+    /* علامة صح */
 }
 
 .admin-panel-users-tbody .has-token-false::before {
-    content: '✗ '; /* علامة خطأ */
+    content: '✗ ';
+    /* علامة خطأ */
+}
+
+/* تنسيق أزرار حالة التوصيل */
+.btn-delivery-status {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-family: var(--font-family-main);
+}
+
+.btn-delivery-status:hover {
+    opacity: 0.9;
+}
+
+/* تاجر - أزرق */
+.btn-role-seller {
+    background-color: var(--primary-color);
+}
+
+/* خدمة توصيل - أخضر */
+.btn-role-delivery {
+    background-color: var(--success-color);
+}
+
+/* كلاهما - برتقالي/ذهبي للمرونة */
+.btn-role-both {
+    background-color: #fd7e14;
+}
+
+/* محتوى الأزرار */
+.btn-role-seller::before {
+    content: '📦 ';
+}
+
+.btn-role-delivery::before {
+    content: '🚚 ';
+}
+
+.btn-role-both::before {
+    content: '🏢 ';
 }

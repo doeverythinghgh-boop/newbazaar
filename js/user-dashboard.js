@@ -61,13 +61,13 @@ function handleAdminPanelClick() {
         console.log("[Dashboard] تم النقر على زر لوحة تحكم المسؤول. جاري تحميل الصفحة...");
         // استخدام mainLoader لتحميل صفحة المسؤول في الحاوية الرئيسية
         mainLoader(
-                    "pages/ADMIN/adminPanel.html",
-                    "index-user-container",
-                    0,
-                    undefined,
-                    "showHomeIcon",
-                    true
-                );
+            "pages/ADMIN/adminPanel.html",
+            "index-user-container",
+            0,
+            undefined,
+            "showHomeIcon",
+            true
+        );
     } catch (error) {
         console.error("حدث خطأ أثناء محاولة تحميل لوحة تحكم المسؤول:", error);
     }
@@ -142,9 +142,11 @@ function updateViewForLoggedInUser() {
 
         // --- زر لوحة تحكم المسؤول ---
         // تحقق إذا كان مسؤولاً
+        // --- زر لوحة تحكم المسؤول ---
+        // تحقق إذا كان مسؤولاً أو إذا كان مسؤولاً أصلياً يقوم بانتحال صفة مستخدم
         if (
-            typeof adminPhoneNumbers !== "undefined" &&
-            adminPhoneNumbers.includes(userSession.phone)
+            (typeof adminPhoneNumbers !== "undefined" && adminPhoneNumbers.includes(userSession.phone)) ||
+            localStorage.getItem('originalAdminSession') // ✅ جديد: التحقق من وجود جلسة مسؤول أصلية
         ) {
             // لا حاجة لإجراء هنا، زر المسؤول ظاهر
             // ✅ جديد: ربط حدث النقر بالزر
@@ -169,7 +171,7 @@ function updateViewForLoggedInUser() {
             // لا حاجة لإجراء هنا، زر التقارير ظاهر
         } else {
             // إخفاء زر التقارير لباقي المستخدمين
-        ///    document.getElementById("dash-view-sales-movement-btn").style.display =
+            ///    document.getElementById("dash-view-sales-movement-btn").style.display =
             ///    "none";
         }
         // --- ربط الأحداث بالأزرار ---

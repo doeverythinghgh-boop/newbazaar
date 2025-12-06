@@ -1,4 +1,3 @@
-
 <style>
   /* ملاحظة: لا يسمح باستخدام تأثيرات hover في هذا المشروع. */
 
@@ -9,9 +8,11 @@
     0% {
       background-position: 0% 50%;
     }
+
     50% {
       background-position: 100% 50%;
     }
+
     100% {
       background-position: 0% 50%;
     }
@@ -23,10 +24,13 @@
     background-size: 400% 400%;
     animation: login_gradient-animation 15s ease infinite;
     min-height: 100vh;
-    display: flex; /* ✅ تعديل: تغيير طريقة المحاذاة العمودية */
-    align-items: flex-start; /* محاذاة المحتوى إلى الأعلى */
+    display: flex;
+    /* ✅ تعديل: تغيير طريقة المحاذاة العمودية */
+    align-items: flex-start;
+    /* محاذاة المحتوى إلى الأعلى */
     justify-content: center;
-    padding: 20px; /* ✅ تعديل: إضافة حشو علوي لدفع النموذج للأسفل قليلًا */
+    padding: 20px;
+    /* ✅ تعديل: إضافة حشو علوي لدفع النموذج للأسفل قليلًا */
     box-sizing: border-box;
   }
 
@@ -40,16 +44,21 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 0; /* إزالة الحشو من هذه الحاوية */
-    background: none; /* جعل هذه الحاوية شفافة */
+    padding: 0;
+    /* إزالة الحشو من هذه الحاوية */
+    background: none;
+    /* جعل هذه الحاوية شفافة */
   }
 
   /* 3. عنوان النموذج (تسجيل الدخول) */
   .login_container h2 {
     margin-top: 0;
-    margin-bottom: 0px; /* زيادة المسافة السفلية */
-    color: var(--dark-blue); /* لون أغمق وأكثر وضوحًا */
-    font-size: clamp(28px, 6vw, 36px); /* تكبير حجم الخط */
+    margin-bottom: 0px;
+    /* زيادة المسافة السفلية */
+    color: var(--dark-blue);
+    /* لون أغمق وأكثر وضوحًا */
+    font-size: clamp(28px, 6vw, 36px);
+    /* تكبير حجم الخط */
     font-weight: 700;
     text-align: center;
   }
@@ -57,13 +66,15 @@
   /* 4. النموذج نفسه */
   .login_container form {
     width: 100%;
-    max-width: 420px; /* تعديل العرض الأقصى */
+    max-width: 420px;
+    /* تعديل العرض الأقصى */
     /* جديد: تأثير زجاجي شفاف */
     background-color: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     padding: 40px;
-    border-radius: 20px; /* حواف أكثر دائرية */
+    border-radius: 20px;
+    /* حواف أكثر دائرية */
     /* جديد: ظل أكثر نعومة وعمقًا */
     box-shadow: var(--shadow-soft);
     border: 1px solid var(--border-color-soft);
@@ -72,29 +83,37 @@
   /* 5. مجموعة حقل الإدخال (العنوان والحقل) */
   .login_form-group {
     margin-bottom: 20px;
-    text-align: right; /* Align labels to the right */
-    position: relative; /* مهم لوضع الأيقونة بالداخل */
+    text-align: right;
+    /* Align labels to the right */
+    position: relative;
+    /* مهم لوضع الأيقونة بالداخل */
   }
 
   .login_form-group label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
-    color: var(--dark-blue); /* لون رمادي داكن */
+    color: var(--dark-blue);
+    /* لون رمادي داكن */
     font-size: 0.9rem;
   }
 
   /* 6. حقول الإدخال */
   .login_form-group input {
-    width: 100%; /* تعديل: العرض الكامل للحاوية */
-    padding: 14px 45px 14px 15px; /* مساحة للأيقونة على اليمين */
-    border: 1px solid var(--border-color-input); /* لون إطار أفتح */
-    border-radius: 10px; /* زيادة دائرية الحواف */
+    width: 100%;
+    /* تعديل: العرض الكامل للحاوية */
+    padding: 14px 45px 14px 15px;
+    /* مساحة للأيقونة على اليمين */
+    border: 1px solid var(--border-color-input);
+    /* لون إطار أفتح */
+    border-radius: 10px;
+    /* زيادة دائرية الحواف */
     box-sizing: border-box;
     font-family: "Tajawal", sans-serif;
     font-size: 16px;
     transition: border-color 0.3s, box-shadow 0.3s;
-    background-color: var(--bg-color-white); /* تعديل: خلفية بيضاء نقية */
+    background-color: var(--bg-color-white);
+    /* تعديل: خلفية بيضاء نقية */
   }
 
   /* حاوية الأيقونة داخل حقل الإدخال لـ password */
@@ -115,34 +134,39 @@
     /* تعديل: تحسين محاذاة الأيقونة */
     position: absolute;
     top: 50%;
-    right: 15px; /* لليمين في RTL */
-    transform: translateY(
-      calc(-50% + 14px)
-    ); /* ضبط المحاذاة العمودية بدقة */
+    right: 15px;
+    /* لليمين في RTL */
+    transform: translateY(calc(-50% + 14px));
+    /* ضبط المحاذاة العمودية بدقة */
     color: var(--icon-color);
     cursor: pointer;
   }
 
   /* Style for input fields with validation errors */
   .login_form-group input.login_input-error {
-    border-color: var(--danger-color); /* Red border for error */
+    border-color: var(--danger-color);
+    /* Red border for error */
   }
 
   .login_form-group input.login_input-error:focus {
-    box-shadow: 0 0 0 3px var(--danger-color-light); /* Red shadow on focus */
+    box-shadow: 0 0 0 3px var(--danger-color-light);
+    /* Red shadow on focus */
   }
 
   /* Style for the error message below the input */
   .login_error-message {
-    color: var(--danger-color); /* Red color for error text */
+    color: var(--danger-color);
+    /* Red color for error text */
     font-size: 12px;
     margin-top: 5px;
-    min-height: 15px; /* Reserve space to prevent layout shifts */
+    min-height: 15px;
+    /* Reserve space to prevent layout shifts */
   }
 
   .login_form-group input:focus {
     outline: none;
-    border-color: var(--primary-color); /* تعديل: لون أزرق متناسق */
+    border-color: var(--primary-color);
+    /* تعديل: لون أزرق متناسق */
     box-shadow: var(--shadow-focus);
   }
 
@@ -150,7 +174,8 @@
   .login_btn {
     width: 100%;
     padding: 15px;
-    font-size: clamp(16px, 4vw, 18px); /* Responsive font size */
+    font-size: clamp(16px, 4vw, 18px);
+    /* Responsive font size */
     margin-top: 10px;
     border: none;
     color: white;
@@ -159,7 +184,8 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
-    border-radius: 10px; /* يفضل إضافة حواف دائرية ليتناسق مع الحقول */
+    border-radius: 10px;
+    /* يفضل إضافة حواف دائرية ليتناسق مع الحقول */
   }
 
   .login_btn:active {
@@ -179,19 +205,26 @@
 
   /* رابط "سجل الآن": يظهر كإجراء ثانوي أساسي */
   .login_form-footer-link {
-    color: var(--primary-color); /* لون أزرق واضح */
-    font-size: 14px; /* تعديل: توحيد حجم الخط */
+    color: var(--primary-color);
+    /* لون أزرق واضح */
+    font-size: 14px;
+    /* تعديل: توحيد حجم الخط */
     text-decoration: none;
   }
 
   /* رابط "الدخول كضيف": يظهر كخيار بديل وأقل أهمية */
   .login_guest-link {
-    color: var(--text-color-light); /* لون رمادي لجعله أقل بروزًا */
+    color: var(--text-color-light);
+    /* لون رمادي لجعله أقل بروزًا */
     font-size: 14px;
-    border-top: 1px solid var(--border-color); /* خط فاصل أغمق قليلاً */
-    padding-top: 15px; /* مسافة فوق الرابط */
-    width: 100%; /* جعله يمتد على عرض الحاوية */
-    text-align: center; /* توسيط النص */
+    border-top: 1px solid var(--border-color);
+    /* خط فاصل أغمق قليلاً */
+    padding-top: 15px;
+    /* مسافة فوق الرابط */
+    width: 100%;
+    /* جعله يمتد على عرض الحاوية */
+    text-align: center;
+    /* توسيط النص */
     text-decoration: none;
   }
 
@@ -199,17 +232,18 @@
   .login_toggle-password {
     position: absolute;
     top: 50%;
-    left: 15px; /* لليسار في RTL */
-    transform: translateY(
-      calc(-50% + 14px)
-    ); /* ضبط المحاذاة العمودية بدقة */
+    left: 15px;
+    /* لليسار في RTL */
+    transform: translateY(calc(-50% + 14px));
+    /* ضبط المحاذاة العمودية بدقة */
     color: var(--icon-color);
     cursor: pointer;
   }
 
   /* تعديل حقل كلمة المرور لوضع الأيقونة على اليسار */
   #login_password {
-    padding-left: 45px; /* مساحة لأيقونة العين على اليسار */
+    padding-left: 45px;
+    /* مساحة لأيقونة العين على اليسار */
   }
 
   .login_form-footer a strong {
@@ -219,12 +253,15 @@
   /* === Back to Home Button (in Header) - تم الإبقاء عليه كما هو كونه عنصر هيدر وليس جزءاً من النموذج === */
   .back-to-home-btn {
     display: flex;
-    flex-direction: column; /* جعل الأيقونة والنص بترتيب عمودي */
+    flex-direction: column;
+    /* جعل الأيقونة والنص بترتيب عمودي */
     align-items: center;
-    gap: 2px; /* تقليل المسافة بين الأيقونة والنص */
+    gap: 2px;
+    /* تقليل المسافة بين الأيقونة والنص */
     font-family: "Tajawal", sans-serif;
     font-weight: 600;
-    color: var(--dark-blue); /* ✅ تعديل: تغيير لون الزر إلى الأزرق */
+    color: var(--dark-blue);
+    /* ✅ تعديل: تغيير لون الزر إلى الأزرق */
     text-decoration: none;
     padding: 8px 12px;
     border-radius: 20px;
@@ -233,25 +270,31 @@
 
   .back-to-home-btn i {
     font-size: 16px;
-    margin-bottom: 2px; /* إضافة مسافة صغيرة أسفل الأيقونة */
+    margin-bottom: 2px;
+    /* إضافة مسافة صغيرة أسفل الأيقونة */
   }
 
   .back-to-home-btn span {
-    font-size: 12px; /* تصغير حجم خط النص */
-    white-space: nowrap; /* منع النص من الانقسام إلى سطرين */
+    font-size: 12px;
+    /* تصغير حجم خط النص */
+    white-space: nowrap;
+    /* منع النص من الانقسام إلى سطرين */
   }
 
   /* Media query for very small screens */
   @media (max-width: 480px) {
     .login_container form {
-      padding: 30px 25px; /* تقليل الحشو للشاشات الصغيرة جدًا */
+      padding: 30px 25px;
+      /* تقليل الحشو للشاشات الصغيرة جدًا */
       /* جديد: إزالة الظل والحدود على الشاشات الصغيرة جدًا */
       box-shadow: none;
       border: none;
       background-color: transparent;
       backdrop-filter: none;
-      -webkit-backdrop-filter: none; /* For Safari compatibility */
+      -webkit-backdrop-filter: none;
+      /* For Safari compatibility */
     }
+
     .login_form-group {
       margin-bottom: 15px;
     }
@@ -260,48 +303,26 @@
 
 <div id="header-container1" style="height: 70px"></div>
 
-<div
-  id="login_form-wrapper"
-  class="login_page-wrapper"
-  style="display: none"
->
+<div id="login_form-wrapper" class="login_page-wrapper" style="display: none">
   <div id="login_form-container" class="login_container">
     <h2 id="login_title">تسجيل الدخول</h2>
     <form id="login_form">
       <div id="login_phone-form-group" class="login_form-group">
-        <label for="login_phone"
-          ><i class="fas fa-phone"></i> رقم الهاتف</label
-        >
+        <label for="login_phone"><i class="fas fa-phone"></i> رقم الهاتف</label>
         <input type="tel" id="login_phone" name="login_phone" required />
         <div id="login_phone-error" class="login_error-message"></div>
       </div>
       <div id="login_password-form-group" class="login_form-group">
-        <label for="login_password"
-          ><i class="fas fa-lock"></i> كلمة المرور</label
-        >
-        <input
-          type="password"
-          id="login_password"
-          name="login_password"
-          required
-        />
-        <i
-          class="fas fa-eye login_toggle-password"
-          id="login_togglePassword"
-        ></i>
+        <label for="login_password"><i class="fas fa-lock"></i> كلمة المرور</label>
+        <input type="password" id="login_password" name="login_password" required />
+        <i class="fas fa-eye login_toggle-password" id="login_togglePassword"></i>
         <div id="login_password-error" class="login_error-message"></div>
       </div>
       <button type="submit" class="button login_btn">تسجيل الدخول</button>
       <div id="login_form-footer" class="login_form-footer">
-        <a
-          href="register.html"
-          id="login_go-to-register-link"
-          class="login_form-footer-link"
-          >ليس لديك حساب؟ <strong>سجل الآن</strong></a
-        >
-        <a id="login_guest-btn" class="login_guest-link"
-          >أو يمكنك <strong>الدخول كضيف</strong> لتصفح المنتجات</a
-        >
+        <a href="register.html" id="login_go-to-register-link" class="login_form-footer-link">ليس لديك حساب؟ <strong>سجل
+            الآن</strong></a>
+        <a id="login_guest-btn" class="login_guest-link">أو يمكنك <strong>الدخول كضيف</strong> لتصفح المنتجات</a>
       </div>
     </form>
   </div>
@@ -316,236 +337,242 @@
  * @param {object} [params] - بيانات (حالة) يمكن تمريرها من الصفحة السابقة.
  * @returns {Promise<void>} - وعد (Promise) لا يُرجع قيمة عند الاكتمال.
  */
-async function loadPage(params) {
-  try {
-    // التحقق من وجود مستخدم مسجل دخوله بالفعل
-    if (Number(userSession?.is_seller) >= 1) {
-      // محاولة تهيئة الإشعارات للمستخدم الحالي إذا كان مسجلاً دخوله.
-      if (typeof initializeNotifications === "function") {
-        initializeNotifications();
-      }
-      // إيقاف التنفيذ لإتاحة الفرصة لإعادة التوجيه (المفروض أن يتم إعادة التوجيه في مكان آخر)
-      return;
-    }
-
-    // إظهار نموذج تسجيل الدخول فقط إذا لم يكن هناك مستخدم مسجل.
-    const loginFormWrapper = document.getElementById("login_form-wrapper");
-    if (loginFormWrapper) {
-      // استخدام 'flex' لأنه يتوافق مع CSS
-      loginFormWrapper.style.display = "flex";
-    }
-
-    // إعداد نموذج تسجيل الدخول
-    login_setupLoginForm();
-    
-  } catch (error) {
-    console.error("🚫 حدث خطأ في دالة loadPage:", error);
-    // يمكن عرض خطأ عام للمستخدم باستخدام SweetAlert2
-    if (typeof Swal !== "undefined") {
-        Swal.fire({
-            icon: "error",
-            title: "خطأ في تحميل الصفحة",
-            text: "يرجى المحاولة مرة أخرى لاحقاً.",
-        });
-    }
-  }
-}
-
-/**
- * @description تقوم بإعداد كافة معالجات الأحداث لنموذج تسجيل الدخول.
- * تشمل: تبديل رؤية كلمة المرور، تنقية رقم الهاتف، ومعالج حدث الإرسال.
- * @function login_setupLoginForm
- * @returns {void}
- */
-function login_setupLoginForm() {
+  async function loadPage(params) {
     try {
-        // الحصول على عناصر النموذج
-        const loginForm = document.getElementById("login_form");
-        if (!loginForm) return;
+      // ✅ إصلاح: تحديث userSession من localStorage لضمان أننا نستخدم أحدث حالة.
+      // هذا يمنع الكود من الاعتقاد بأن المستخدم لا يزال مسجلاً بعد تسجيل الخروج
+      // إذا كان المتغير العام userSession لم يتم تحديثه بعد.
+      userSession = JSON.parse(localStorage.getItem("loggedInUser")) || null;
 
-        const loginPhoneInput = document.getElementById("login_phone");
-        const loginPasswordInput = document.getElementById("login_password");
-        const loginTogglePassword = document.getElementById("login_togglePassword");
-        const loginGuestBtn = document.getElementById("login_guest-btn");
-
-        // 1. إضافة وظيفة تبديل رؤية كلمة المرور
-        if (loginTogglePassword && loginPasswordInput) {
-            loginTogglePassword.addEventListener("click", function () {
-                // تبديل نوع الحقل
-                const type =
-                    loginPasswordInput.getAttribute("type") === "password" ? "text" : "password";
-                loginPasswordInput.setAttribute("type", type);
-                // تبديل أيقونة العين
-                this.classList.toggle("fa-eye");
-                this.classList.toggle("fa-eye-slash");
-            });
+      // التحقق من وجود مستخدم مسجل دخوله بالفعل
+      if (Number(userSession?.is_seller) >= 1) {
+        // محاولة تهيئة الإشعارات للمستخدم الحالي إذا كان مسجلاً دخوله.
+        if (typeof initializeNotifications === "function") {
+          initializeNotifications();
         }
+        // إيقاف التنفيذ لإتاحة الفرصة لإعادة التوجيه (المفروض أن يتم إعادة التوجيه في مكان آخر)
+        return;
+      }
 
-        // 2. معالج حدث الإدخال لرقم الهاتف (للتنقية)
-        if (loginPhoneInput) {
-            loginPhoneInput.addEventListener("input", function (e) {
-                // استخدام دالة `normalizeDigits` لتحويل الأرقام الهندية (مثل '٠١٢') إلى إنجليزية ('012').
-                const normalized = normalizeDigits(e.target.value);
-                // بعد التحويل، يتم استخدام تعبير نمطي لإزالة أي حرف ليس رقمًا (0-9).
-                e.target.value = normalized.replace(/[^0-9]/g, "");
-            });
-        }
-        
-        // 3. معالج حدث إرسال نموذج تسجيل الدخول
-        loginForm.addEventListener("submit", login_handleSubmit);
+      // إظهار نموذج تسجيل الدخول فقط إذا لم يكن هناك مستخدم مسجل.
+      const loginFormWrapper = document.getElementById("login_form-wrapper");
+      if (loginFormWrapper) {
+        // استخدام 'flex' لأنه يتوافق مع CSS
+        loginFormWrapper.style.display = "flex";
+      }
 
-        // 4. ربط الحدث بزر "الدخول كضيف".
-        if (loginGuestBtn) {
-            loginGuestBtn.addEventListener("click", login_handleGuestLogin);
-        }
+      // إعداد نموذج تسجيل الدخول
+      login_setupLoginForm();
 
     } catch (error) {
-        console.error("🚫 حدث خطأ في دالة login_setupLoginForm:", error);
-    }
-}
-
-
-/**
- * @description معالج حدث إرسال نموذج تسجيل الدخول.
- * يقوم بالتحقق من صحة المدخلات، ثم يتواصل مع الواجهة الخلفية للتحقق من بيانات الدخول.
- * @event submit
- * @async
- * @param {Event} e - كائن الحدث لمنع السلوك الافتراضي.
- * @returns {Promise<void>}
- */
-async function login_handleSubmit(e) {
-  try {
-    console.log(
-      "%c[Login Page] تم الضغط على زر تسجيل الدخول.",
-      "color: blue; font-weight: bold;"
-    );
-    // منع السلوك الافتراضي للنموذج (الذي يقوم بإعادة تحميل الصفحة).
-    e.preventDefault();
-
-    const loginPhoneInput = document.getElementById("login_phone");
-    const loginPasswordInput = document.getElementById("login_password");
-
-    // 1. مسح أي رسائل خطأ سابقة
-    if (typeof clearError === "function") {
-        clearError(loginPhoneInput);
-        clearError(loginPasswordInput);
-    }
-    
-    // 2. الحصول على القيم والتحقق من صحة المدخلات
-    const phoneValue = loginPhoneInput.value.trim();
-    const passwordValue = loginPasswordInput.value.trim();
-    let loginIsValid = true;
-
-    // التحقق من رقم الهاتف
-    if (phoneValue === "") {
-      showError(loginPhoneInput, "رقم الهاتف مطلوب.");
-      loginIsValid = false;
-    } else if (phoneValue.length < 11) {
-      showError(loginPhoneInput, "رقم الهاتف يجب ألا يقل عن 11 رقمًا.");
-      loginIsValid = false;
-    }
-
-    // التحقق من كلمة المرور
-    if (passwordValue === "") {
-      showError(loginPasswordInput, "كلمة المرور مطلوبة.");
-      loginIsValid = false;
-    } else if (passwordValue.length < 4) {
-      showError(loginPasswordInput, "كلمة المرور يجب ألا تقل عن 4 أحرف.");
-      loginIsValid = false;
-    }
-
-    // 3. إذا كانت جميع المدخلات صالحة
-    if (loginIsValid) {
-      console.log("[Login Page] النموذج صالح، جاري التحقق من بيانات الدخول...");
-      
-      // عرض نافذة منبثقة تفيد بأن عملية تسجيل الدخول جارية.
-      Swal.fire({
-        title: "جاري تسجيل الدخول...",
-        text: "الرجاء الانتظار قليلاً.",
-        allowOutsideClick: false,
-        didOpen: () => {
-          // إظهار أيقونة التحميل.
-          Swal.showLoading();
-        },
-        customClass: { popup: 'fullscreen-swal' }, // تطبيق النمط المخصص
-      });
-
-      // 4. التواصل مع الخادم للتحقق
-      const verificationResult = await verifyUserPassword(
-        phoneValue,
-        passwordValue
-      );
-
-      // 5. معالجة نتيجة التحقق
-      if (verificationResult && !verificationResult.error) {
-        console.log(
-          "[Login Page] تسجيل دخول ناجح. جاري استدعاء handleLoginSuccess..."
-        );
-        login_handleLoginSuccess(verificationResult);
-      } else {
-        // إذا فشل التحقق
-        console.error(
-          "[Login Page] فشل تسجيل الدخول:",
-          verificationResult?.error || "خطأ غير محدد"
-        );
-        Swal.close();
-        const errorMessage =
-          "كلمة المرور ورقم الهاتف غير متوافقين. تأكد من صحتهم";
-        if (typeof showError === "function") {
-            showError(loginPasswordInput, errorMessage);
-        }
-      }
-    }
-  } catch (error) {
-    console.error("🚫 حدث خطأ في دالة login_handleSubmit:", error);
-    // إغلاق نافذة التحميل وعرض رسالة خطأ
-    if (typeof Swal !== "undefined") {
-        Swal.close();
+      console.error("🚫 حدث خطأ في دالة loadPage:", error);
+      // يمكن عرض خطأ عام للمستخدم باستخدام SweetAlert2
+      if (typeof Swal !== "undefined") {
         Swal.fire({
-            icon: "error",
-            title: "فشل في عملية الدخول",
-            text: "حدث خطأ غير متوقع أثناء محاولة تسجيل الدخول.",
+          icon: "error",
+          title: "خطأ في تحميل الصفحة",
+          text: "يرجى المحاولة مرة أخرى لاحقاً.",
         });
+      }
     }
   }
-}
 
-/**
- * @description يتعامل مع الإجراءات التي تحدث بعد تسجيل دخول ناجح للمستخدم.
- * @function login_handleLoginSuccess
- * @param {object} user - كائن المستخدم المسجل دخوله.
- * @async
- * @returns {Promise<void>}
- */
-async function login_handleLoginSuccess(user) {
-  try {
-    console.log(
-      "%c[Login Page] دخلنا دالة login_handleLoginSuccess. بيانات المستخدم:",
-      "color: green;",
-      user
-    );
+  /**
+   * @description تقوم بإعداد كافة معالجات الأحداث لنموذج تسجيل الدخول.
+   * تشمل: تبديل رؤية كلمة المرور، تنقية رقم الهاتف، ومعالج حدث الإرسال.
+   * @function login_setupLoginForm
+   * @returns {void}
+   */
+  function login_setupLoginForm() {
+    try {
+      // الحصول على عناصر النموذج
+      const loginForm = document.getElementById("login_form");
+      if (!loginForm) return;
 
-    // 1. حفظ بيانات المستخدم وتحديث الجلسة
-    localStorage.setItem("loggedInUser", JSON.stringify(user));
-    userSession = user; // تحديث الكائن العام لجلسة المستخدم
-  setUserNameInIndexBar(); 
-    // 2. إعداد إشعارات FCM إذا كان المستخدم مؤهلاً
-    if (Number(userSession?.is_seller) >= 1) {
-      console.log("[Login Page] المستخدم مؤهل، جاري استدعاء setupFCM() الآن...");
-      if (typeof setupFCM === "function") {
-        await setupFCM();
-        await login_askForNotificationPermission();
+      const loginPhoneInput = document.getElementById("login_phone");
+      const loginPasswordInput = document.getElementById("login_password");
+      const loginTogglePassword = document.getElementById("login_togglePassword");
+      const loginGuestBtn = document.getElementById("login_guest-btn");
+
+      // 1. إضافة وظيفة تبديل رؤية كلمة المرور
+      if (loginTogglePassword && loginPasswordInput) {
+        loginTogglePassword.addEventListener("click", function () {
+          // تبديل نوع الحقل
+          const type =
+            loginPasswordInput.getAttribute("type") === "password" ? "text" : "password";
+          loginPasswordInput.setAttribute("type", type);
+          // تبديل أيقونة العين
+          this.classList.toggle("fa-eye");
+          this.classList.toggle("fa-eye-slash");
+        });
       }
-    } else {
-      console.log(
-        "[Login Page] المستخدم غير مؤهل للإشعارات، تم تخطي استدعاء setupFCM()."
-      );
-    }
 
-    // 3. عرض رسالة الترحيب والانتقال إلى الصفحة الرئيسية
-    Swal.fire({
-      title: `🎉 أهلاً بك، ${userSession.username}! 🎉`,
-      html: `
+      // 2. معالج حدث الإدخال لرقم الهاتف (للتنقية)
+      if (loginPhoneInput) {
+        loginPhoneInput.addEventListener("input", function (e) {
+          // استخدام دالة `normalizeDigits` لتحويل الأرقام الهندية (مثل '٠١٢') إلى إنجليزية ('012').
+          const normalized = normalizeDigits(e.target.value);
+          // بعد التحويل، يتم استخدام تعبير نمطي لإزالة أي حرف ليس رقمًا (0-9).
+          e.target.value = normalized.replace(/[^0-9]/g, "");
+        });
+      }
+
+      // 3. معالج حدث إرسال نموذج تسجيل الدخول
+      loginForm.addEventListener("submit", login_handleSubmit);
+
+      // 4. ربط الحدث بزر "الدخول كضيف".
+      if (loginGuestBtn) {
+        loginGuestBtn.addEventListener("click", login_handleGuestLogin);
+      }
+
+    } catch (error) {
+      console.error("🚫 حدث خطأ في دالة login_setupLoginForm:", error);
+    }
+  }
+
+
+  /**
+   * @description معالج حدث إرسال نموذج تسجيل الدخول.
+   * يقوم بالتحقق من صحة المدخلات، ثم يتواصل مع الواجهة الخلفية للتحقق من بيانات الدخول.
+   * @event submit
+   * @async
+   * @param {Event} e - كائن الحدث لمنع السلوك الافتراضي.
+   * @returns {Promise<void>}
+   */
+  async function login_handleSubmit(e) {
+    try {
+      console.log(
+        "%c[Login Page] تم الضغط على زر تسجيل الدخول.",
+        "color: blue; font-weight: bold;"
+      );
+      // منع السلوك الافتراضي للنموذج (الذي يقوم بإعادة تحميل الصفحة).
+      e.preventDefault();
+
+      const loginPhoneInput = document.getElementById("login_phone");
+      const loginPasswordInput = document.getElementById("login_password");
+
+      // 1. مسح أي رسائل خطأ سابقة
+      if (typeof clearError === "function") {
+        clearError(loginPhoneInput);
+        clearError(loginPasswordInput);
+      }
+
+      // 2. الحصول على القيم والتحقق من صحة المدخلات
+      const phoneValue = loginPhoneInput.value.trim();
+      const passwordValue = loginPasswordInput.value.trim();
+      let loginIsValid = true;
+
+      // التحقق من رقم الهاتف
+      if (phoneValue === "") {
+        showError(loginPhoneInput, "رقم الهاتف مطلوب.");
+        loginIsValid = false;
+      } else if (phoneValue.length < 11) {
+        showError(loginPhoneInput, "رقم الهاتف يجب ألا يقل عن 11 رقمًا.");
+        loginIsValid = false;
+      }
+
+      // التحقق من كلمة المرور
+      if (passwordValue === "") {
+        showError(loginPasswordInput, "كلمة المرور مطلوبة.");
+        loginIsValid = false;
+      } else if (passwordValue.length < 4) {
+        showError(loginPasswordInput, "كلمة المرور يجب ألا تقل عن 4 أحرف.");
+        loginIsValid = false;
+      }
+
+      // 3. إذا كانت جميع المدخلات صالحة
+      if (loginIsValid) {
+        console.log("[Login Page] النموذج صالح، جاري التحقق من بيانات الدخول...");
+
+        // عرض نافذة منبثقة تفيد بأن عملية تسجيل الدخول جارية.
+        Swal.fire({
+          title: "جاري تسجيل الدخول...",
+          text: "الرجاء الانتظار قليلاً.",
+          allowOutsideClick: false,
+          didOpen: () => {
+            // إظهار أيقونة التحميل.
+            Swal.showLoading();
+          },
+          customClass: { popup: 'fullscreen-swal' }, // تطبيق النمط المخصص
+        });
+
+        // 4. التواصل مع الخادم للتحقق
+        const verificationResult = await verifyUserPassword(
+          phoneValue,
+          passwordValue
+        );
+
+        // 5. معالجة نتيجة التحقق
+        if (verificationResult && !verificationResult.error) {
+          console.log(
+            "[Login Page] تسجيل دخول ناجح. جاري استدعاء handleLoginSuccess..."
+          );
+          login_handleLoginSuccess(verificationResult);
+        } else {
+          // إذا فشل التحقق
+          console.error(
+            "[Login Page] فشل تسجيل الدخول:",
+            verificationResult?.error || "خطأ غير محدد"
+          );
+          Swal.close();
+          const errorMessage =
+            "كلمة المرور ورقم الهاتف غير متوافقين. تأكد من صحتهم";
+          if (typeof showError === "function") {
+            showError(loginPasswordInput, errorMessage);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("🚫 حدث خطأ في دالة login_handleSubmit:", error);
+      // إغلاق نافذة التحميل وعرض رسالة خطأ
+      if (typeof Swal !== "undefined") {
+        Swal.close();
+        Swal.fire({
+          icon: "error",
+          title: "فشل في عملية الدخول",
+          text: "حدث خطأ غير متوقع أثناء محاولة تسجيل الدخول.",
+        });
+      }
+    }
+  }
+
+  /**
+   * @description يتعامل مع الإجراءات التي تحدث بعد تسجيل دخول ناجح للمستخدم.
+   * @function login_handleLoginSuccess
+   * @param {object} user - كائن المستخدم المسجل دخوله.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async function login_handleLoginSuccess(user) {
+    try {
+      console.log(
+        "%c[Login Page] دخلنا دالة login_handleLoginSuccess. بيانات المستخدم:",
+        "color: green;",
+        user
+      );
+
+      // 1. حفظ بيانات المستخدم وتحديث الجلسة
+      localStorage.setItem("loggedInUser", JSON.stringify(user));
+      userSession = user; // تحديث الكائن العام لجلسة المستخدم
+      setUserNameInIndexBar();
+      // 2. إعداد إشعارات FCM إذا كان المستخدم مؤهلاً
+      if (Number(userSession?.is_seller) >= 1) {
+        return;
+      /*  console.log("[Login Page] المستخدم مؤهل، جاري استدعاء setupFCM() الآن...");
+        if (typeof setupFCM === "function") {
+          await setupFCM();
+          await login_askForNotificationPermission();
+        }*/
+      } else {
+        console.log(
+          "[Login Page] المستخدم غير مؤهل للإشعارات، تم تخطي استدعاء setupFCM()."
+        );
+      }
+
+      // 3. عرض رسالة الترحيب والانتقال إلى الصفحة الرئيسية
+      Swal.fire({
+        title: `🎉 أهلاً بك، ${userSession.username}! 🎉`,
+        html: `
         <p style="font-size: 1.1rem; color: #333;">أنت الآن جاهز لتجربة تسوق فريدة!</p>
         <div style="text-align: right; margin-top: 20px; padding-right: 15px; font-size: 1rem;">
           <p style="margin-bottom: 10px;">🛍️ تصفح آلاف المنتجات بسهولة.</p>
@@ -553,77 +580,77 @@ async function login_handleLoginSuccess(user) {
           <p>✨ اكتشف كل ما هو جديد في سويس بازار.</p>
         </div>
       `,
-      icon: "success",
-      allowOutsideClick: false, // منع الإغلاق عند النقر خارج الرسالة
-      confirmButtonText: "ابدأ التسوق الآن!",
-      confirmButtonColor: "#3b82f6",
-      customClass: { popup: 'fullscreen-swal' }, // تطبيق النمط المخصص
-    }).then((result) => {
-      // عند الضغط على الزر، انتقل إلى الصفحة الرئيسية
-      if (result.isConfirmed) {
-        if (typeof mainLoader === "function") {
-            mainLoader("./pages/home.html", "index-home-container", 0, undefined, "hiddenHomeIcon",true);
+        icon: "success",
+        allowOutsideClick: false, // منع الإغلاق عند النقر خارج الرسالة
+        confirmButtonText: "ابدأ التسوق الآن!",
+        confirmButtonColor: "#3b82f6",
+        customClass: { popup: 'fullscreen-swal' }, // تطبيق النمط المخصص
+      }).then((result) => {
+        // عند الضغط على الزر، انتقل إلى الصفحة الرئيسية
+        if (result.isConfirmed) {
+          if (typeof mainLoader === "function") {
+            mainLoader("./pages/home.html", "index-home-container", 0, undefined, "hiddenHomeIcon", true);
+          }
         }
-      }
-    });
+      });
 
-  } catch (error) {
-    console.error("🚫 حدث خطأ في دالة login_handleLoginSuccess:", error);
-  }
-}
-
-/**
- * @description تطلب إذن الإشعارات من النظام الأصلي (Native) إذا كان التطبيق يعمل ضمن بيئة Android.
- * @function login_askForNotificationPermission
- * @async
- * @returns {Promise<void>} - يُرجع وعدًا (Promise) لا يُرجع قيمة عند الاكتمال.
- */
-async function login_askForNotificationPermission() {
-  try {
-    // التحقق من وجود الكائن 'Android' للتأكد من أن الكود يعمل داخل تطبيق أندرويد
-    if (
-      window.Android &&
-      typeof window.Android.requestNotificationPermission === "function"
-    ) {
-      console.log(
-        "Calling native function to request notification permission..."
-      );
-      window.Android.requestNotificationPermission();
-    } else {
-      console.log("واجهة الأندرويد غير متاحة.");
+    } catch (error) {
+      console.error("🚫 حدث خطأ في دالة login_handleLoginSuccess:", error);
     }
-  } catch (error) {
-    console.error("🚫 حدث خطأ في دالة login_askForNotificationPermission:", error);
   }
-}
 
-/**
- * @description يعالج عملية تسجيل الدخول كضيف.
- * @function login_handleGuestLogin
- * @param {Event} event - كائن الحدث لمنع السلوك الافتراضي للرابط.
- * @returns {void}
- */
-function login_handleGuestLogin(event) {
-  try {
-    event.preventDefault(); // منع الرابط من تحديث الصفحة
-    console.log("[Auth] Logging in as a guest.");
+  /**
+   * @description تطلب إذن الإشعارات من النظام الأصلي (Native) إذا كان التطبيق يعمل ضمن بيئة Android.
+   * @function login_askForNotificationPermission
+   * @async
+   * @returns {Promise<void>} - يُرجع وعدًا (Promise) لا يُرجع قيمة عند الاكتمال.
+   */
+  async function login_askForNotificationPermission() {
+    try {
+      // التحقق من وجود الكائن 'Android' للتأكد من أن الكود يعمل داخل تطبيق أندرويد
+      if (
+        window.Android &&
+        typeof window.Android.requestNotificationPermission === "function"
+      ) {
+        console.log(
+          "Calling native function to request notification permission..."
+        );
+        window.Android.requestNotificationPermission();
+      } else {
+        console.log("واجهة الأندرويد غير متاحة.");
+      }
+    } catch (error) {
+      console.error("🚫 حدث خطأ في دالة login_askForNotificationPermission:", error);
+    }
+  }
 
-    // إنشاء كائن مستخدم ضيف
-    const guestUser = {
-      username: "ضيف",
-      is_guest: true,
-      user_key: "guest_user",
-      is_seller: -1,
-      notifications_key: null, // الضيف ليس له مفتاح إشعارات
-      notifications_enabled: false, // الإشعارات معطلة للضيف
-    };
+  /**
+   * @description يعالج عملية تسجيل الدخول كضيف.
+   * @function login_handleGuestLogin
+   * @param {Event} event - كائن الحدث لمنع السلوك الافتراضي للرابط.
+   * @returns {void}
+   */
+  function login_handleGuestLogin(event) {
+    try {
+      event.preventDefault(); // منع الرابط من تحديث الصفحة
+      console.log("[Auth] Logging in as a guest.");
 
-    // حفظ بيانات الضيف في localStorage وتحديث الجلسة
-    localStorage.setItem("loggedInUser", JSON.stringify(guestUser));
-    userSession = guestUser;
-  setUserNameInIndexBar(); 
-    // إعادة تحميل الصفحة الرئيسية بالكامل لتحديث الواجهة
-    if (typeof mainLoader === "function") {
+      // إنشاء كائن مستخدم ضيف
+      const guestUser = {
+        username: "ضيف",
+        is_guest: true,
+        user_key: "guest_user",
+        is_seller: -1,
+        notifications_key: null, // الضيف ليس له مفتاح إشعارات
+        notifications_enabled: false, // الإشعارات معطلة للضيف
+      };
+
+      // حفظ بيانات الضيف في localStorage وتحديث الجلسة
+      localStorage.setItem("loggedInUser", JSON.stringify(guestUser));
+      userSession = guestUser;
+      setUserNameInIndexBar();
+      // إعادة تحميل الصفحة الرئيسية بالكامل لتحديث الواجهة
+      if (typeof mainLoader === "function") {
         mainLoader(
           "./pages/home.html",
           "index-home-container",
@@ -631,14 +658,14 @@ function login_handleGuestLogin(event) {
           undefined,
           "hiddenHomeIcon"
         );
+      }
+    } catch (error) {
+      console.error("🚫 حدث خطأ في دالة login_handleGuestLogin:", error);
     }
-  } catch (error) {
-    console.error("🚫 حدث خطأ في دالة login_handleGuestLogin:", error);
   }
-}
 
-loadPage();
+  loadPage();
 
-// يتم إدراج هذا العنصر بالطريقة المتبعة في المشروع (hgh_sec)
-insertUniqueSnapshot("../pages/header.html", "header-container1", 300);
+  // يتم إدراج هذا العنصر بالطريقة المتبعة في المشروع (hgh_sec)
+  insertUniqueSnapshot("../pages/header.html", "header-container1", 300);
 </script>

@@ -1,38 +1,40 @@
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Styles -->
+<link rel="stylesheet" href="/pages/ADMIN/adminPanel.css" />
+<script src="/pages/ADMIN/adminPanel.js"></script>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Styles -->
-    <link rel="stylesheet" href="/pages/ADMIN/adminPanel.css" />
-    <script src="/pages/ADMIN/adminPanel.js"></script>
-  <body>
-  
-    <div class="admin-panel-container">
-      <h1 class="admin-panel-title">لوحة تحكم المسؤول - إدارة المستخدمين</h1>
+<body>
 
-      <!-- مؤشر التحميل -->
-      <div id="admin-panel-loader" class="admin-panel-loader-container">
-        <div class="admin-panel-loader"></div>
-        <p>جاري تحميل بيانات المستخدمين...</p>
-      </div>
+  <div class="admin-panel-container">
+    <h1 class="admin-panel-title">لوحة تحكم المسؤول - إدارة المستخدمين</h1>
 
-      <!-- حاوية الجدول -->
-      <div class="admin-panel-table-container" id="admin-panel-table-container" style="display: none;">
-        <table class="admin-panel-users-table" id="admin-panel-users-table">
-          <thead class="admin-panel-table-header">
-            <tr>
-              <th>المفتاح الفريد</th>
-              <th>اسم المستخدم</th>
-              <th>رقم الهاتف</th>
-              <th>كلمة المرور</th>
-              <th>العنوان</th>
-              <th>لديه توكن FCM</th>
-              <th>منصة التوكن</th>
-            </tr>
-          </thead>
-          <tbody id="admin-panel-users-tbody">
-            <!-- سيتم تعبئة الصفوف هنا عبر JavaScript -->
-          </tbody>
-        </table>
-      </div>
+    <!-- مؤشر التحميل -->
+    <div id="admin-panel-loader" class="admin-panel-loader-container">
+      <div class="admin-panel-loader"></div>
+      <p>جاري تحميل بيانات المستخدمين...</p>
     </div>
-  </body>
+
+    <!-- حاوية الجدول -->
+    <div class="admin-panel-table-container" id="admin-panel-table-container" style="display: none;">
+      <table class="admin-panel-users-table" id="admin-panel-users-table">
+        <thead class="admin-panel-table-header">
+          <tr>
+            <th>المفتاح الفريد</th>
+            <th>اسم المستخدم</th>
+            <th>رقم الهاتف</th>
+            <th>كلمة المرور</th>
+            <th>العنوان</th>
+            <th>لديه توكن FCM</th>
+            <th>منصة التوكن</th>
+            <th>حالة التوصيل</th>
+            <th>دخول</th>
+          </tr>
+        </thead>
+        <tbody id="admin-panel-users-tbody">
+          <!-- سيتم تعبئة الصفوف هنا عبر JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>

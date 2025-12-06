@@ -1,529 +1,548 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="index-html-root">
-  <head id="index-page-head">
-    <meta charset="UTF-8" id="index-meta-charset" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-      id="index-meta-viewport"
-    />
-    <title id="index-page-title">Suez Bazaar</title>
-    <!-- Favicon -->
-    <link
-      rel="icon"
-      href="favicon.ico"
-      type="image/x-icon"
-      id="index-favicon-icon"
-    />
-    <link
-      rel="shortcut icon"
-      href="favicon.ico"
-      type="image/x-icon"
-      id="index-favicon-shortcut"
-    />
-    <link
-      id="font-tajawal"
-      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v6.5.2/css/all.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- ✅ ربط ملف المتغيرات لاستخدامها في الأنماط الداخلية -->
-    <link rel="stylesheet" href="style/variables.css" />
-    <script src="/js/cloudFileManager.js"></script>
-    <script src="/js/cardPackage.js"></script>
-    <script src="/js/order.js"></script>
-    <script src="/js/forms.js"></script>
-    <!-- ربط ملف الأنماط الخارجي -->
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-        /* Prevent scrollbars on the body */
-        box-sizing: border-box;
-      }
+<head id="index-page-head">
+  <meta charset="UTF-8" id="index-meta-charset" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" id="index-meta-viewport" />
+  <title id="index-page-title">Suez Bazaar</title>
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon" id="index-favicon-icon" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" id="index-favicon-shortcut" />
+  <link id="font-tajawal" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-      body {
-        display: flex;
-        flex-direction: column;
-        /* لجعل المحتوى الرئيسي والتذييل يترتبان عموديًا */
-      }
+  <!-- ✅ ربط ملف المتغيرات لاستخدامها في الأنماط الداخلية -->
+  <link rel="stylesheet" href="style/variables.css" />
+  <script src="/js/cloudFileManager.js"></script>
+  <script src="/js/cardPackage.js"></script>
+  <script src="/js/order.js"></script>
+  <script src="/js/forms.js"></script>
+  <!-- ربط ملف الأنماط الخارجي -->
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      /* Prevent scrollbars on the body */
+      box-sizing: border-box;
+    }
 
-      /* ✅ تعديل: إعادة تسمية الفئة وتطبيق Flexbox */
-      .index-app-header {
-        display: flex;
-        justify-content: flex-start;
-        /* محاذاة العناصر من بداية الحاوية (اليمين في RTL) */
-        align-items: center;
-        flex-wrap: nowrap;
-        /* منع العناصر من الانتقال إلى سطر جديد */
-        overflow-x: auto;
-        /* إضافة شريط تمرير أفقي عند الحاجة */
-        background-color: var(--bg-color-light);
-        padding: 15px 20px;
-        box-shadow: var(--shadow-interactive);
-        /* تغيير الظل ليصبح سفليًا */
-        z-index: 1000;
-        /* لضمان ظهوره فوق المحتوى الآخر */
-      }
+    body {
+      display: flex;
+      flex-direction: column;
+      /* لجعل المحتوى الرئيسي والتذييل يترتبان عموديًا */
+    }
 
-      .index-header-login-btn {
-        /* ✅ تعديل: استخدام Flexbox لترتيب الأيقونة والنص عمودياً */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4px;
-        /* مسافة بين الأيقونة والنص */
+    /* ✅ تعديل: إعادة تسمية الفئة وتطبيق Flexbox */
+    .index-app-header {
+      display: flex;
+      justify-content: flex-start;
+      /* محاذاة العناصر من بداية الحاوية (اليمين في RTL) */
+      align-items: center;
+      flex-wrap: nowrap;
+      /* منع العناصر من الانتقال إلى سطر جديد */
+      overflow-x: auto;
+      /* إضافة شريط تمرير أفقي عند الحاجة */
+      background-color: var(--bg-color-light);
+      padding: 15px 20px;
+      box-shadow: var(--shadow-interactive);
+      /* تغيير الظل ليصبح سفليًا */
+      z-index: 1000;
+      /* لضمان ظهوره فوق المحتوى الآخر */
+    }
 
-        /* ✅ تعديل: إزالة الخلفية والحدود لجعله يبدو كأيقونة ونص فقط */
-        background-color: transparent;
-        border: none;
-        padding: 5px;
-        /* تقليل الحشو */
+    .index-header-login-btn {
+      /* ✅ تعديل: استخدام Flexbox لترتيب الأيقونة والنص عمودياً */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      /* مسافة بين الأيقونة والنص */
 
-        font-family: "Tajawal", sans-serif;
-        text-decoration: none;
-        cursor: pointer;
-        transition: transform 0.2s;
-        position: relative;
-        /* ✅ جديد: ضروري لتحديد موضع الشارة بشكل صحيح */
-      }
+      /* ✅ تعديل: إزالة الخلفية والحدود لجعله يبدو كأيقونة ونص فقط */
+      background-color: transparent;
+      border: none;
+      padding: 5px;
+      /* تقليل الحشو */
 
-      /* ✅ جديد: تنسيق الأيقونة */
-      .index-header-login-btn .index-user-icon {
-        font-size: 20px;
-        /* تكبير حجم الأيقونة */
-        color: var(--primary-color);
-        /* لون الأيقونة */
-      }
+      font-family: "Tajawal", sans-serif;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s;
+      position: relative;
+      /* ✅ جديد: ضروري لتحديد موضع الشارة بشكل صحيح */
+    }
 
-      /* ✅ جديد: تنسيق النص */
-      .index-header-login-btn span {
-        font-size: 8px;
-        /* تصغير حجم الخط */
-        color: var(--dark-blue);
-        white-space: nowrap;
-        /* ✅ جديد: منع النص من الانقسام إلى سطرين */
-      }
+    /* ✅ جديد: تنسيق الأيقونة */
+    .index-header-login-btn .index-user-icon {
+      font-size: 20px;
+      /* تكبير حجم الأيقونة */
+      color: var(--primary-color);
+      /* لون الأيقونة */
+    }
 
-      /* أضف هذا الكود إلى ملف style/index.css */
+    /* ✅ جديد: تنسيق النص */
+    .index-header-login-btn span {
+      font-size: 8px;
+      /* تصغير حجم الخط */
+      color: var(--dark-blue);
+      white-space: nowrap;
+      /* ✅ جديد: منع النص من الانقسام إلى سطرين */
+    }
 
-      .index-header-login-btn {
-        /* ... الأنماط الحالية للزر ... */
+    .index-header-login-btn {
+      /* ... الأنماط الحالية للزر ... */
 
-        /* ✅ جديد: إضافة خصائص الانتقال للتحكم في الانميشن */
-        /* ✅ تحسين: إضافة المزيد من الخصائص للانميشن لضمان اختفاء كامل */
-        opacity: 1;
-        margin-left: 20px;
-        margin-right: 5px;
-        transform: translateY(0);
-        max-width: 100px;
-        /* تحديد عرض أقصى للسماح بالانميشن */
-        transition: opacity 0.3s ease, transform 0.3s ease, max-width 0.5s ease,
-          padding 0.5s ease, margin 0.5s ease;
-      }
+      /* ✅ جديد: إضافة خصائص الانتقال للتحكم في الانميشن */
+      /* ✅ تحسين: إضافة المزيد من الخصائص للانميشن لضمان اختفاء كامل */
+      opacity: 1;
+      margin-left: 20px;
+      margin-right: 5px;
+      transform: translateY(0);
+      max-width: 100px;
+      /* تحديد عرض أقصى للسماح بالانميشن */
+      transition: opacity 0.3s ease, transform 0.3s ease, max-width 0.5s ease,
+        padding 0.5s ease, margin 0.5s ease;
+    }
 
-      .index-header-login-btn.index-hidden {
-        /* ✅ جديد: تحديد حالة الزر عندما يكون مخفياً */
-        /* ✅ تحسين: جعل الزر يتقلص ويختفي تمامًا من التخطيط */
-        opacity: 0;
-        transform: translateY(
-          -10px /* تحريك الزر للأعلى قليلاً عند الاختفاء */
+    .index-header-login-btn.index-hidden {
+      /* ✅ جديد: تحديد حالة الزر عندما يكون مخفياً */
+      /* ✅ تحسين: جعل الزر يتقلص ويختفي تمامًا من التخطيط */
+      opacity: 0;
+      transform: translateY(-10px
+          /* تحريك الزر للأعلى قليلاً عند الاختفاء */
         );
-        pointer-events: none;
-        /* منع التفاعل مع الزر أثناء اختفائه */
-        max-width: 0;
-        /* جعل العرض صفرًا لإزالة الزر من التدفق */
-        padding-left: 0;
-        padding-right: 0;
-        /* ✅ حل مشكلة الفجوة: إزالة الهوامش بالكامل عند الإخفاء */
-        margin: 0;
+      pointer-events: none;
+      /* منع التفاعل مع الزر أثناء اختفائه */
+      max-width: 0;
+      /* جعل العرض صفرًا لإزالة الزر من التدفق */
+      padding-left: 0;
+      padding-right: 0;
+      /* ✅ حل مشكلة الفجوة: إزالة الهوامش بالكامل عند الإخفاء */
+      margin: 0;
+    }
+
+    /* ✅ جديد: تنسيق الزر النشط */
+    .index-header-login-btn.active {
+      border-bottom: 2px solid var(--primary-color);
+      background-color: var(--primary-color-light);
+      color: var(--primary-color);
+      border-radius: 8px;
+    }
+
+    .index-header-login-btn.active .index-user-icon {
+      color: var(--primary-color);
+    }
+
+    .index-header-login-btn.active span {
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    /* ✅ جديد: أنماط شارة عدد المنتجات في السلة */
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      /* تعديل الموضع الرأسي */
+      right: -8px;
+      /* تعديل الموضع الأفقي */
+      background-color: var(--accent-color);
+      /* لون الخلفية */
+      border-radius: 50%;
+      /* لجعلها دائرية */
+      width: 18px;
+      /* عرض الشارة */
+      height: 18px;
+      /* ارتفاع الشارة */
+      font-size: 10px;
+      /* حجم الخط */
+      font-weight: bold;
+      display: flex;
+      /* لتوسيط الرقم */
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--bg-color-light);
+      /* إضافة حدود لفصلها عن الخلفية */
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      /* ظل خفيف */
+
+      /* إخفاء الشارة افتراضيًا */
+      display: none;
+    }
+
+    /* ✅ جديد: تنسيق العلامة المائية لوضع المسؤول */
+    .admin-watermark {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: rgba(220, 53, 69, 0.9);
+      /* لون أحمر شفاف */
+      color: white;
+      padding: 8px 15px;
+      border-radius: 25px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 12px;
+      z-index: 9999;
+      pointer-events: none;
+      /* للسماح بالنقر من خلالها */
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      direction: rtl;
+    }
+
+    .admin-watermark i {
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body id="index-app-body">
+  <header class="index-app-header" id="index-app-header">
+    <!-- زر تسجيل الدخول -->
+    <button class="index-header-login-btn" id="index-login-btn">
+      <i class="fas fa-user-circle index-user-icon" id="index-login-icon"></i>
+      <span id="index-login-text">تسجيل الدخول</span>
+    </button>
+
+    <!-- زر الرئيسية -->
+    <button class="index-header-login-btn" id="index-home-btn">
+      <i class="fas fa-home index-user-icon" id="index-home-icon"></i>
+      <span id="index-home-text">الرئيسية</span>
+    </button>
+
+    <!-- زر البحث -->
+    <button class="index-header-login-btn" id="index-search-btn">
+      <i class="fas fa-search index-user-icon" id="index-search-icon"></i>
+      <span id="index-search-text">بحث</span>
+    </button>
+
+    <!-- زر حركة المشتريات -->
+    <button class="index-header-login-btn" id="index-sales-movement-btn">
+      <i class="fas fa-history index-user-icon" id="index-sales-icon"></i>
+      <span id="index-sales-text">مشتريات</span>
+    </button>
+
+    <!-- زر السلة -->
+    <button class="index-header-login-btn" id="index-cart-btn">
+      <i class="fas fa-shopping-cart index-user-icon" id="index-cart-icon"></i>
+      <span id="index-cart-text">السلة</span>
+    </button>
+
+    <!-- جديد: زر الهدايا -->
+    <button class="index-header-login-btn" id="index-gifts-btn">
+      <i class="fas fa-gift index-user-icon" id="index-gifts-icon"></i>
+      <span id="index-gifts-text">هدايا</span>
+    </button>
+    <!-- جديد: زر إضافة منتج -->
+    <button class="index-header-login-btn" id="dash-add-product-btn">
+      <i class="fas fa-plus index-user-icon"></i>
+      <span>إضافة منتج</span>
+    </button>
+
+    <!-- جديد: زر منتجاتي -->
+    <button class="index-header-login-btn" id="dash-view-my-products-btn">
+      <i class="fas fa-archive index-user-icon"></i>
+      <span>منتجاتي</span>
+    </button>
+
+    <!-- زر تواصل معنا -->
+    <button class="index-header-login-btn" id="index-contact-btn">
+      <i class="fas fa-phone index-user-icon" id="index-contact-icon"></i>
+      <span id="index-contact-text">تواصل معنا</span>
+    </button>
+  </header>
+
+  <div id="index-home-container"></div>
+  <div id="index-search-container"></div>
+  <div id="index-user-container"></div>
+  <div id="index-product-container"></div>
+  <div id="index-cardPackage-container"></div>
+  <div id="index-myProducts-container"></div>
+  <!---region main javaScript files---->
+  <script src="js/auth.js" id="index-script-auth-js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/connectUsers.js"></script>
+  <script src="js/connectProduct.js"></script>
+  <script src="shared/categoryModal.js"></script>
+  <script src="js/network.js" id="index-script-network-js"></script>
+
+  <script src="js/tools.js" id="index-script-tools-js"></script>
+  <script src="js/globalVariable.js"></script>
+
+  <!---end region main javaScript files---->
+  <script>
+    function hiddenHomeIcon() {
+      const homeButton = document.getElementById("index-home-btn");
+      if (homeButton) {
+        homeButton.classList.add("index-hidden");
       }
-
-      /* ✅ جديد: تنسيق الزر النشط */
-      .index-header-login-btn.active {
-        border-bottom: 2px solid var(--primary-color);
-        background-color: var(--primary-color-light);
-        color: var(--primary-color);
-        border-radius: 8px;
+    }
+    function showHomeIcon() {
+      const homeButton = document.getElementById("index-home-btn");
+      if (homeButton) {
+        homeButton.classList.remove("index-hidden");
       }
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      userSession = JSON.parse(localStorage.getItem("loggedInUser")) || null;
+      setUserNameInIndexBar();
+      updateCartBadge(); // ✅ جديد: تحديث شارة السلة فور تحميل الصفحة
+      mainLoader(
+        "./pages/home.html",
+        "index-home-container",
+        0,
+        undefined,
+        "hiddenHomeIcon"
+      );
 
-      .index-header-login-btn.active .index-user-icon {
-        color: var(--primary-color);
-      }
+      //#region main navigation handlers
+      document
+        .getElementById("index-login-btn")
+        .addEventListener("click", handleLoginButtonClick);
 
-      .index-header-login-btn.active span {
-        color: var(--primary-color);
-        font-weight: bold;
-      }
-
-      /* ✅ جديد: أنماط شارة عدد المنتجات في السلة */
-      .cart-badge {
-        position: absolute;
-        top: -5px;
-        /* تعديل الموضع الرأسي */
-        right: -8px;
-        /* تعديل الموضع الأفقي */
-        background-color: var(--accent-color);
-        /* لون الخلفية */
-        border-radius: 50%;
-        /* لجعلها دائرية */
-        width: 18px;
-        /* عرض الشارة */
-        height: 18px;
-        /* ارتفاع الشارة */
-        font-size: 10px;
-        /* حجم الخط */
-        font-weight: bold;
-        display: flex;
-        /* لتوسيط الرقم */
-        align-items: center;
-        justify-content: center;
-        border: 2px solid var(--bg-color-light);
-        /* إضافة حدود لفصلها عن الخلفية */
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        /* ظل خفيف */
-
-        /* إخفاء الشارة افتراضيًا */
-        display: none;
-      }
-    </style>
-  </head>
-
-  <body id="index-app-body">
-    <header class="index-app-header" id="index-app-header">
-      <!-- زر تسجيل الدخول -->
-      <button class="index-header-login-btn" id="index-login-btn">
-        <i class="fas fa-user-circle index-user-icon" id="index-login-icon"></i>
-        <span id="index-login-text">تسجيل الدخول</span>
-      </button>
-
-      <!-- زر الرئيسية -->
-      <button class="index-header-login-btn" id="index-home-btn">
-        <i class="fas fa-home index-user-icon" id="index-home-icon"></i>
-        <span id="index-home-text">الرئيسية</span>
-      </button>
-
-      <!-- زر البحث -->
-      <button class="index-header-login-btn" id="index-search-btn">
-        <i class="fas fa-search index-user-icon" id="index-search-icon"></i>
-        <span id="index-search-text">بحث</span>
-      </button>
-
-      <!-- زر حركة المشتريات -->
-      <button class="index-header-login-btn" id="index-sales-movement-btn">
-        <i class="fas fa-history index-user-icon" id="index-sales-icon"></i>
-        <span id="index-sales-text">مشتريات</span>
-      </button>
-
-      <!-- زر السلة -->
-      <button class="index-header-login-btn" id="index-cart-btn">
-        <i
-          class="fas fa-shopping-cart index-user-icon"
-          id="index-cart-icon"
-        ></i>
-        <span id="index-cart-text">السلة</span>
-      </button>
-
-      <!-- جديد: زر الهدايا -->
-      <button class="index-header-login-btn" id="index-gifts-btn">
-        <i class="fas fa-gift index-user-icon" id="index-gifts-icon"></i>
-        <span id="index-gifts-text">هدايا</span>
-      </button>
-      <!-- جديد: زر إضافة منتج -->
-      <button class="index-header-login-btn" id="dash-add-product-btn">
-        <i class="fas fa-plus index-user-icon"></i>
-        <span>إضافة منتج</span>
-      </button>
-
-      <!-- جديد: زر منتجاتي -->
-      <button class="index-header-login-btn" id="dash-view-my-products-btn">
-        <i class="fas fa-archive index-user-icon"></i>
-        <span>منتجاتي</span>
-      </button>
-
-      <!-- زر تواصل معنا -->
-      <button class="index-header-login-btn" id="index-contact-btn">
-        <i class="fas fa-phone index-user-icon" id="index-contact-icon"></i>
-        <span id="index-contact-text">تواصل معنا</span>
-      </button>
-    </header>
-
-    <div id="index-home-container"></div>
-    <div id="index-search-container"></div>
-    <div id="index-user-container"></div>
-    <div id="index-product-container"></div>
-    <div id="index-cardPackage-container"></div>
-    <div id="index-myProducts-container"></div>
-    <!---region main javaScript files---->
-    <script src="js/auth.js" id="index-script-auth-js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/connectUsers.js"></script>
-    <script src="js/connectProduct.js"></script>
-    <script src="shared/categoryModal.js"></script>
-    <script src="js/network.js" id="index-script-network-js"></script>
-
-    <script src="js/tools.js" id="index-script-tools-js"></script>
-    <script src="js/globalVariable.js"></script>
-
-    <!---end region main javaScript files---->
-    <script>
-      function hiddenHomeIcon() {
-        const homeButton = document.getElementById("index-home-btn");
-        if (homeButton) {
-          homeButton.classList.add("index-hidden");
-        }
-      }
-      function showHomeIcon() {
-        const homeButton = document.getElementById("index-home-btn");
-        if (homeButton) {
-          homeButton.classList.remove("index-hidden");
-        }
-      }
-      document.addEventListener("DOMContentLoaded", () => {
-        userSession = JSON.parse(localStorage.getItem("loggedInUser")) || null;
-        setUserNameInIndexBar();
-        updateCartBadge(); // ✅ جديد: تحديث شارة السلة فور تحميل الصفحة
-        mainLoader(
-          "./pages/home.html",
-          "index-home-container",
-          0,
-          undefined,
-          "hiddenHomeIcon"
-        );
-
-        //#region main navigation handlers
-        document
-          .getElementById("index-login-btn")
-          .addEventListener("click", handleLoginButtonClick);
-
-        document
-          .getElementById("index-home-btn")
-          .addEventListener("click", handleHomeButtonClick);
-        // ربط الأزرار الجديدة بالدوال الخاصة بها
-        document
-          .getElementById("index-search-btn")
-          .addEventListener("click", handleSearchButtonClick);
-        document
-          .getElementById("index-sales-movement-btn")
-          .addEventListener("click", async () => {
-            if (userSession) {
-              const container = document.getElementById(
-                "index-myProducts-container"
-              );
-              if (container.innerHTML == "") {
-                await mainLoader(
-                  "./pages/sales-movement.html",
-                  "index-myProducts-container",
-                  300,
-                  undefined,
-                  "showHomeIcon",
-                  true
-                );
-              } else {
-                await mainLoader(
-                  "./pages/sales-movement.html",
-                  "index-myProducts-container",
-                  300,
-                  undefined,
-                  "showHomeIcon",
-                  false
-                );
-              }
-            } else {
-              // هذا الشرط سيتحقق إذا كان المستخدم ضيفًا أو لم يسجل دخوله على الإطلاق.
-              console.warn(
-                "[Modal] Add to cart button clicked by guest or non-logged-in user. Prompting for login/registration."
-              );
-              // إذا لم يكن المستخدم مسجلاً، أظهر رسالة تنبيه تدعوه لتسجيل الدخول.
-              Swal.fire({
-                icon: "info",
-                title: "يجب تسجيل الدخول",
-                text: "لمتابعه مشترياتك ومنتجاتك، يرجى تسجيل الدخول أولاً.",
-                showCancelButton: true,
-                confirmButtonText: "تسجيل الدخول",
-                cancelButtonText: "إلغاء",
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  console.log("[Modal] User chose to log in. Redirecting...");
-                  mainLoader(
-                    "./pages/login.html",
-                    "index-user-container",
-                    0,
-                    undefined,
-                    "hiddenLoginIcon",
-                    true
-                  );
-                }
-              });
-            }
-          });
-        document
-          .getElementById("index-cart-btn")
-          .addEventListener("click", () => {
+      document
+        .getElementById("index-home-btn")
+        .addEventListener("click", handleHomeButtonClick);
+      // ربط الأزرار الجديدة بالدوال الخاصة بها
+      document
+        .getElementById("index-search-btn")
+        .addEventListener("click", handleSearchButtonClick);
+      document
+        .getElementById("index-sales-movement-btn")
+        .addEventListener("click", async () => {
+          if (userSession) {
             const container = document.getElementById(
-              "index-cardPackage-container"
+              "index-myProducts-container"
             );
             if (container.innerHTML == "") {
-              mainLoader(
-                "./pages/cardPackage.html",
-                "index-cardPackage-container",
-                0,
+              await mainLoader(
+                "./pages/sales-movement.html",
+                "index-myProducts-container",
+                300,
                 undefined,
                 "showHomeIcon",
                 true
               );
             } else {
-              mainLoader(
-                "./pages/cardPackage.html",
-                "index-cardPackage-container",
-                0,
+              await mainLoader(
+                "./pages/sales-movement.html",
+                "index-myProducts-container",
+                300,
                 undefined,
                 "showHomeIcon",
                 false
               );
             }
-          });
-        document
-          .getElementById("index-gifts-btn")
-          .addEventListener("click", () =>
-            handleProtectedLinkClick("./pages/gifts.html")
-          );
-
-        function handleHomeButtonClick() {
-          const container = document.getElementById("index-home-container");
-          if (container.innerHTML == "") {
-            mainLoader(
-              "pages/home.html",
-              "index-home-container",
-              0,
-              undefined,
-              "hiddenHomeIcon",
-              true
-            );
           } else {
-            mainLoader(
-              "pages/home.html",
-              "index-home-container",
-              0,
-              undefined,
-              "hiddenHomeIcon",
-              false
+            // هذا الشرط سيتحقق إذا كان المستخدم ضيفًا أو لم يسجل دخوله على الإطلاق.
+            console.warn(
+              "[Modal] Add to cart button clicked by guest or non-logged-in user. Prompting for login/registration."
             );
+            // إذا لم يكن المستخدم مسجلاً، أظهر رسالة تنبيه تدعوه لتسجيل الدخول.
+            Swal.fire({
+              icon: "info",
+              title: "يجب تسجيل الدخول",
+              text: "لمتابعه مشترياتك ومنتجاتك، يرجى تسجيل الدخول أولاً.",
+              showCancelButton: true,
+              confirmButtonText: "تسجيل الدخول",
+              cancelButtonText: "إلغاء",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                console.log("[Modal] User chose to log in. Redirecting...");
+                mainLoader(
+                  "./pages/login.html",
+                  "index-user-container",
+                  0,
+                  undefined,
+                  "hiddenLoginIcon",
+                  true
+                );
+              }
+            });
           }
-        }
-
-        function handleLoginButtonClick() {
-          try {
-            if (userSession) {
-              console.log("المستخدم مسجل الدخول، التوجيه إلى لوحة التحكم.");
-              // إذا كان المستخدم مسجلاً، اذهب إلى لوحة التحكم
-              mainLoader(
-                "pages/user-dashboard.html",
-                "index-user-container",
-                0,
-                undefined,
-                "showHomeIcon",
-                true
-              );
-            } else {
-              // إذا لم يكن مسجلاً، اذهب إلى صفحة تسجيل الدخول
-              console.log(
-                "المستخدم غير مسجل الدخول، التوجيه إلى صفحة تسجيل الدخول."
-              );
-              mainLoader(
-                "pages/login.html",
-                "index-user-container",
-                0,
-                undefined,
-                "showHomeIcon",
-                true
-              );
-            }
-          } catch (error) {
-            console.error("خطأ في التعامل مع زر تسجيل الدخول:", error);
-          }
-        }
-
-        function handleSearchButtonClick() {
-          const container = document.getElementById("index-search-container");
-          if (container.innerHTML == "") {
-            mainLoader(
-              "pages/search.html",
-              "index-search-container",
-              0,
-              undefined,
-              "showHomeIcon",
-              true
-            );
-          } else {
-            mainLoader(
-              "pages/search.html",
-              "index-search-container",
-              0,
-              undefined,
-              "showHomeIcon",
-              false
-            );
-          }
-        }
-        // ✅ جديد: إعداد زر إضافة منتج
-        const addProductBtn = document.getElementById("dash-add-product-btn");
-        if (addProductBtn) {
-          addProductBtn.addEventListener("click", showAddProductModal);
-        }
-
-        // ✅ جديد: إعداد زر عرض منتجاتي
-        const viewMyProductsBtn = document.getElementById(
-          "dash-view-my-products-btn"
-        );
-        if (viewMyProductsBtn) {
-          viewMyProductsBtn.addEventListener("click", async () => {
-            console.log(myProducts);
-            mainLoader(
-              "pages/product2Me.html",
-              "index-myProducts-container",
-              0,
-              undefined,
-              "showHomeIcon",
-              true
-            );
-          });
-        }
-        //#endregion
-
-        // ✅ جديد: منطق تحديد الزر النشط
-        const headerButtons = document.querySelectorAll(
-          ".index-header-login-btn"
-        );
-
-        function setActiveButton(clickedBtn) {
-          headerButtons.forEach((btn) => btn.classList.remove("active"));
-          if (clickedBtn) {
-            clickedBtn.classList.add("active");
-          }
-        }
-
-        headerButtons.forEach((btn) => {
-          btn.addEventListener("click", function () {
-            setActiveButton(this);
-          });
         });
+      document
+        .getElementById("index-cart-btn")
+        .addEventListener("click", () => {
+          const container = document.getElementById(
+            "index-cardPackage-container"
+          );
+          if (container.innerHTML == "") {
+            mainLoader(
+              "./pages/cardPackage.html",
+              "index-cardPackage-container",
+              0,
+              undefined,
+              "showHomeIcon",
+              true
+            );
+          } else {
+            mainLoader(
+              "./pages/cardPackage.html",
+              "index-cardPackage-container",
+              0,
+              undefined,
+              "showHomeIcon",
+              false
+            );
+          }
+        });
+      document
+        .getElementById("index-gifts-btn")
+        .addEventListener("click", () =>
+          handleProtectedLinkClick("./pages/gifts.html")
+        );
 
-        // تعيين الزر الرئيسي كنشط افتراضيًا
-        const homeBtn = document.getElementById("index-home-btn");
-        if (homeBtn) {
-          setActiveButton(homeBtn);
+      function handleHomeButtonClick() {
+        const container = document.getElementById("index-home-container");
+        if (container.innerHTML == "") {
+          mainLoader(
+            "pages/home.html",
+            "index-home-container",
+            0,
+            undefined,
+            "hiddenHomeIcon",
+            true
+          );
+        } else {
+          mainLoader(
+            "pages/home.html",
+            "index-home-container",
+            0,
+            undefined,
+            "hiddenHomeIcon",
+            false
+          );
         }
+      }
+
+      function handleLoginButtonClick() {
+        try {
+          if (userSession) {
+            console.log("المستخدم مسجل الدخول، التوجيه إلى لوحة التحكم.");
+            // إذا كان المستخدم مسجلاً، اذهب إلى لوحة التحكم
+            mainLoader(
+              "pages/user-dashboard.html",
+              "index-user-container",
+              0,
+              undefined,
+              "showHomeIcon",
+              true
+            );
+          } else {
+            // إذا لم يكن مسجلاً، اذهب إلى صفحة تسجيل الدخول
+            console.log(
+              "المستخدم غير مسجل الدخول، التوجيه إلى صفحة تسجيل الدخول."
+            );
+            console.log("[Login Page] المستخدم غير مؤهل للإشعارات، تم تخطي استدعاء setupFCM().");
+            mainLoader(
+              "pages/login.html",
+              "index-user-container",
+              0,
+              undefined,
+              "showHomeIcon",
+              true
+            );
+          }
+        } catch (error) {
+          console.error("خطأ في التعامل مع زر تسجيل الدخول:", error);
+        }
+      }
+
+      function handleSearchButtonClick() {
+        const container = document.getElementById("index-search-container");
+        if (container.innerHTML == "") {
+          mainLoader(
+            "pages/search.html",
+            "index-search-container",
+            0,
+            undefined,
+            "showHomeIcon",
+            true
+          );
+        } else {
+          mainLoader(
+            "pages/search.html",
+            "index-search-container",
+            0,
+            undefined,
+            "showHomeIcon",
+            false
+          );
+        }
+      }
+
+      // ✅ جديد: إعداد زر إضافة منتج
+      const addProductBtn = document.getElementById("dash-add-product-btn");
+      if (addProductBtn) {
+        addProductBtn.addEventListener("click", showAddProductModal);
+      }
+
+      // ✅ جديد: إعداد زر عرض منتجاتي
+      const viewMyProductsBtn = document.getElementById(
+        "dash-view-my-products-btn"
+      );
+      if (viewMyProductsBtn) {
+        viewMyProductsBtn.addEventListener("click", async () => {
+          console.log(myProducts);
+          mainLoader(
+            "pages/product2Me.html",
+            "index-myProducts-container",
+            0,
+            undefined,
+            "showHomeIcon",
+            true
+          );
+        });
+      }
+      //#endregion
+
+      // ✅ جديد: منطق تحديد الزر النشط
+      const headerButtons = document.querySelectorAll(".index-header-login-btn");
+
+      function setActiveButton(clickedBtn) {
+        headerButtons.forEach((btn) => btn.classList.remove("active"));
+        if (clickedBtn) {
+          clickedBtn.classList.add("active");
+        }
+      }
+
+      headerButtons.forEach((btn) => {
+        btn.addEventListener("click", function () {
+          setActiveButton(this);
+        });
       });
-    </script>
-  </body>
+
+      // تعيين الزر الرئيسي كنشط افتراضيًا
+      const homeBtn = document.getElementById("index-home-btn");
+      if (homeBtn) {
+        setActiveButton(homeBtn);
+      }
+
+      // ✅ جديد: التحقق من وضع انتحال الشخصية (Impersonation Mode) وإظهار العلامة المائية
+      checkImpersonationMode();
+    });
+
+    function checkImpersonationMode() {
+      const originalAdminSession = localStorage.getItem("originalAdminSession");
+      if (originalAdminSession) {
+        const watermark = document.createElement("div");
+        watermark.className = "admin-watermark";
+        watermark.innerHTML = `
+          <i class="fas fa-user-shield"></i>
+          <span>وضع المسؤول: تتصفح بصلاحيات المستخدم</span>
+        `;
+        document.body.appendChild(watermark);
+      }
+    }
+  </script>
+</body>
+
 </html>

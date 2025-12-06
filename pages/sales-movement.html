@@ -946,7 +946,8 @@
                 // تعيين المتغيرات العامة لتمريرها إلى config.js
                 window.globalStepperAppData = {
                     idUser: userSession.user_key,
-                    ordersData: [salesMovement_convertedOrder]
+                    ordersData: [salesMovement_convertedOrder],
+                    baseURL: baseURL  // إضافة baseURL
                 };
 
                 console.log('تم تعيين globalStepperAppData:', window.globalStepperAppData);
@@ -1075,7 +1076,7 @@
 
                         // تحديث الجلسة
                         if (typeof productSession !== 'undefined') {
-                            productSession = [productDataForModal, {showAddToCart:false    }];
+                            productSession = [productDataForModal, { showAddToCart: false }];
                             console.log('✅ تم تحديث productSession من salesMovement');
                         }
 

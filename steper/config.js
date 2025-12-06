@@ -156,13 +156,43 @@ export var ordersData = [
 export var globalStepperAppData = null;
 
 /**
+ * @var {string} baseURL
+ * @description عنوان URL الأساسي للـ API.
+ * يتم تحديثه من النافذة الأم إذا كان متوفراً.
+ */
+export var baseURL = '';
+
+/**
+ * @var {string} order_status
+ * @description حالة الطلب الحالية.
+ * يتم تحديثه من النافذة الأم إذا كان متوفراً.
+ */
+export var order_status = '';
+
+/**
  * @function updateGlobalStepperAppData
  * @description دالة لتحديث المتغير العام globalStepperAppData وطباعة القيمة الجديدة.
  * @param {object} newData - البيانات الجديدة.
  */
 export function updateGlobalStepperAppData(newData) {
     globalStepperAppData = newData;
-    console.log("Global stepper_app_data updated:", globalStepperAppData);
+    try {
+        if (globalStepperAppData) {
+            fetch(baseURL + '/api/orders', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    order_key: ordersData[0].order_key,
+                    order_status: globalStepperAppData
+                })
+            })
+            .then(res => res.json())
+            .then(data => console.log(data));
+            console.log("Global stepper_app_data updated:", globalStepperAppData);
+        }
+    } catch (error) {
+        console.error("Error updating global stepper_app_data:", error);
+    }
 }
 
 /**
@@ -188,6 +218,18 @@ export function updateGlobalStepperAppData(newData) {
                 ordersData.length = 0; // مسح البيانات الافتراضية
                 ordersData.push(...parentData.ordersData); // إضافة البيانات الحقيقية
                 console.log('تم تحديث ordersData:', ordersData);
+            }
+
+            // تحديث baseURL
+            if (parentData.baseURL) {
+                baseURL = parentData.baseURL;
+                console.log('تم تحديث baseURL إلى:', baseURL);
+            }
+
+            // تحديث order_status من أول طلب في ordersData
+            if (parentData.ordersData && parentData.ordersData.length > 0 && parentData.ordersData[0].order_status) {
+                order_status = parentData.ordersData[0].order_status;
+                console.log('تم تحديث order_status إلى:', order_status);
             }
 
             console.log('تمت التهيئة بنجاح من البيانات الحقيقية');

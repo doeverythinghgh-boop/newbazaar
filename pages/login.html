@@ -348,7 +348,7 @@
       if (Number(userSession?.is_seller) >= 1) {
         // محاولة تهيئة الإشعارات للمستخدم الحالي إذا كان مسجلاً دخوله.
         if (typeof initializeNotifications === "function") {
-          initializeNotifications();
+        //  initializeNotifications();
         }
         // إيقاف التنفيذ لإتاحة الفرصة لإعادة التوجيه (المفروض أن يتم إعادة التوجيه في مكان آخر)
         return;
@@ -557,7 +557,7 @@
       setUserNameInIndexBar();
       // 2. إعداد إشعارات FCM إذا كان المستخدم مؤهلاً
       if (Number(userSession?.is_seller) >= 1) {
-        return;
+      
       /*  console.log("[Login Page] المستخدم مؤهل، جاري استدعاء setupFCM() الآن...");
         if (typeof setupFCM === "function") {
           await setupFCM();

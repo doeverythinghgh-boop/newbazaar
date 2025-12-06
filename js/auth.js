@@ -106,10 +106,10 @@ async function handleRevokedPermissions() {
  */
 async function initializeNotifications() {
   // [خطوة 1] التأكد من وجود جلسة مستخدم مسجلة. إذا لم يكن هناك مستخدم، تتوقف الدالة.
-  if (!userSession) return;
+//  if (!userSession) return;
 
   // [خطوة 2] استدعاء دالة للتحقق مما إذا كان المستخدم قد ألغى أذونات الإشعارات يدويًا.
-  handleRevokedPermissions();
+  //handleRevokedPermissions();
 
   // [خطوة 3] التحقق مما إذا كان المستخدم مؤهلاً لاستقبال الإشعارات (بائع أو له دور أعلى).
   if (Number(userSession.is_seller) >= 1) {
@@ -221,9 +221,18 @@ async function clearAndNavigateToLogin() {
       // ملاحظة: حتى لو فشل الحذف من الخادم، ستستمر عملية تسجيل الخروج من جانب العميل.
     }
   }*/
-
+  // 3. مسح جميع بيانات المتصفح
+  console.log("[Auth] جاري مسح جميع بيانات المتصفح...");
+  await clearAllBrowserData();
+  clearMainContainers();
+  console.log("[Auth] تم مسح بيانات المتصفح بنجاح.");
+userSession=null;
+//
+  setUserNameInIndexBar(); 
+checkImpersonationMode();
   // [خطوة 1] استدعاء `mainLoader` لتحميل محتوى صفحة تسجيل الدخول في حاوية المستخدم الرئيسية.
-  mainLoader(
+  console.log("[Auth] دخلنا دالة clearAndNavigateToLogin 00000000000. جاري تحميل صفحة تسجيل الدخول...");
+await mainLoader(
     "pages/login.html",
     "index-user-container",
     0,

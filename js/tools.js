@@ -3,6 +3,28 @@
  * @description يوفر دوال مساعدة لتنسيق النصوص والأرقام، مثل تحويل الأرقام الهندية إلى إنجليزية وتوحيد النص العربي.
  */
 
+
+
+// دالة للتحقق من وجود جلسة مسؤول أصلية في التخزين المحلي.
+function checkImpersonationMode() {
+  const originalAdminSession = localStorage.getItem("originalAdminSession");
+  if (originalAdminSession) {
+    // إذا وجدت، يتم إنشاء عنصر HTML للعلامة المائية وإضافته إلى الصفحة.
+    const watermark = document.createElement("div");
+    watermark.className = "admin-watermark";
+    watermark.innerHTML = `
+          <i class="fas fa-user-shield"></i>
+          <span>وضع المسؤول: تتصفح بصلاحيات المستخدم</span>
+        `;
+    document.body.appendChild(watermark);
+  }else{
+    const watermark = document.querySelector(".admin-watermark");
+    if (watermark) {
+      watermark.remove();
+    }
+  }
+}
+
 /**
  * @description يحول الأرقام الهندية (٠-٩) إلى أرقام إنجليزية (0-9) في سلسلة نصية.
  *   هذه الدالة مفيدة لمعالجة مدخلات المستخدم التي قد تحتوي على أرقام بأي من الصيغتين.
@@ -133,21 +155,21 @@ const clearError = (input) => {
   // تفريغ نص رسالة الخطأ.
   errorDiv.textContent = "";
 };
-function setUserNameInIndexBar(){
-    let loginTextElement = document.getElementById("index-login-text");
+function setUserNameInIndexBar() {
+  let loginTextElement = document.getElementById("index-login-text");
 
-      if (userSession && userSession.username) {
-        if (loginTextElement) {
-          let displayName = userSession.username;
-          if (displayName.length > 8) {
-            displayName = displayName.substring(0, 8) + "...";
-          }
-          loginTextElement.textContent = displayName;
-        }
-      }else{
-          loginTextElement.textContent = "تسجيل الدخول";
-
+  if (userSession && userSession.username) {
+    if (loginTextElement) {
+      let displayName = userSession.username;
+      if (displayName.length > 8) {
+        displayName = displayName.substring(0, 8) + "...";
       }
+      loginTextElement.textContent = displayName;
+    }
+  } else {
+    loginTextElement.textContent = "تسجيل الدخول";
+
+  }
 }
 async function clearAllBrowserData() {
   // -----------------------------

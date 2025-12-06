@@ -548,20 +548,7 @@
       checkImpersonationMode();
     });
 
-    // دالة للتحقق من وجود جلسة مسؤول أصلية في التخزين المحلي.
-    function checkImpersonationMode() {
-      const originalAdminSession = localStorage.getItem("originalAdminSession");
-      if (originalAdminSession) {
-        // إذا وجدت، يتم إنشاء عنصر HTML للعلامة المائية وإضافته إلى الصفحة.
-        const watermark = document.createElement("div");
-        watermark.className = "admin-watermark";
-        watermark.innerHTML = `
-          <i class="fas fa-user-shield"></i>
-          <span>وضع المسؤول: تتصفح بصلاحيات المستخدم</span>
-        `;
-        document.body.appendChild(watermark);
-      }
-    }
+  
   </script>
 </body>
 

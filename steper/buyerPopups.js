@@ -38,11 +38,12 @@ function getProductName(productKey, ordersData) {
  * Helper to attach log button listeners
  */
 function attachLogButtonListeners() {
-    document.querySelectorAll('.btn-show-key').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+    document.querySelectorAll('.btn-show-key').forEach(button => {
+        button.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation(); // Prevent toggling the checkbox/row
-            console.log(btn.dataset.key);
+            console.log('button.dataset.key',button.dataset.key);
+            localStorage.setItem('productKeyFromStepReview', button.dataset.key);
         });
     });
 }

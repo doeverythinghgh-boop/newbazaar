@@ -1010,6 +1010,108 @@
             }
         });
 
+        // ========================================
+        // مراقبة تغييرات localStorage للمفتاح productKeyFromStepReview
+        // ========================================
+
+        // متغير لمنع التنفيذ المتكرر
+        let salesMovement_isProcessingProductKey = false;
+
+        // دالة للتحقق من التغييرات
+        async function salesMovement_checkProductKeyChanges() {
+            try {
+                // منع التنفيذ المتكرر
+                if (salesMovement_isProcessingProductKey) {
+                    return;
+                }
+
+                const salesMovement_currentProductKey = localStorage.getItem('productKeyFromStepReview');
+
+                // التحقق من وجود قيمة صالحة
+                if (salesMovement_currentProductKey !== null &&
+                    salesMovement_currentProductKey !== "" &&
+                    salesMovement_currentProductKey !== undefined) {
+
+                    console.log('🔔 تم اكتشاف قيمة productKeyFromStepReview:', salesMovement_currentProductKey);
+
+                    // تفعيل علامة المعالجة
+                    salesMovement_isProcessingProductKey = true;
+
+                    // مسح القيمة فوراً لمنع التكرار
+                    localStorage.setItem('productKeyFromStepReview', "");
+
+                    try {
+                        // جلب بيانات المنتج
+                        const salesMovement_response = await fetch(`${baseURL}/api/products?product_key=${salesMovement_currentProductKey}`);
+
+                        if (!salesMovement_response.ok) {
+                            throw new Error(`HTTP error! status: ${salesMovement_response.status}`);
+                        }
+
+                        const product = await salesMovement_response.json();
+                        console.log('✅ تم جلب بيانات المنتج:', product);
+
+                        // تحضير بيانات المنتج
+                        const productDataForModal = {
+                            product_key: product.product_key,
+                            productName: product.productName,
+                            user_key: product.user_key,
+                            pricePerItem: product.product_price,
+                            original_price: product.original_price,
+                            imageSrc: product.ImageName
+                                ? product.ImageName.split(",").map(
+                                    (name) => `https://pub-e828389e2f1e484c89d8fb652c540c12.r2.dev/${name}`
+                                )
+                                : [],
+                            availableQuantity: product.product_quantity,
+                            sellerMessage: product.user_message,
+                            description: product.product_description,
+                            sellerName: product.seller_username,
+                            sellerPhone: product.seller_phone,
+                            MainCategory: product.MainCategory,
+                            SubCategory: product.SubCategory,
+                            type: product.serviceType,
+                        };
+
+                        // تحديث الجلسة
+                        if (typeof productSession !== 'undefined') {
+                            productSession = [productDataForModal, {showAddToCart:false    }];
+                            console.log('✅ تم تحديث productSession من salesMovement');
+                        }
+
+                        // عرض المنتج
+                        if (typeof productViewLayout === 'function') {
+                            productViewLayout(productDataForModal.type);
+                            console.log('✅ تم استدعاء productViewLayout');
+                        } else {
+                            console.warn('⚠️ الدالة productViewLayout غير موجودة');
+                        }
+
+                    } catch (fetchError) {
+                        console.error('❌ خطأ في جلب بيانات المنتج:', fetchError);
+                    } finally {
+                        // إعادة تعيين علامة المعالجة بعد ثانية واحدة
+                        setTimeout(() => {
+                            salesMovement_isProcessingProductKey = false;
+                        }, 1000);
+                    }
+                }
+            } catch (salesMovement_error) {
+                console.error('❌ خطأ في مراقبة productKeyFromStepReview:', salesMovement_error);
+                salesMovement_isProcessingProductKey = false;
+            }
+        }
+
+        // بدء المراقبة كل 100 ملي ثانية
+        const salesMovement_productKeyWatcher = setInterval(salesMovement_checkProductKeyChanges, 100);
+
+        // تنظيف المراقبة عند إغلاق الصفحة (اختياري)
+        window.addEventListener('beforeunload', function () {
+            clearInterval(salesMovement_productKeyWatcher);
+        });
+
+        console.log('✅ تم تفعيل مراقبة productKeyFromStepReview في localStorage');
+
 
     </script>
 </body>

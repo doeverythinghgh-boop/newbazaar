@@ -294,7 +294,29 @@
             document
                 .getElementById("index-sales-movement-btn")
                 .addEventListener("click", async () => {
-                    await mainLoader("./pages/sales-movement.html", "index-myProducts-container", 300, undefined, "showHomeIcon", true)
+                    if (userSession) {
+                        await mainLoader("./pages/sales-movement.html", "index-myProducts-container", 300, undefined, "showHomeIcon", false)
+                    } else {
+                        // هذا الشرط سيتحقق إذا كان المستخدم ضيفًا أو لم يسجل دخوله على الإطلاق.
+                        console.warn(
+                            "[Modal] Add to cart button clicked by guest or non-logged-in user. Prompting for login/registration."
+                        );
+                        // إذا لم يكن المستخدم مسجلاً، أظهر رسالة تنبيه تدعوه لتسجيل الدخول.
+                        Swal.fire({
+                            icon: "info",
+                            title: "يجب تسجيل الدخول",
+                            text: "لمتابعه مشترياتك ومنتجاتك، يرجى تسجيل الدخول أولاً.",
+                            showCancelButton: true,
+                            confirmButtonText: "تسجيل الدخول",
+                            cancelButtonText: "إلغاء",
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                console.log("[Modal] User chose to log in. Redirecting...");
+                                mainLoader("./pages/login.html", "index-user-container", 0, undefined, "hiddenLoginIcon", true);
+
+                            }
+                        });
+                    }
                 });
             document
                 .getElementById("index-cart-btn")

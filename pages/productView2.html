@@ -1,39 +1,165 @@
- <style>
+<style>
     /*
     * ========================================
     * ProductView Styles (productView_)
     * ========================================
     */
 
-    
-
     /* تطبيق الحركات على العناصر */
     .productView_modal_content {
         padding: 20px;
         max-width: 100%;
-width: 100%;
+        width: 100%;
         animation: productView_fadeInScaleUp 0.4s ease-out forwards;
     }
 
-    #productView_image {
+    /* 
+    * ==========================================
+    * 3D Slider Styles (Adapted for ProductView)
+    * ==========================================
+    */
+
+    /* Main slider container */
+    .productView_slider-container {
+        position: relative;
+        height: 400px;
+        /* مطابق للارتفاع الأقصى السابق */
         width: 100%;
-        animation: productView_zoomInEffect 0.5s ease-out 0.1s forwards;
-        opacity: 0; /* يبدأ مخفياً */
-        max-height: 400px; /* تحديد ارتفاع أقصى */
-        border-radius: 8px;
-        background-color: var(--bg-color-light, #f9f9f9); /* خلفية للصورة */
+        margin-bottom: 20px;
+        overflow: hidden;
+        /* لمنع ظهور التمرير الأفقي */
+        background: linear-gradient(180deg, var(--bg-color-white, #fff) 0%, var(--border-color, #e9ecef) 100%);
+        border-radius: 12px;
+        box-shadow: var(--shadow-soft, 0 4px 12px rgba(0, 0, 0, 0.05));
     }
+
+    /* Inner slides track */
+    .productView_slider-track {
+        position: relative;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        /* لمركزة العناصر */
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Each slide */
+    .productView_slide {
+        position: absolute;
+        top: 5%;
+        /* هوامش لضبط المحاذاة */
+        /* left: 20%;  لا نعتمد عليها بشكل مطلق مع الحسابات الجديدة */
+        width: 60%;
+        height: 90%;
+        background-size: contain;
+        /* استخدام contain لضمان ظهور المنتج بالكامل */
+        background-position: center;
+        background-repeat: no-repeat;
+        border-radius: 12px;
+        box-shadow: var(--shadow-interactive, 0 2px 8px rgba(0, 0, 0, 0.1));
+        opacity: 0.8;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1;
+        filter: blur(3px) brightness(0.9) saturate(0.8);
+        cursor: pointer;
+        background-color: #fff;
+        /* خلفية بيضاء لصور المنتجات الشفافة */
+    }
+
+    /* Active (visible) slide */
+    .productView_slide.active {
+        transform: translateX(0) scale(1) translateZ(0) !important;
+        filter: blur(0) brightness(1) saturate(1);
+        opacity: 1;
+        z-index: 10;
+        border: 1px solid var(--border-color, #eee);
+    }
+
+    /* Navigation dots container */
+    .productView_slider-dots {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 20;
+    }
+
+    /* Each navigation dot */
+    .productView_slider-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--text-color-light, #ccc);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    /* Active dot */
+    .productView_slider-dot.active {
+        background-color: var(--primary-color, #007bff);
+        transform: scale(1.3);
+    }
+
+    /* Navigation buttons (Prev/Next) styles */
+    .productView_slider-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 20;
+        background-color: rgba(255, 255, 255, 0.8);
+        color: var(--text-color-dark, #333);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        cursor: pointer;
+        display: none;
+        /* Hidden by default */
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .productView_slider-nav:hover {
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .productView_slider-nav.prev {
+        left: 10px;
+    }
+
+    .productView_slider-nav.next {
+        right: 10px;
+    }
+
+    .productView_slider-nav:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+
+
+    /* ========================================== */
 
     #productView_details_container {
         animation: productView_slideInFromTop 0.5s ease-out 0.2s forwards;
-        opacity: 0; /* يبدأ مخفياً */
+        opacity: 0;
+        /* يبدأ مخفياً */
         text-align: right;
     }
 
     /* حركة متدرجة للتفاصيل */
-    #productView_details_container > * {
+    #productView_details_container>* {
         animation: productView_slideInFromTop 0.5s ease-out forwards;
-        opacity: 0; /* يبدأ مخفياً */
+        opacity: 0;
+        /* يبدأ مخفياً */
     }
 
     /* حاويات الوصف والرسالة */
@@ -46,6 +172,7 @@ width: 100%;
         border: 1px solid var(--border-color-soft, #eef2f7);
         box-shadow: var(--shadow-soft);
     }
+
     .productView_description_box h4,
     .productView_seller_message_box h4 {
         margin-top: 0;
@@ -53,62 +180,27 @@ width: 100%;
         border-bottom: 1px solid var(--border-color, #e9ecef);
         padding-bottom: 10px;
     }
+
     .productView_description_box p,
     .productView_seller_message_box p {
         color: var(--text-color-medium, #4a5568);
         line-height: 1.6;
     }
+
     .productView_description_box h4 i,
     .productView_seller_message_box h4 i {
         color: var(--primary-color, #007bff);
-        margin-left: 8px; /* تغيير جهة الهامش */
+        margin-left: 8px;
+        /* تغيير جهة الهامش */
     }
 
-    .productView_image_container {
-        width: 100%;
-        position: relative;
-        overflow: hidden;
-        margin-bottom: 15px;
-    }
-
-    .productView_thumbnails_container {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 10px;
-        flex-wrap: wrap;
-    }
-    .productView_thumbnails_container img {
-        width: 60px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: 4px;
-        cursor: pointer;
-        border: 2px solid var(--border-color, #e9ecef);
-        transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-    }
-    .productView_thumbnails_container img.active {
-        border-color: var(--primary-color, #007bff);
-        box-shadow: var(--shadow-focus);
-        transform: scale(1.1);
-    }
-/* Keyframes للحركات */
+    /* Keyframes للحركات */
     @keyframes productView_fadeInScaleUp {
         from {
             opacity: 0;
             transform: scale(0.9);
         }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
 
-    @keyframes productView_zoomInEffect {
-        from {
-            opacity: 0;
-            transform: scale(0.5);
-        }
         to {
             opacity: 1;
             transform: scale(1);
@@ -120,6 +212,7 @@ width: 100%;
             opacity: 0;
             transform: translateY(-30px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -128,37 +221,33 @@ width: 100%;
 </style>
 
 <div class="productView_modal_content" id="productView_modal_content">
-    <div
-        class="productView_image_container"
-        id="productView_image_container"
-    >
-        <img id="productView_image" src="" alt="صورة المنتج" />
-        <div class="productView_thumbnails_container" id="productView_thumbnails_container">
-            </div>
+
+    <!-- ✅ جديد: حاوية سلايدر الصور -->
+    <div id="productView_slider" class="productView_slider-container">
+        <div class="productView_slider-track" id="productView_slider_track"></div>
+        <div class="productView_slider-dots" id="productView_slider_dots"></div>
+        <button class="productView_slider-nav prev" id="productView_slider_prev" aria-label="Previous Slide">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="productView_slider-nav next" id="productView_slider_next" aria-label="Next Slide">
+            <i class="fas fa-chevron-right"></i>
+        </button>
     </div>
+
     <div class="productView_details" id="productView_details_container">
-        <h3
-            id="productView_name"
-            style="text-align: center; margin-bottom: 1rem; color: var(--text-color-dark, #222)"
-        >
-            </h3>
-        <div
-            class="productView_description_box"
-            id="productView_description_container"
-        >
+        <h3 id="productView_name" style="text-align: center; margin-bottom: 1rem; color: var(--text-color-dark, #222)">
+        </h3>
+        <div class="productView_description_box" id="productView_description_container">
             <h4 id="productView_description_header">
-                <i class="fas fa-file-alt"></i> وصف المنتج
+                <i class="fas fa-file-alt"></i>وصف الخدمة 
             </h4>
             <p id="productView_description_text"></p>
         </div>
 
         <div class="productView_seller_message_box" id="productView_seller_message_container">
             <h4 id="productView_seller_message_header">
-                <i
-                    class="fas fa-comment-dots"
-                    id="productView_seller_message_icon"
-                ></i>
-                رسالة من البائع
+                <i class="fas fa-comment-dots" id="productView_seller_message_icon"></i>
+                رسالة من صاحب الخدمة
             </h4>
             <p id="productView_seller_message_text"></p>
         </div>
@@ -167,127 +256,228 @@ width: 100%;
 <script>
     /**
      * @fileoverview Product View Details Logic (productView_ module)
-     * @author Hisham (BidStory Project)
+     * @author Hisham (BidStory Project) - Updated with 3D Slider
      */
 
     // ==============================================
-    //  الوصول إلى عناصر DOM (فصل المسؤوليات - SRP)
+    //  الوصول إلى عناصر DOM
     // ==============================================
 
-    /**
-     * كائن يحتوي على جميع معرفات DOM المستخدمة لتجنب تكرار استدعاء document.getElementById.
-     */
     const productView_domElements = {
-        // بيانات المنتج
         name: document.getElementById("productView_name"),
         description: document.getElementById("productView_description_text"),
         sellerMessage: document.getElementById("productView_seller_message_text"),
 
-        // الصور
-        mainImage: document.getElementById("productView_image"),
-        thumbnailsContainer: document.getElementById("productView_thumbnails_container"),
+        // Slider Elements
+        sliderContainer: document.getElementById("productView_slider"),
+        sliderTrack: document.getElementById("productView_slider_track"),
+        sliderDots: document.getElementById("productView_slider_dots"),
+        prevBtn: document.getElementById("productView_slider_prev"),
+        nextBtn: document.getElementById("productView_slider_next")
     };
 
 
     // ==============================================
-    //  الدوال المساعدة (قابلية الصيانة - Modularity)
+    //  منطق السلايدر (3D Slider Logic)
     // ==============================================
 
+    let productView_sliderState = {
+        currentIndex: 0,
+        slides: [],
+        dots: [],
+        autoPlayInterval: null,
+        images: []
+    };
+
     /**
-     * تُنشئ وتعالج صور المصغرات للمنتج.
-     * @param {string[]} imageSrcArray - مصفوفة مسارات الصور.
-     * @param {HTMLElement} mainImageEl - عنصر الصورة الرئيسية (<img>).
-     * @param {HTMLElement} thumbnailsContainerEl - حاوية الصور المصغرة.
+     * يبني ويعرض شريط تمرير (Slider) لصور المنتج.
+     * @param {string[]} images - مصفوفة روابط الصور.
      */
-    function productView_populateThumbnails(imageSrcArray, mainImageEl, thumbnailsContainerEl) {
-        try {
-            thumbnailsContainerEl.innerHTML = ""; // مسح الصور المصغرة القديمة
-            mainImageEl.src = imageSrcArray[0] || ""; // عرض الصورة الأولى
+    function productView_buildSlider(images) {
+        const { sliderTrack, sliderDots, prevBtn, nextBtn, sliderContainer } = productView_domElements;
 
-            imageSrcArray.forEach((src) => {
-                const thumb = document.createElement("img");
-                thumb.alt = "صورة مصغرة للمنتج";
-                thumb.src = src;
+        // إعادة تعيين الحالة
+        productView_sliderState = {
+            currentIndex: 0,
+            slides: [],
+            dots: [],
+            autoPlayInterval: null,
+            images: images
+        };
 
-                thumb.onclick = () => { // عند النقر، تحديث الصورة الرئيسية
-                    mainImageEl.src = src;
-                    // إزالة الكلاس 'active' من الجميع وإضافته إلى الصورة المحددة
-                    document.querySelectorAll('.productView_thumbnails_container img').forEach(t => t.classList.remove('active'));
-                    thumb.classList.add('active');
-                };
+        // تنظيف المحتوى السابق
+        sliderTrack.innerHTML = '';
+        sliderDots.innerHTML = '';
 
-                thumb.onerror = () => {
-                    console.warn("[productView_] فشل تحميل الصورة المصغرة:", src);
-                    // استبدال الصورة الفاشلة بعنصر نائب (يمكن تحسين هذا في CSS المشروع)
-                    const placeholder = document.createElement("div");
-                    placeholder.className = "image-load-error-placeholder";
-                    placeholder.innerHTML = `<i class="fas fa-exclamation-triangle"></i><span>فشل التحميل</span>`;
-                    thumb.replaceWith(placeholder);
-                };
-                thumbnailsContainerEl.appendChild(thumb);
-            });
+        // إخفاء الأزرار مؤقتًا
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
 
-            // تفعيل أول صورة مصغرة بشكل افتراضي (تأخير بسيط لضمان الإلحاق)
-            setTimeout(() => {
-                if (thumbnailsContainerEl.firstChild) thumbnailsContainerEl.firstChild.classList.add('active');
-            }, 0);
-
-        } catch (error) {
-            console.error("productView_populateThumbnails - خطأ في تعبئة الصور المصغرة:", error);
+        if (!images || images.length === 0) {
+            sliderTrack.innerHTML = '<p style="text-align:center; color:#666; width:100%;">لا توجد صور للمنتج</p>';
+            return;
         }
+
+        // إنشاء الشرائح والنقاط
+        images.forEach((imageUrl, index) => {
+            // Slide
+            const slide = document.createElement('div');
+            slide.className = 'productView_slide';
+            slide.style.backgroundImage = `url('${imageUrl}')`;
+
+            // أحداث التوقف/التشغيل
+            slide.addEventListener('mousedown', productView_pauseAutoPlay);
+            slide.addEventListener('mouseup', productView_startAutoPlay);
+            slide.addEventListener('touchstart', productView_pauseAutoPlay, { passive: true });
+            slide.addEventListener('touchend', productView_startAutoPlay);
+
+            // النقر على الشريحة الجانبية لتفعيلها
+            slide.onclick = () => productView_goToSlide(index);
+
+            sliderTrack.appendChild(slide);
+            productView_sliderState.slides.push(slide);
+
+            // Dot
+            const dot = document.createElement('div');
+            dot.className = 'productView_slider-dot';
+            dot.onclick = (e) => {
+                e.stopPropagation(); // منع انتقال النقر
+                productView_goToSlide(index);
+            };
+            sliderDots.appendChild(dot);
+            productView_sliderState.dots.push(dot);
+        });
+
+        // إعداد عناصر التحكم
+        if (images.length > 1) {
+            prevBtn.style.display = 'flex';
+            nextBtn.style.display = 'flex';
+
+            prevBtn.onclick = () => productView_goToSlide(productView_sliderState.currentIndex - 1);
+            nextBtn.onclick = () => productView_goToSlide(productView_sliderState.currentIndex + 1);
+
+            // بدء التشغيل التلقائي
+            productView_startAutoPlay();
+        } else {
+            // إخفاء النقاط إذا صورة واحدة
+            sliderDots.style.display = 'none';
+        }
+
+        // عرض الشريحة الأولى
+        productView_goToSlide(0);
+    }
+
+    /**
+     * الانتقال إلى شريحة محددة مع تأثير 3D.
+     */
+    function productView_goToSlide(index) {
+        const { slides, dots } = productView_sliderState;
+        if (slides.length === 0) return;
+
+        // حساب الفهرس الدائري
+        const total = slides.length;
+        const newIndex = (index + total) % total;
+        productView_sliderState.currentIndex = newIndex;
+
+        slides.forEach((slide, i) => {
+            const directOffset = i - newIndex;
+            // حساب المسافة الأقصر في الحلقة الدائرية
+            const wrapOffset = directOffset > 0 ? directOffset - total : directOffset + total;
+            const offset = Math.abs(directOffset) < Math.abs(wrapOffset) ? directOffset : wrapOffset;
+
+            const isActive = offset === 0;
+
+            // حساب التحويلات
+            const translateX = offset * 40; // 40% إزاحة
+            const scale = isActive ? 1 : 0.7;
+            const translateZ = -Math.abs(offset) * 50; // عمق
+
+            slide.style.transform = `translateX(${translateX}%) translateZ(${translateZ}px) scale(${scale})`;
+
+            // تحديث الكلاسات
+            if (isActive) {
+                slide.classList.add('active');
+                slide.style.zIndex = 10;
+            } else {
+                slide.classList.remove('active');
+                slide.style.zIndex = 1; // القيم الأقل في الخلف
+            }
+        });
+
+        // تحديث النقاط
+        dots.forEach((dot, i) => {
+            if (i === newIndex) dot.classList.add('active');
+            else dot.classList.remove('active');
+        });
+
+        // إعادة ضبط المؤقت
+        if (slides.length > 1) {
+            productView_resetAutoPlay();
+        }
+    }
+
+    function productView_startAutoPlay() {
+        if (productView_sliderState.images.length <= 1) return;
+        if (productView_sliderState.autoPlayInterval) clearInterval(productView_sliderState.autoPlayInterval);
+        productView_sliderState.autoPlayInterval = setInterval(() => {
+            productView_goToSlide(productView_sliderState.currentIndex + 1);
+        }, 4000);
+    }
+
+    function productView_pauseAutoPlay() {
+        if (productView_sliderState.autoPlayInterval) clearInterval(productView_sliderState.autoPlayInterval);
+    }
+
+    function productView_resetAutoPlay() {
+        productView_pauseAutoPlay();
+        productView_startAutoPlay();
     }
 
 
     // ==============================================
-    //  الدالة الرئيسية (مبدأ المسؤولية الواحدة - SRP)
+    //  الدالة الرئيسية
     // ==============================================
 
     /**
-     * تعرض تفاصيل المنتج في النافذة المنبثقة وتُهيئ الوظائف التفاعلية.
-     * تُعد هذه الدالة نقطة الدخول الرئيسية لعرض بيانات المنتج.
-     * @param {object} productData - كائن بيانات المنتج المراد عرضه.
+     * تعرض تفاصيل المنتج وتهيئ السلايدر.
      */
     function productView_viewDetails(productData) {
         try {
-            console.log("[productView_] جاري عرض تفاصيل المنتج...");
-            const {
-                name, description, sellerMessage,
-                mainImage, thumbnailsContainer,
-            } = productView_domElements;
+            console.log("[productView_] عرض التفاصيل بالسلايدر...");
+            const { name, description, sellerMessage } = productView_domElements;
 
-            // تعبئة البيانات الأساسية
             name.textContent = productData.productName || "غير متوفر";
             description.textContent = productData.description || "لا يوجد وصف متاح.";
             sellerMessage.textContent = productData.sellerMessage || "لا توجد رسالة من البائع.";
-            
-            // تعبئة معرض الصور
-            productView_populateThumbnails(
-                productData.imageSrc || [],
-                mainImage,
-                thumbnailsContainer
-            );
+
+            // بناء السلايدر
+            const images = productData.imageSrc || [];
+            productView_buildSlider(images);
 
         } catch (error) {
-            console.error("productView_viewDetails - خطأ عام أثناء عرض التفاصيل:", error);
-            // رسالة تنبيه للمستخدم النهائي باستخدام SweetAlert2
+            console.error("productView_viewDetails - Error:", error);
             Swal.fire({
                 icon: "error",
-                title: "عفواً!",
-                text: "حدث خطأ أثناء تحميل تفاصيل المنتج. يرجى المحاولة لاحقاً.",
+                title: "خطأ",
+                text: "حدث خطأ أثناء عرض المنتج.",
                 customClass: { popup: 'fullscreen-swal' },
             });
         }
     }
 
     // ==============================================
-    //  نقطة الدخول (Initialization)
+    //  نقطة الدخول
     // ==============================================
 
     try {
-        console.log("Initializing product view module with received state:", productSession);
-        // productSession[0] هو بيانات المنتج
+        console.log("Initializing product view 3D slider...", productSession);
+        // التحقق من وجود Session وتنظيف المؤقتات القديمة إذا وجدت (كإجراء احترازي عند إعادة التحميل)
+        if (typeof productView_sliderState !== 'undefined' && productView_sliderState.autoPlayInterval) {
+            clearInterval(productView_sliderState.autoPlayInterval);
+        }
+
         productView_viewDetails(productSession[0]);
     } catch (error) {
-        console.error("خطأ أثناء تهيئة نافذة عرض المنتج:", error);
+        console.error("خطأ في تهيئة نافذة المنتج:", error);
     }
 </script>

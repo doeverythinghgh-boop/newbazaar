@@ -265,6 +265,7 @@
   <div id="index-product-container"></div>
   <div id="index-cardPackage-container"></div>
   <div id="index-myProducts-container"></div>
+  <div id="index-contact-container"></div>
   <!---region main javaScript files---->
   <script src="js/auth.js" id="index-script-auth-js"></script>
   <!-- ملف الإعدادات العامة للمشروع (مثل baseURL) -->
@@ -382,6 +383,11 @@
           }
         });
 
+      document
+        .getElementById("index-contact-btn")
+        .addEventListener("click", handleContactButtonClick);
+
+
       // [خطوة 5.5] ربط زر "السلة".
       document
         .getElementById("index-cart-btn")
@@ -416,6 +422,8 @@
         .addEventListener("click", () =>
           handleProtectedLinkClick("./pages/gifts.html")
         );
+
+    
 
       // دالة معالجة النقر على زر "الرئيسية".
       function handleHomeButtonClick() {
@@ -493,6 +501,21 @@
             false
           );
         }
+      }
+
+      // دالة معالجة النقر على زر "اتصال".
+      function handleContactButtonClick() {
+        const container = document.getElementById("index-contact-btn");
+      
+          mainLoader(
+            "pages/contact.html",
+            "index-contact-container",
+            0,
+            undefined,
+            "showHomeIcon",
+            true
+          );
+      
       }
 
       // [خطوة 5.7] ربط زر "إضافة منتج".

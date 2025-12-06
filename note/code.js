@@ -35,7 +35,7 @@ mainLoader(
     <div id="index-product-container"></div>
     <div id="index-cardPackage-container"></div>
     <div id="index-myProducts-container"></div>
-
+<div id="index-contact-container"></div>
 
 */
 

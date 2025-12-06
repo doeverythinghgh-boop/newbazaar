@@ -1,0 +1,639 @@
+
+
+    <style>
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            margin-left: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-right: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--accent-color);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 60px 0 30px;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: #555;
+        }
+        
+        /* Main Content */
+        .contact-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        @media (max-width: 992px) {
+            .contact-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Contact Info */
+        .contact-info {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .contact-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+        
+        .contact-icon {
+            background-color: #eef2ff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .contact-details h4 {
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+        
+        /* Contact Form */
+        .contact-form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .contact-form h3 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        /* Services Section */
+        .services-section {
+            margin-bottom: 60px;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--primary-color);
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .service-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .service-icon {
+            background-color: #eef2ff;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+        }
+        
+        .service-card h4 {
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+        
+        /* FAQ Section */
+        .faq-section {
+            margin-bottom: 60px;
+        }
+        
+        .faq-item {
+            background-color: white;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 0 20px 20px;
+            max-height: 300px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h4 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            nav ul {
+                justify-content: center;
+                margin-top: 15px;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .contact-info, .contact-form {
+                padding: 20px;
+            }
+        }
+    </style>
+
+<body>
+    
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>تواصل معنا</h2>
+            <p>نحن هنا لمساعدتك! يمكنك التواصل معنا عبر أي من الوسائل التالية أو ملء النموذج وسنقوم بالرد عليك في أسرع وقت.</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <div class="container">
+        <div class="contact-section">
+            <!-- Contact Info -->
+            <div class="contact-info">
+                <h3>معلومات الاتصال</h3>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>الهاتف</h4>
+                        <p>+966 12 345 6789</p>
+                        <p>+966 98 765 4321</p>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>البريد الإلكتروني</h4>
+                        <p>info@marketing-program.com</p>
+                        <p>support@marketing-program.com</p>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>العنوان</h4>
+                        <p>شارع الملك فهد، الرياض</p>
+                        <p>المملكة العربية السعودية</p>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>ساعات العمل</h4>
+                        <p>الأحد - الخميس: 8 صباحاً - 5 مساءً</p>
+                        <p>الجمعة - السبت: مغلق</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Form -->
+            <div class="contact-form">
+                <h3>أرسل رسالة</h3>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">الاسم الكامل *</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني *</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">رقم الهاتف</label>
+                        <input type="tel" id="phone" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service">نوع الخدمة المطلوبة</label>
+                        <select id="service" class="form-control">
+                            <option value="">اختر خدمة</option>
+                            <option value="consulting">استشارات تسويقية</option>
+                            <option value="digital">تسويق رقمي</option>
+                            <option value="branding">تصميم الهوية البصرية</option>
+                            <option value="social">إدارة وسائل التواصل الاجتماعي</option>
+                            <option value="seo">تحسين محركات البحث</option>
+                            <option value="other">خدمة أخرى</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">الرسالة *</label>
+                        <textarea id="message" class="form-control" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> إرسال الرسالة
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Services Section -->
+        <div class="services-section">
+            <h2 class="section-title">خدماتنا ومنتجاتنا</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h4>التسويق الرقمي</h4>
+                    <p>حلول تسويق رقمي متكاملة لزيادة وصول علامتك التجارية</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h4>تحليل السوق</h4>
+                    <p>دراسات وتحليلات متعمقة لفهم السوق المستهدف</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-ad"></i>
+                    </div>
+                    <h4>الإعلانات الممولة</h4>
+                    <p>إدارة حملات إعلانية فعالة عبر مختلف المنصات</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>إدارة وسائل التواصل</h4>
+                    <p>إدارة احترافية لحسابات التواصل الاجتماعي لعلامتك</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h2 class="section-title">الأسئلة الشائعة</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>كيف يمكنني الاشتراك في برامج التسويق الخاصة بكم؟</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>يمكنك الاشتراك في أي من برامجنا عن طريق التواصل معنا عبر الهاتف أو البريد الإلكتروني أو تعبئة نموذج الاتصال وسيقوم أحد ممثلينا بالتواصل معك لشرح خطوات الاشتراك والبرامج المناسبة لاحتياجاتك.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>ما هي مدة تنفيذ حملة تسويقية ناجحة؟</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>تختلف مدة تنفيذ الحملة حسب أهدافها ونطاقها. عادة ما تستغرق الحملات من 3 إلى 6 أشهر لتحقيق نتائج ملموسة، ولكننا نقدم خططاً شهرية للعملاء الذين يرغبون في تجربة خدماتنا أولاً.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>هل تقدمون خدمات تسويقية للشركات الصغيرة؟</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>نعم، نقدم حلول تسويقية تناسب جميع أحجام الأعمال، من الشركات الناشئة إلى المؤسسات الكبيرة. لدينا باقات مخصصة للشركات الصغيرة والمتوسطة ذات ميزانيات مرنة.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>كيف تقيسون نجاح الحملات التسويقية؟</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>نستخدم أدوات تحليل متقدمة لقياس مؤشرات الأداء الرئيسية (KPIs) مثل معدل التحويل، عائد الاستثمار، الوصول، التفاعل، والوعي بالعلامة التجارية. نقدم تقارير شهرية مفصلة عن أداء الحملات.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>برنامج التسويق</h4>
+                    <p>نقدم حلول تسويقية مبتكرة ومخصصة لمساعدة أعمالك على النمو والازدهار في السوق التنافسي.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>روابط سريعة</h4>
+                    <ul style="list-style: none;">
+                        <li><a href="#" style="color: #ccc; text-decoration: none; display: block; margin-bottom: 10px;">الرئيسية</a></li>
+                        <li><a href="#" style="color: #ccc; text-decoration: none; display: block; margin-bottom: 10px;">الخدمات</a></li>
+                        <li><a href="#" style="color: #ccc; text-decoration: none; display: block; margin-bottom: 10px;">المنتجات</a></li>
+                        <li><a href="#" style="color: #ccc; text-decoration: none; display: block; margin-bottom: 10px;">عن البرنامج</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>اتصل بنا</h4>
+                    <p><i class="fas fa-map-marker-alt" style="margin-left: 8px;"></i> الرياض، المملكة العربية السعودية</p>
+                    <p><i class="fas fa-phone" style="margin-left: 8px;"></i> +966 12 345 6789</p>
+                    <p><i class="fas fa-envelope" style="margin-left: 8px;"></i> info@marketing-program.com</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>© 2023 برنامج التسويق. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Toggle Functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+                
+                // Close other FAQ items
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    if (item !== faqItem) {
+                        item.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const service = document.getElementById('service').value;
+            
+            // Simple validation
+            if (name && email) {
+                // In a real application, you would send data to server here
+                alert(`شكراً ${name} على تواصلك معنا! سنقوم بالرد على رسالتك على ${email} في أقرب وقت ممكن.`);
+                document.getElementById('contactForm').reset();
+            } else {
+                alert('يرجى ملء الحقول المطلوبة');
+            }
+        });
+        
+        // Animate service cards on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe service cards
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s, transform 0.5s';
+            observer.observe(card);
+        });
+    </script>
+</body>

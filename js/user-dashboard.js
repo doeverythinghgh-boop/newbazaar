@@ -61,7 +61,7 @@ function handleAdminPanelClick() {
         console.log("[Dashboard] تم النقر على زر لوحة تحكم المسؤول. جاري تحميل الصفحة...");
         // استخدام mainLoader لتحميل صفحة المسؤول في الحاوية الرئيسية
         mainLoader(
-                    "pages/adminPanel.html",
+                    "pages/ADMIN/adminPanel.html",
                     "index-user-container",
                     0,
                     undefined,

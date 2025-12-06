@@ -1,0 +1,117 @@
+body {
+  font-family: "Tajawal", sans-serif;
+  background-color: #f8f9fa;
+  color: #343a40;
+  padding: 20px;
+}
+
+.admin-panel-container {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow-x: auto; /* للسماح بالتمرير الأفقي على الشاشات الصغيرة */
+}
+
+h1 {
+  text-align: center;
+  color: #03478f;
+  margin-bottom: 30px;
+}
+h1 i {
+  margin-left: 10px;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 14px;
+  min-width: 800px; /* لمنع الجدول من الانضغاط بشكل كبير */
+}
+
+.users-table th,
+.users-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #dee2e6;
+  white-space: nowrap; /* لمنع التفاف النص */
+}
+
+.users-table thead th {
+  background-color: #03478f;
+  color: white;
+  font-weight: 600;
+  border-bottom: 2px solid #02386e;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.users-table tbody tr:hover {
+  background-color: #f1f3f5;
+}
+
+.services-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.services-btn:hover {
+  background-color: #0056b3;
+}
+.services-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.loader-container {
+  text-align: center;
+  padding: 50px;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid #f1f3f5;
+  border-top-color: #03478f;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* أنماط لم تعد مستخدمة ولكن تم الاحتفاظ بها للرجوع إليها مستقبلاً */
+.role-badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  display: inline-block;
+}
+
+.role-admin {
+  background-color: #c0392b;
+}
+.role-seller {
+  background-color: #27ae60;
+}
+.role-delivery {
+  background-color: #f39c12;
+  color: #333;
+}
+.role-customer {
+  background-color: #2980b9;
+}

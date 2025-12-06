@@ -562,7 +562,7 @@ async function login_handleLoginSuccess(user) {
       // عند الضغط على الزر، انتقل إلى الصفحة الرئيسية
       if (result.isConfirmed) {
         if (typeof mainLoader === "function") {
-            mainLoader("./pages/home.html", "index-home-container", 0, undefined, "hiddenHomeIcon");
+            mainLoader("./pages/home.html", "index-home-container", 0, undefined, "hiddenHomeIcon",true);
         }
       }
     });

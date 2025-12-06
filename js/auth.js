@@ -386,6 +386,34 @@ async function logout() {
 }
 
 /**
+ * @description تقوم بمسح محتوى جميع الحاويات الرئيسية في الصفحة.
+ *   تُستخدم هذه الدالة لإعادة تهيئة الواجهة عند تسجيل الخروج أو الانتقال بين الأقسام الرئيسية.
+ * @function clearMainContainers
+ * @returns {void}
+ */
+function clearMainContainers() {
+  const containerIds = [
+    "index-home-container",
+    "index-search-container",
+    "index-user-container",
+    "index-product-container",
+    "index-cardPackage-container",
+    "index-myProducts-container",
+  ];
+
+  console.log("[UI] جاري مسح الحاويات الرئيسية...");
+
+  containerIds.forEach(id => {
+    const container = document.getElementById(id);
+    if (container) {
+      container.innerHTML = "";
+    }
+  });
+
+  console.log("[UI] تم مسح الحاويات الرئيسية بنجاح.");
+}
+
+/**
  * @description دالة مساعدة جديدة تعالج عملية تسجيل الخروج الكاملة:
  * 1. إعلام واجهة Android (إذا كانت موجودة).
  * 2. محاولة حذف توكن FCM من الخادم.
@@ -428,9 +456,16 @@ async function clearAndNavigateToLogin() {
   // 3. مسح جميع بيانات المتصفح
   console.log("[Auth] جاري مسح جميع بيانات المتصفح...");
   await clearAllBrowserData();
+  clearMainContainers();
   console.log("[Auth] تم مسح بيانات المتصفح بنجاح.");
 userSession=null;
+//
   setUserNameInIndexBar(); 
+
+  // 4. مسح محتوى الحاويات الرئيسية في الواجهة
+  clearMainContainers();
+
+
   // 4. إعادة التوجيه إلى صفحة تسجيل الدخول
   mainLoader(
     "pages/login.html",

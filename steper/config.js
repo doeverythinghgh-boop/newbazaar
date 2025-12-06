@@ -170,28 +170,41 @@ export var baseURL = '';
 export var order_status = '';
 
 /**
+ * @var {Promise<void>} initializationPromise
+ * @description وعد (Promise) يتم حله عندما تنتهي دالة `initializeFromParent` من عملها.
+ * هذا يضمن أن أي كود يعتمد على البيانات المهيأة من الصفحة الأم لن يعمل إلا بعد اكتمال التهيئة.
+ */
+let resolveInitialization;
+export const initializationPromise = new Promise(resolve => { resolveInitialization = resolve; });
+
+/**
  * @function updateGlobalStepperAppData
  * @description دالة لتحديث المتغير العام globalStepperAppData وطباعة القيمة الجديدة.
  * @param {object} newData - البيانات الجديدة.
  */
 export function updateGlobalStepperAppData(newData) {
+    console.log("🚀 [Config] updateGlobalStepperAppData: Function called. 000000000000", { newData });
     globalStepperAppData = newData;
     try {
         if (globalStepperAppData) {
+            console.log("  [Config] updateGlobalStepperAppData: Preparing to send data to server...");
             fetch(baseURL + '/api/orders', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     order_key: ordersData[0].order_key,
-                    order_status: globalStepperAppData
+                    order_status: JSON.stringify(globalStepperAppData)
                 })
             })
             .then(res => res.json())
-            .then(data => console.log(data));
-            console.log("Global stepper_app_data updated:", globalStepperAppData);
+            .then(data => {
+                console.log("  [Config] updateGlobalStepperAppData: Server responded successfully.", data);
+            })
+            .catch(err => console.error("  [Config] updateGlobalStepperAppData: Fetch request failed.", err));
+            console.log("✅ [Config] updateGlobalStepperAppData: Global variable updated locally.", globalStepperAppData);
         }
     } catch (error) {
-        console.error("Error updating global stepper_app_data:", error);
+        console.error("❌ [Config] updateGlobalStepperAppData: A critical error occurred.", error);
     }
 }
 
@@ -200,45 +213,64 @@ export function updateGlobalStepperAppData(newData) {
  * يتم تحديث idUser و ordersData بالقيم الحقيقية
  */
 (function initializeFromParent() {
+    console.log("🚀 [Config] initializeFromParent: Starting initialization from parent window...");
     try {
         // التحقق من وجود بيانات من النافذة الأم
         if (window.parent && window.parent.globalStepperAppData) {
             const parentData = window.parent.globalStepperAppData;
 
-            console.log('تم العثور على بيانات من النافذة الأم:', parentData);
+            console.log('  [Config] initializeFromParent: Found data in parent window.', parentData);
 
             // تحديث idUser
             if (parentData.idUser) {
                 appDataControl.currentUser.idUser = parentData.idUser;
-                console.log('تم تحديث idUser إلى:', parentData.idUser);
+                console.log(`    [Config] initializeFromParent: Updated idUser to: ${parentData.idUser}`);
             }
 
             // تحديث ordersData
             if (parentData.ordersData && Array.isArray(parentData.ordersData)) {
                 ordersData.length = 0; // مسح البيانات الافتراضية
                 ordersData.push(...parentData.ordersData); // إضافة البيانات الحقيقية
-                console.log('تم تحديث ordersData:', ordersData);
+                console.log('    [Config] initializeFromParent: Updated ordersData.', ordersData);
             }
 
             // تحديث baseURL
             if (parentData.baseURL) {
                 baseURL = parentData.baseURL;
-                console.log('تم تحديث baseURL إلى:', baseURL);
+                console.log(`    [Config] initializeFromParent: Updated baseURL to: ${baseURL}`);
             }
 
             // تحديث order_status من أول طلب في ordersData
             if (parentData.ordersData && parentData.ordersData.length > 0 && parentData.ordersData[0].order_status) {
-                order_status = parentData.ordersData[0].order_status;
-                console.log('تم تحديث order_status إلى:', order_status);
+                let rawStatus = parentData.ordersData[0].order_status;
+                console.log('    [Config] initializeFromParent: Found raw order_status.', rawStatus);
+                // التحقق مما إذا كانت البيانات نص JSON وتحويلها
+                if (typeof rawStatus === 'string' && rawStatus.trim().startsWith('{')) {
+                    console.log('      [Config] initializeFromParent: order_status is a JSON string, attempting to parse...');
+                    try {
+                        // إذا كان نص JSON، قم بتحويله إلى كائن
+                        globalStepperAppData = JSON.parse(rawStatus);
+                        console.log('      [Config] initializeFromParent: Successfully parsed and updated globalStepperAppData.', globalStepperAppData);
+                    } catch (e) {
+                        console.error('      ❌ [Config] initializeFromParent: Failed to parse order_status JSON string.', e);
+                        // في حالة الفشل، استخدم القيمة كما هي (كسلوك احتياطي)
+                        globalStepperAppData = rawStatus;
+                    }
+                }
             }
 
-            console.log('تمت التهيئة بنجاح من البيانات الحقيقية');
+            console.log('✅ [Config] initializeFromParent: Initialization from parent data complete.');
         } else {
-            console.log('لا توجد بيانات من النافذة الأم، استخدام القيم الافتراضية');
+            console.log('  [Config] initializeFromParent: No data found in parent window. Using default values.');
         }
     } catch (error) {
-        console.error('خطأ في تهيئة البيانات من النافذة الأم:', error);
-        console.log('سيتم استخدام القيم الافتراضية');
+        console.error('❌ [Config] initializeFromParent: A critical error occurred during initialization.', error);
+        console.log('  [Config] initializeFromParent: Falling back to default values due to error.');
+    } finally {
+        // في كل الحالات (نجاح أو فشل)، قم بحل الوعد للإشارة إلى أن التهيئة قد انتهت
+        if (resolveInitialization) {
+            console.log('🏁 [Config] initializeFromParent: Initialization routine finished. Resolving promise.');
+            resolveInitialization();
+        }
     }
 })();
-

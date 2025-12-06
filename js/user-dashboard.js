@@ -49,6 +49,29 @@ function setupModalLogic(modalId, closeBtnId, options = {}) {
     // إرجاع كائن يحتوي على دوال التحكم في النافذة
     return { open, close, modalElement };
 }
+
+/**
+ * @description يعالج حدث النقر على زر لوحة تحكم المسؤول.
+ *   يقوم بتحميل صفحة لوحة التحكم في الحاوية الرئيسية.
+ * @function handleAdminPanelClick
+ * @returns {void}
+ */
+function handleAdminPanelClick() {
+    try {
+        console.log("[Dashboard] تم النقر على زر لوحة تحكم المسؤول. جاري تحميل الصفحة...");
+        // استخدام mainLoader لتحميل صفحة المسؤول في الحاوية الرئيسية
+        mainLoader(
+                    "pages/adminPanel.html",
+                    "index-user-container",
+                    0,
+                    undefined,
+                    "showHomeIcon",
+                    true
+                );
+    } catch (error) {
+        console.error("حدث خطأ أثناء محاولة تحميل لوحة تحكم المسؤول:", error);
+    }
+}
 /**
  * @file js/user-dashboard.js
  * @description يحتوي هذا الملف على المنطق البرمجي الخاص بصفحة لوحة تحكم المستخدم (`user-dashboard.html`).
@@ -124,6 +147,10 @@ function updateViewForLoggedInUser() {
             adminPhoneNumbers.includes(userSession.phone)
         ) {
             // لا حاجة لإجراء هنا، زر المسؤول ظاهر
+            // ✅ جديد: ربط حدث النقر بالزر
+            const adminBtn = document.getElementById("dash-admin-panel-btn");
+            if (adminBtn) adminBtn.addEventListener("click", handleAdminPanelClick);
+
         } else {
             // إخفاء زر لوحة التحكم إذا لم يكن المستخدم مسؤولاً
             const adminBtn = document.getElementById("dash-admin-panel-btn");
@@ -142,8 +169,8 @@ function updateViewForLoggedInUser() {
             // لا حاجة لإجراء هنا، زر التقارير ظاهر
         } else {
             // إخفاء زر التقارير لباقي المستخدمين
-            document.getElementById("dash-view-sales-movement-btn").style.display =
-                "none";
+        ///    document.getElementById("dash-view-sales-movement-btn").style.display =
+            ///    "none";
         }
         // --- ربط الأحداث بالأزرار ---
 

@@ -5,9 +5,20 @@
  * يوفر هذا الملف دوال مساعدة لحفظ واسترجاع البيانات من تخزين المتصفح المحلي.
  */
 
-import { updateGlobalStepperAppData, globalStepperAppData } from "./config.js";
+import { updateGlobalStepperAppData, globalStepperAppData, ordersData } from "./config.js";
 
-const APP_STATE_KEY = "stepper_app_data";
+/**
+ * @function getAppKey
+ * @description إنشاء مفتاح تخزين فريد لكل طلب بناءً على order_key.
+ * @returns {string} - مفتاح التخزين الديناميكي.
+ */
+function getAppKey() {
+    if (ordersData && ordersData.length > 0 && ordersData[0].order_key) {
+        return `stepper_app_data_${ordersData[0].order_key}`;
+    }
+    console.warn("[State] getAppKey: Using default key. Order data not yet available.");
+    return "stepper_app_data_default";
+}
 
 /**
  * @function getAppState
@@ -15,9 +26,12 @@ const APP_STATE_KEY = "stepper_app_data";
  * @returns {object} كائن الحالة الكامل (يحتوي على steps و dates).
  */
 function getAppState() {
+    console.log("🔄 [State] getAppState: Attempting to retrieve state from LocalStorage.");
     try {
-        const stateStr = localStorage.getItem(APP_STATE_KEY);
-        return stateStr ? JSON.parse(stateStr) : { steps: {}, dates: {} };
+        const stateStr = localStorage.getItem(getAppKey());
+        const state = stateStr ? JSON.parse(stateStr) : { steps: {}, dates: {} };
+        console.log("  [State] getAppState: State retrieved successfully.", state);
+        return state;
     } catch (e) {
         console.error("Failed to parse app state:", e);
         return { steps: {}, dates: {} };
@@ -30,8 +44,10 @@ function getAppState() {
  * @param {object} state - كائن الحالة الكامل.
  */
 function saveAppState(state) {
+    console.log("💾 [State] saveAppState: Attempting to save state to LocalStorage.", state);
     try {
-        localStorage.setItem(APP_STATE_KEY, JSON.stringify(state));
+        localStorage.setItem(getAppKey(), JSON.stringify(state));
+        console.log("  [State] saveAppState: State saved. Now updating global variable.");
         // تحديث المتغير العام في config.js
         updateGlobalStepperAppData(state);
     } catch (e) {
@@ -52,6 +68,7 @@ export function initializeState() {
     // للوصول إلى القيمة الحالية، نحتاج للتأكد من أننا نستخدم المتغير المستورد.
     // في هذا الملف، نحن نستورد updateGlobalStepperAppData فقط، لذا سنحتاج لاستيراد globalStepperAppData أيضًا.
 
+    console.log("🚀 [State] initializeState: Starting state initialization.");
     // لكن انتظر، globalStepperAppData معرف في config.js كـ var ويتم تصديره.
     // سنقوم بتعديل الاستيراد في الأعلى ليشمل globalStepperAppData.
 
@@ -59,11 +76,11 @@ export function initializeState() {
 
     if (globalStepperAppData && Object.keys(globalStepperAppData).length > 0) {
         console.log("Found initial globalStepperAppData, using it:", globalStepperAppData);
-        state = globalStepperAppData;
+        state = { ...globalStepperAppData }; // Use a copy to avoid mutation issues
         // حفظ الحالة الموجودة في المتغير العام إلى LocalStorage لضمان التزامن
         saveAppState(state);
     } else {
-        console.log("No initial globalStepperAppData found, loading from LocalStorage.");
+        console.log("  [State] initializeState: No initial globalStepperAppData found, loading from LocalStorage.");
         state = getAppState();
         // تحديث المتغير العام بالقيمة الحالية عند البدء
         updateGlobalStepperAppData(state);
@@ -72,10 +89,12 @@ export function initializeState() {
     let updated = false;
     if (!state.steps) {
         state.steps = {};
+        console.log("  [State] initializeState: 'steps' property missing, initializing.");
         updated = true;
     }
     if (!state.dates) {
         state.dates = {};
+        console.log("  [State] initializeState: 'dates' property missing, initializing.");
         updated = true;
     }
     if (updated) {
@@ -84,6 +103,7 @@ export function initializeState() {
 
     // تنظيف المفاتيح القديمة
     cleanupLegacyKeys();
+    console.log("✅ [State] initializeState: Initialization complete.");
 }
 
 /**
@@ -91,7 +111,7 @@ export function initializeState() {
  * @description إزالة المفاتيح القديمة التي كانت تستخدم قبل التجميع.
  */
 function cleanupLegacyKeys() {
-    console.log("Running cleanupLegacyKeys...");
+    console.log("🧹 [State] cleanupLegacyKeys: Checking for and removing legacy keys...");
     try {
         const keysToRemove = [
             "current_step_state",
@@ -114,9 +134,11 @@ function cleanupLegacyKeys() {
         keysToRemove.forEach(key => {
             if (localStorage.getItem(key)) {
                 localStorage.removeItem(key);
+                console.log(`  [State] cleanupLegacyKeys: Removed legacy key '${key}'.`);
             }
         });
     } catch (e) {
+        // This error is not critical, so we just log it.
         console.error("Failed to cleanup legacy keys:", e);
     }
 }
@@ -129,10 +151,12 @@ function cleanupLegacyKeys() {
  * @param {object} state - كائن البيانات الذي يحتوي على حالة الخطوة.
  */
 export function saveStepState(stepId, state) {
+    console.log(`💾 [State] saveStepState: Saving state for step '${stepId}'.`, state);
     const appState = getAppState();
     if (!appState.steps) appState.steps = {};
     appState.steps[stepId] = state;
     saveAppState(appState);
+    console.log(`  [State] saveStepState: State for '${stepId}' saved successfully.`);
 }
 
 /**
@@ -143,7 +167,9 @@ export function saveStepState(stepId, state) {
  * @returns {object|null} - تعيد كائن الحالة إذا وجد، أو null.
  */
 export function loadStepState(stepId) {
+    console.log(`🔄 [State] loadStepState: Loading state for step '${stepId}'.`);
     const appState = getAppState();
+    console.log(`  [State] loadStepState: Found state for '${stepId}':`, (appState.steps && appState.steps[stepId]) || null);
     return (appState.steps && appState.steps[stepId]) || null;
 }
 
@@ -155,10 +181,12 @@ export function loadStepState(stepId) {
  * @param {string} dateStr - نص التاريخ المنسق.
  */
 export function saveStepDate(stepId, dateStr) {
+    console.log(`💾 [State] saveStepDate: Saving date for step '${stepId}': ${dateStr}`);
     const appState = getAppState();
     if (!appState.dates) appState.dates = {};
     appState.dates[stepId] = dateStr;
     saveAppState(appState);
+    console.log(`  [State] saveStepDate: Date for '${stepId}' saved successfully.`);
 }
 
 /**
@@ -169,6 +197,8 @@ export function saveStepDate(stepId, dateStr) {
  * @returns {string|null} - نص التاريخ أو null.
  */
 export function loadStepDate(stepId) {
+    console.log(`🔄 [State] loadStepDate: Loading date for step '${stepId}'.`);
     const appState = getAppState();
+    console.log(`  [State] loadStepDate: Found date for '${stepId}':`, (appState.dates && appState.dates[stepId]) || null);
     return (appState.dates && appState.dates[stepId]) || null;
 }

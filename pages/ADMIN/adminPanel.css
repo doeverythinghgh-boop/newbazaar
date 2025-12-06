@@ -1,117 +1,112 @@
-body {
-  font-family: "Tajawal", sans-serif;
-  background-color: #f8f9fa;
-  color: #343a40;
-  padding: 20px;
+/* المتغيرات الأساسية المستوحاة من المشروع */
+:root {
+    --primary-color: #007bff;
+    --bg-color-light: #f8f9fa;
+    --text-color-dark: #343a40;
+    --border-color: #dee2e6;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --font-family-main: "Tajawal", sans-serif;
 }
 
+/* تنسيق الحاوية الرئيسية */
 .admin-panel-container {
-  background: white;
-  border-radius: 15px;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  overflow-x: auto; /* للسماح بالتمرير الأفقي على الشاشات الصغيرة */
+    font-family: var(--font-family-main);
+    padding: 20px;
+    background-color: #fff;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
 }
 
-h1 {
-  text-align: center;
-  color: #03478f;
-  margin-bottom: 30px;
-}
-h1 i {
-  margin-left: 10px;
-}
-
-.users-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  font-size: 14px;
-  min-width: 800px; /* لمنع الجدول من الانضغاط بشكل كبير */
+.admin-panel-title {
+    color: var(--text-color-dark);
+    margin-bottom: 25px;
+    font-size: 24px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
 }
 
-.users-table th,
-.users-table td {
-  padding: 12px 15px;
-  text-align: center;
-  border-bottom: 1px solid #dee2e6;
-  white-space: nowrap; /* لمنع التفاف النص */
+/* تنسيق مؤشر التحميل */
+.admin-panel-loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: var(--text-color-dark);
 }
 
-.users-table thead th {
-  background-color: #03478f;
-  color: white;
-  font-weight: 600;
-  border-bottom: 2px solid #02386e;
-  text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.users-table tbody tr:hover {
-  background-color: #f1f3f5;
-}
-
-.services-btn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-.services-btn:hover {
-  background-color: #0056b3;
-}
-.services-btn:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-}
-
-.loader-container {
-  text-align: center;
-  padding: 50px;
-}
-
-.loader {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 4px solid #f1f3f5;
-  border-top-color: #03478f;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
+.admin-panel-loader {
+    border: 5px solid var(--bg-color-light);
+    border-top: 5px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-/* أنماط لم تعد مستخدمة ولكن تم الاحتفاظ بها للرجوع إليها مستقبلاً */
-.role-badge {
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
-  color: white;
-  text-align: center;
-  display: inline-block;
+/* تنسيق حاوية الجدول */
+.admin-panel-table-container {
+    overflow-x: auto; /* لإضافة شريط تمرير أفقي عند الحاجة على الشاشات الصغيرة */
 }
 
-.role-admin {
-  background-color: #c0392b;
+/* تنسيق الجدول */
+.admin-panel-users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: var(--shadow-sm);
 }
-.role-seller {
-  background-color: #27ae60;
+
+.admin-panel-users-table th,
+.admin-panel-users-table td {
+    padding: 12px 15px;
+    text-align: right;
+    border-bottom: 1px solid var(--border-color);
 }
-.role-delivery {
-  background-color: #f39c12;
-  color: #333;
+
+/* رأس الجدول */
+.admin-panel-table-header th {
+    background-color: var(--bg-color-light);
+    color: var(--text-color-dark);
+    font-weight: 700;
+    font-size: 14px;
 }
-.role-customer {
-  background-color: #2980b9;
+
+/* صفوف الجدول */
+.admin-panel-users-tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+.admin-panel-users-tbody td {
+    font-size: 14px;
+    color: #495057;
+}
+
+/* تنسيق خاص بعمود "لديه توكن" */
+.admin-panel-users-tbody .has-token-true {
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.admin-panel-users-tbody .has-token-false {
+    color: var(--danger-color);
+}
+
+/* أيقونات لتوضيح حالة التوكن */
+.admin-panel-users-tbody .has-token-true::before {
+    content: '✓ '; /* علامة صح */
+}
+
+.admin-panel-users-tbody .has-token-false::before {
+    content: '✗ '; /* علامة خطأ */
 }

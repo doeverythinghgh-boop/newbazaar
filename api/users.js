@@ -159,7 +159,8 @@ export default async function handler(request) {
       const result = await db.execute(`
         SELECT 
           u.id, u.username, u.phone, u.is_seller, u.user_key, u.Address, u.Password,
-          ut.fcm_token
+           ut.fcm_token,
+    ut.platform  
         FROM users u
         LEFT JOIN user_tokens ut ON u.user_key = ut.user_key
       `);

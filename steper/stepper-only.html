@@ -20,6 +20,15 @@
         <!-- عرض معلومات المستخدم الحالي (تم نقله إلى عنوان المتصفح) -->
         <main id="main-content">
             <!-- الشريط الرئيسي للحالات الأساسية -->
+
+            <!-- ✅ جديد: رابط عرض صور الطلب الخاص -->
+            <div style="text-align:center; margin-bottom:15px; display:none;" id="orderPhotoLinkContainer">
+                <a href="#" id="orderPhotoLink"
+                    style="color:#007bff; font-weight:bold; text-decoration:underline; font-size:1rem; display:inline-flex; align-items:center; gap:8px; padding: 5px 10px; background: #eef2f7; border-radius: 20px;">
+                    <i class="fas fa-images"></i> عرض صور الطلب الخاص
+                </a>
+            </div>
+
             <div class="stepper-container" id="primary-stepper-container">
                 <div class="stepper-wrapper" id="primary-stepper-wrapper">
                     <!-- الخطوة 1: مراجعة -->
@@ -103,3 +112,52 @@
 </body>
 
 </html>
+<script type="module">
+    import { ordersData } from './config.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Check for data availability
+        const checkData = setInterval(() => {
+            if (ordersData && ordersData.length > 0) {
+                clearInterval(checkData);
+                initPhotoLink();
+            }
+        }, 500);
+
+        function initPhotoLink() {
+            const linkContainer = document.getElementById('orderPhotoLinkContainer');
+            const link = document.getElementById('orderPhotoLink');
+
+            if (ordersData.length > 0) {
+                const order = ordersData[0];
+                const item = order.order_items && order.order_items[0];
+
+                console.log("[StepperOnly] Checking order for photo link:", {
+                    total_amount: order.total_amount,
+                    type: typeof order.total_amount,
+                    condition: (order.total_amount == 0)
+                });
+
+                // Only show for special orders where total_amount is 0
+                if (item && order.total_amount == 0) {
+                    // We assume the first item defines the context (User, Seller, Product)
+                    const u = order.user_key;
+                    const s = item.seller_key;
+                    // REVERT: Use product_key as 'p' because images are named with the Product Key.
+                    const p = item.product_key;
+                    // NEW: Pass order_key as 'o' for uniqueness check
+                    const o = order.order_key;
+
+                    link.onclick = (e) => {
+                        e.preventDefault();
+                        window.open(`../pages/orderPhoto.html?u=${u}&s=${s}&p=${p}&o=${o}`, '_blank');
+                    };
+
+                    linkContainer.style.display = 'block';
+                } else {
+                    linkContainer.style.display = 'none';
+                }
+            }
+        }
+    });
+</script>

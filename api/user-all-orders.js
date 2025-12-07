@@ -269,6 +269,7 @@ export default async function handler(request) {
         user_address: order.user_address,
         order_status: order.order_status,
         created_at: order.created_at,
+        total_amount: order.total_amount, // Added missing field
         order_items: formattedItems
       };
     });

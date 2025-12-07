@@ -5,7 +5,7 @@
         padding: 0 20px;
     }
 
-    
+
 
     /* تخطيط السلة */
     .cartPage_cart-layout {
@@ -484,7 +484,7 @@
 
     /* تصميم متجاوب إضافي */
     @media (max-width: 576px) {
-        
+
 
         .cartPage_cart-item td {
             padding: 10px;
@@ -550,10 +550,13 @@
             <h2 id="cartPage_emptyCartTitle">سلة المشتريات فارغة</h2>
             <p id="cartPage_emptyCartMessage">لم تقم بإضافة أي منتجات إلى سلة المشتريات بعد. ابدأ التسوق الآن لإضافة
                 منتجات رائعة!</p>
-            <a href="#" class="cartPage_continue-shopping" id="cartPage_continueShoppingBtn" onclick="mainLoader('./pages/home.html', 'index-home-container', 0, undefined, 'hiddenHomeIcon',false); return false;">
+            <a href="#" class="cartPage_continue-shopping" id="cartPage_continueShoppingBtn"
+                onclick="mainLoader('./pages/home.html', 'index-home-container', 0, undefined, 'hiddenHomeIcon',false); return false;">
                 <i class="fas fa-store"></i> متابعة التسوق
             </a>
         </div>
+    </div>
+
     </div>
 
     <!-- نافذة تعديل الملاحظة -->
@@ -572,6 +575,30 @@
             </div>
         </div>
     </div>
+
+    <!-- ✅ جديد: رسالة نجاح طلب الصور -->
+    <div id="cartPage_photoOrderMessage"
+        style="display:none; background:#d4edda; color:#155724; padding:15px; border-radius:8px; margin:20px; border:1px solid #c3e6cb; position:relative; text-align:right;">
+        <strong><i class="fas fa-check-circle"></i> تم استلام طلبك الخاص بالصور!</strong>
+        <p style="margin:5px 0 0 0;">لقد قمت بإرسال طلب يحتوي على صور وملاحظات. سيتم مراجعته قريباً.</p>
+        <button onclick="this.parentElement.style.display='none'; localStorage.removeItem('showOrderPhotoMessage');"
+            style="position:absolute; top:10px; left:10px; background:none; border:none; cursor:pointer; color:#155724; font-size:1.2rem;">&times;</button>
+    </div>
+
+    <script>
+        // Check for photo order message
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('showOrderPhotoMessage') === 'true') {
+                const msgEl = document.getElementById('cartPage_photoOrderMessage');
+                if (msgEl) {
+                    // Move inside container at bottom
+                    const container = document.getElementById('cartPage_mainContainer');
+                    if (container) container.appendChild(msgEl);
+                    msgEl.style.display = 'block';
+                }
+            }
+        });
+    </script>
 
 
     <script>
@@ -807,7 +834,7 @@
 
                 // تفريغ السلة
                 document.getElementById('cartPage_clearCartBtn').addEventListener('click', function () {
-                     Swal.fire({
+                    Swal.fire({
                         title: 'هل أنت متأكد؟',
                         text: "سيتم تفريغ سلة المشتريات بالكامل!",
                         icon: 'warning',
@@ -826,14 +853,14 @@
                 });
 
                 // إتمام الشراء
-                document.getElementById('cartPage_checkoutBtn').addEventListener('click',async function () {
+                document.getElementById('cartPage_checkoutBtn').addEventListener('click', async function () {
                     try {
                         const cartPage_cart = getCart();
                         if (cartPage_cart.length === 0) {
                             return;
                         }
-                    // منطق إتمام الشراء هنا
-await sendOrder2Excution();
+                        // منطق إتمام الشراء هنا
+                        await sendOrder2Excution();
                     } catch (error) {
                         console.error('حدث خطأ أثناء إتمام الشراء:', error);
                     }
@@ -890,7 +917,7 @@ await sendOrder2Excution();
                 console.error('حدث خطأ أثناء حفظ الملاحظة:', error);
             }
         }
-    insertUniqueSnapshot("../pages/header.html", "header-container10", 100);
+        insertUniqueSnapshot("../pages/header.html", "header-container10", 100);
 
     </script>
 </body>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صور الطلب الخاص</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        .loader {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 50px;
+        }
+
+        .error-msg {
+            color: var(--danger-color, red);
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            z-index: 1000;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="close-btn" onclick="window.close()">إغلاق <i class="fas fa-times"></i></button>
+
+    <h2 style="color: #333; margin-bottom: 30px; border-bottom: 2px solid #007bff; padding-bottom: 10px;">صور الطلب
+        الخاص</h2>
+
+    <div class="gallery" id="gallery">
+        <!-- Images will be injected here -->
+    </div>
+
+    <div id="status" class="loader"><i class="fas fa-spinner fa-spin"></i> جاري البحث عن الصور وتحميلها...</div>
+
+    <script>
+        // R2 Bucket Public URL
+        const R2_BASE_URL = 'https://pub-e828389e2f1e484c89d8fb652c540c12.r2.dev';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            // Get keys from URL
+            const u = params.get('u'); // User Key
+            const s = params.get('s'); // Seller Key
+            const p = params.get('p'); // Product Key
+            const o = params.get('o'); // Order Key
+
+            const gallery = document.getElementById('gallery');
+            const status = document.getElementById('status');
+
+            if (!u || !s || !p || !o) {
+                status.innerHTML = '<div class="error-msg">بيانات الطلب غير مكتملة (المفاتيح ناقصة). لا يمكن عرض الصور.</div>';
+                return;
+            }
+
+            console.log(`[OrderPhoto] Searching for images with pattern: ${u}_${s}_${p}_${o}_{index}`);
+
+            const indices = [1, 2, 3, 4];
+            const promises = [];
+
+            // Try to find images for each index
+            for (const i of indices) {
+                promises.push(findImage(u, s, p, o, i));
+            }
+
+            try {
+                const results = await Promise.all(promises);
+                gallery.innerHTML = '';
+
+                let foundAny = false;
+                results.forEach(imgUrl => {
+                    if (imgUrl) {
+                        foundAny = true;
+                        const div = document.createElement('div');
+                        div.className = 'gallery-item';
+                        // On click, open image in new tab for full view
+                        div.innerHTML = `<img src="${imgUrl}" onclick="window.open(this.src, '_blank')" title="اضغط للتكبير" loading="lazy">`;
+                        gallery.appendChild(div);
+                    }
+                });
+
+                if (!foundAny) {
+                    status.innerHTML = '<div class="error-msg" style="color:#777;">لا توجد صور محفوظة لهذا الطلب.</div>';
+                } else {
+                    status.style.display = 'none';
+                }
+
+            } catch (e) {
+                console.error(e);
+                status.innerHTML = '<div class="error-msg">حدث خطأ أثناء تحميل الصور.</div>';
+            }
+        });
+
+        // Function to probe for image existence using Image object (bypasses CORS for checking)
+        function findImage(u, s, p, o, index) {
+            return new Promise((resolve) => {
+                const baseName = `${u}_${s}_${p}_${o}_${index}`;
+                // Common extensions to check (case-sensitive on R2)
+                const extensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp', 'JPG', 'JPEG', 'PNG', 'WEBP', 'GIF', 'BMP'];
+
+                let checkedCount = 0;
+                let foundUrl = null;
+
+                // We try all extensions. The first one that loads wins.
+                // If multiple exist (unlikely), we just take the first one that triggers onload.
+                extensions.forEach(ext => {
+                    const url = `${R2_BASE_URL}/${baseName}.${ext}`;
+                    const img = new Image();
+                    img.onload = () => {
+                        if (!foundUrl) {
+                            foundUrl = url;
+                            resolve(url);
+                        }
+                    };
+                    img.onerror = () => {
+                        checkedCount++;
+                        if (checkedCount === extensions.length && !foundUrl) {
+                            resolve(null); // All failed
+                        }
+                    };
+                    img.src = url;
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>

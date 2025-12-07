@@ -291,7 +291,7 @@
 
                     <div class="mainAdver_dropzoneContent">
                         <i class="fas fa-cloud-upload-alt fa-3x" style="color: #007bff; margin-bottom: 15px;"></i>
-                        <p class="mainAdver_dropzoneText">اسحب وأفلت الملفات هنا أو انقر لاختيارها</p>
+                        <p class="mainAdver_dropzoneText">انقر لاختيار الصور</p>
                         <p class="mainAdver_hint">يمكنك إضافة صور جديدة أو حذف الصور الحالية.</p>
                     </div>
 
@@ -621,14 +621,7 @@
             });
         };
 
-        // السحب والإفلات (Drag & Drop)
-        els.uploaderEl.ondragover = e => { e.preventDefault(); els.uploaderEl.style.backgroundColor = '#eef'; };
-        els.uploaderEl.ondragleave = () => els.uploaderEl.style.backgroundColor = '';
-        els.uploaderEl.ondrop = e => {
-            e.preventDefault();
-            els.uploaderEl.style.backgroundColor = '';
-            if (e.dataTransfer.files.length) handleNewFiles(e.dataTransfer.files);
-        };
+        // (Drag & Drop functionality removed as requested)
 
         // الكاميرا (Unified Logic)
         els.takePhotoBtn.onclick = () => {

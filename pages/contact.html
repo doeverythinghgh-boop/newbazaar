@@ -3,7 +3,10 @@
          * ========================================
          * Contact Page Styles (contact_)
          * ========================================
-        */
+         * 
+         * ⚠️ ملاحظة مهمة: عدم استخدام hover اطلاقا في هذه الصفحة
+         * جميع تأثيرات hover تم حذفها عمداً
+         */
   .contact_container {
     width: 90%;
     max-width: 1200px;
@@ -42,11 +45,6 @@
     color: var(--bg-color-white);
     text-decoration: none;
     font-weight: 600;
-    transition: color 0.3s;
-  }
-
-  .contact_nav ul li a:hover {
-    color: var(--accent-color);
   }
 
   /* Hero Section */
@@ -72,7 +70,7 @@
   .contact_section {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 5px;
     margin-bottom: 10px;
   }
 
@@ -88,6 +86,7 @@
     padding: 30px;
     border-radius: 10px;
   }
+
 
   .contact_info h3 {
     color: var(--primary-color);
@@ -120,11 +119,20 @@
     color: var(--secondary-color);
   }
 
+  .contact_details a {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    margin-bottom: 5px;
+  }
+
   /* Contact Form */
   .contact_form {
     background-color: var(--bg-color-white);
     padding: 30px;
     border-radius: 10px;
+    text-align: center;
   }
 
   .contact_form h3 {
@@ -132,7 +140,73 @@
     margin-bottom: 25px;
     padding-bottom: 10px;
     border-bottom: 2px solid var(--accent-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
   }
+
+  /* Form and Services Tabs - using same styles as legal tabs */
+  #contact_form_title,
+  #contact_services_title {
+    flex: 1;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, var(--primary-color-light), var(--bg-color-white));
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transform: scale(1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    text-align: center;
+    width: auto;
+  }
+
+  #contact_form_services_section.contact_expanded #contact_form_title,
+  #contact_form_services_section.contact_expanded #contact_services_title {
+    background-color: transparent;
+    border: none;
+    border-radius: 8px 8px 0 0;
+    box-shadow: none;
+    color: var(--text-color-medium);
+  }
+
+  #contact_form_title.contact_active,
+  #contact_services_title.contact_active {
+    color: var(--primary-color);
+    background-color: var(--primary-color-light);
+  }
+
+  #contact_form_services_section.contact_expanded #contact_form_title.contact_active::after,
+  #contact_form_services_section.contact_expanded #contact_services_title.contact_active::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
+  }
+
+  #contact_form_title:active,
+  #contact_services_title:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  #contact_form_title i,
+  #contact_services_title i {
+    font-size: 1.1rem;
+  }
+
 
   .contact_form-group {
     margin-bottom: 5px;
@@ -179,12 +253,7 @@
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
     width: 100%;
-  }
-
-  .contact_submit-btn:hover {
-    transform: translateY(-3px);
   }
 
   /* Services Section */
@@ -198,12 +267,30 @@
     color: var(--primary-color);
   }
 
+  /* Tab content containers */
+  .contact_tab_content {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.4s ease, max-height 0.4s ease, transform 0.4s ease, margin 0.4s ease;
+    margin: 0;
+  }
+
+  #contact_form_services_section.contact_expanded .contact_tab_content.contact_tab_visible {
+    opacity: 1;
+    max-height: 2000px;
+    transform: translateY(0);
+    margin-top: 20px;
+  }
+
   .contact_services-grid {
     /* ✅ تعديل: تغيير التخطيط من شبكة إلى عمود */
     display: flex;
     flex-direction: column;
     gap: 15px; /* تقليل المسافة بين العناصر */
   }
+
 
   .contact_service-card {
     /* ✅ تعديل: تغيير التخطيط الداخلي للبطاقة ليصبح صفًا */
@@ -214,11 +301,6 @@
     padding: 20px; /* تقليل الحشو قليلًا */
     border-radius: 10px;
     text-align: right; /* محاذاة النص لليمين */
-    transition: transform 0.3s;
-  }
-
-  .contact_service-card:hover {
-    transform: translateY(-5px); /* تقليل تأثير الحركة */
   }
 
   .contact_service-icon {
@@ -299,11 +381,6 @@
     border-radius: 50%;
     color: var(--bg-color-white);
     text-decoration: none;
-    transition: background-color 0.3s;
-  }
-
-  .contact_social-links a:hover {
-    background-color: var(--primary-color);
   }
 
   .contact_copyright {
@@ -312,6 +389,162 @@
     border-top: 1px solid var(--text-color-medium);
     color: var(--text-color-light);
     font-size: 0.9rem;
+  }
+
+  /* Legal Pages Section with Tabs */
+  .contact_legal-section {
+    margin-bottom: 30px;
+    background-color: var(--bg-color-white);
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.4s ease;
+    overflow: hidden;
+    max-height: 80px;
+  }
+
+  .contact_legal-section.contact_expanded {
+    max-height: 2000px;
+    padding: 20px;
+  }
+
+  .contact_legal-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    transition: all 0.3s ease;
+  }
+
+  .contact_legal-section.contact_expanded .contact_legal-tabs {
+    border-bottom: 2px solid var(--border-color-input);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  .contact_legal-tab {
+    flex: 1;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, var(--primary-color-light), var(--bg-color-white));
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transform: scale(1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .contact_legal-tab:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .contact_legal-section.contact_expanded .contact_legal-tab {
+    background-color: transparent;
+    border: none;
+    border-radius: 8px 8px 0 0;
+    box-shadow: none;
+    color: var(--text-color-medium);
+  }
+
+  .contact_legal-tab.contact_active {
+    color: var(--primary-color);
+    background-color: var(--primary-color-light);
+  }
+
+  .contact_legal-section.contact_expanded .contact_legal-tab.contact_active::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
+  }
+
+  .contact_legal-tab i {
+    font-size: 1.1rem;
+  }
+
+  .contact_legal-iframe-container {
+    position: relative;
+    width: 100%;
+    min-height: 500px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--bg-color-white);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    max-height: 0;
+    margin: 0;
+    padding: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.4s ease, max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease, transform 0.4s ease;
+  }
+
+  .contact_legal-section.contact_expanded .contact_legal-iframe-container {
+    opacity: 1;
+    max-height: 2000px;
+    margin-top: 20px;
+    padding: 0;
+    transform: translateY(0);
+  }
+
+  .contact_legal-iframe {
+    width: 100%;
+    height: 500px;
+    border: none;
+    display: block;
+    transition: opacity 0.3s ease;
+  }
+
+  .contact_legal-iframe.contact_hidden {
+    display: none;
+  }
+
+  .contact_legal-iframe.contact_visible {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .contact_legal-tabs {
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .contact_legal-tab {
+      border-radius: 8px;
+    }
+
+    .contact_legal-tab.contact_active::after {
+      display: none;
+    }
+
+    .contact_legal-iframe-container {
+      min-height: 400px;
+    }
+
+    .contact_legal-iframe {
+      height: 400px;
+    }
   }
 
   /* Responsive */
@@ -449,8 +682,8 @@
           </div>
           <div class="contact_details" id="contact_details_phone">
             <h4 id="contact_details_title_phone">الهاتف</h4>
-            <p id="contact_phone_p1">01024182175</p>
-            <p id="contact_phone_p2">01026546550</p>
+            <a href="tel:01024182175" id="contact_phone_p1">01024182175</a>
+            <a href="tel:01026546550" id="contact_phone_p2">01026546550</a>
           </div>
         </div>
 
@@ -460,7 +693,7 @@
           </div>
           <div class="contact_details" id="contact_details_email">
             <h4 id="contact_details_title_email">البريد الإلكتروني</h4>
-            <p id="contact_email_p1">suezbazaar@gmail.com</p>
+            <a href="mailto:suezbazaar@gmail.com" id="contact_email_p1">suezbazaar@gmail.com</a>
           </div>
         </div>
 
@@ -478,10 +711,22 @@
         </div>
       </div>
 
-      <!-- Contact Form -->
-      <div class="contact_form" id="contact_form_div">
-        <h3 id="contact_form_title">أرسل رسالة</h3>
-        <form id="contact_contactForm">
+      <!-- Contact Form and Services Tabs Section -->
+      <div class="contact_legal-section" id="contact_form_services_section">
+        <div class="contact_legal-tabs" id="contact_form_services_tabs">
+          <button class="contact_legal-tab" id="contact_form_title" data-tab="form">
+            <i class="fas fa-envelope" id="contact_form_title_icon"></i>
+            <span id="contact_form_title_text">أرسل رسالة</span>
+          </button>
+          <button class="contact_legal-tab" id="contact_services_title" data-tab="services">
+            <i class="fas fa-briefcase" id="contact_services_title_icon"></i>
+            <span id="contact_services_title_text">خدماتنا ومنتجاتنا</span>
+          </button>
+        </div>
+        <div class="contact_legal-iframe-container" id="contact_form_services_container">
+          <!-- Contact Form -->
+          <div class="contact_form contact_tab_content" id="contact_form_div" data-content="form">
+            <form id="contact_contactForm">
           <div class="contact_form-group" id="contact_form_group_name">
             <label for="contact_name" id="contact_label_name"
               >الاسم الكامل *</label
@@ -557,16 +802,11 @@
             <i class="fas fa-paper-plane" id="contact_submit_icon"></i> إرسال
             الرسالة
           </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Services Section -->
-    <div class="contact_services-section" id="contact_services_section">
-      <h2 class="contact_section-title" id="contact_services_title">
-        خدماتنا ومنتجاتنا
-      </h2>
-      <div class="contact_services-grid" id="contact_services_grid">
+            </form>
+          </div>
+          <!-- Services Section -->
+          <div class="contact_info contact_tab_content" id="contact_services_section" data-content="services">
+            <div class="contact_services-grid" id="contact_services_grid">
         <!-- ✅ تعديل: تم دمج العنوان والوصف داخل حاوية واحدة -->
         <div class="contact_service-card" id="contact_service_card_digital">
           <div class="contact_service-icon" id="contact_service_icon_1">
@@ -604,12 +844,44 @@
           </div>
         </div>
       </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Footer -->
   <footer class="contact_footer" id="contact_footer">
     <div class="contact_container" id="contact_footer_container">
+      <!-- Legal Pages Section -->
+      <div class="contact_legal-section" id="contact_legal_section">
+        <div class="contact_legal-tabs" id="contact_legal_tabs">
+          <button class="contact_legal-tab" id="contact_legal_tab_privacy" data-tab="privacy">
+            <i class="fas fa-shield-alt" id="contact_legal_icon_privacy"></i>
+            <span id="contact_legal_text_privacy">سياسة الخصوصية</span>
+          </button>
+          <button class="contact_legal-tab" id="contact_legal_tab_delete" data-tab="delete">
+            <i class="fas fa-user-times" id="contact_legal_icon_delete"></i>
+            <span id="contact_legal_text_delete">حذف البيانات</span>
+          </button>
+        </div>
+        <div class="contact_legal-iframe-container" id="contact_legal_iframe_container">
+          <iframe 
+            id="contact_legal_iframe_privacy" 
+            class="contact_legal-iframe contact_hidden" 
+            data-src="../privacy.html"
+            title="سياسة الخصوصية"
+            loading="lazy"
+          ></iframe>
+          <iframe 
+            id="contact_legal_iframe_delete" 
+            class="contact_legal-iframe contact_hidden" 
+            data-src="../delete-account.html"
+            title="حذف الحساب"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
+
       <div class="contact_footer-content" id="contact_footer_content">
         <div class="contact_footer-column" id="contact_footer_column_1">
           <h4 id="contact_footer_title_1" style="color: blue;">تابعنا</h4>
@@ -677,6 +949,82 @@
       console.error("حدث خطأ في إعداد الأسئلة الشائعة:", error);
     }
 
+    // Form and Services Tabs Functionality
+    try {
+      const contact_formServicesSection = document.getElementById("contact_form_services_section");
+      const contact_formTitle = document.getElementById("contact_form_title");
+      const contact_servicesTitle = document.getElementById("contact_services_title");
+      const contact_formDiv = document.getElementById("contact_form_div");
+      const contact_servicesSection = document.getElementById("contact_services_section");
+
+      const contact_tabs = [contact_formTitle, contact_servicesTitle];
+      const contact_contents = {
+        form: contact_formDiv,
+        services: contact_servicesSection
+      };
+
+      contact_tabs.forEach((contact_tab) => {
+        if (contact_tab) {
+          contact_tab.addEventListener("click", () => {
+            try {
+              const contact_tabName = contact_tab.getAttribute("data-tab");
+              const contact_isActive = contact_tab.classList.contains("contact_active");
+
+              // If clicking the same active tab, collapse the section
+              if (contact_isActive && contact_formServicesSection && contact_formServicesSection.classList.contains("contact_expanded")) {
+                // Remove active class from clicked tab
+                contact_tab.classList.remove("contact_active");
+                
+                // Hide all contents
+                Object.values(contact_contents).forEach((contact_content) => {
+                  if (contact_content) {
+                    contact_content.classList.remove("contact_tab_visible");
+                  }
+                });
+                
+                // Collapse section
+                contact_formServicesSection.classList.remove("contact_expanded");
+                return;
+              }
+
+              // Expand section if not already expanded
+              if (contact_formServicesSection && !contact_formServicesSection.classList.contains("contact_expanded")) {
+                contact_formServicesSection.classList.add("contact_expanded");
+              }
+
+              // Remove active class from all tabs
+              contact_tabs.forEach((contact_t) => {
+                if (contact_t) {
+                  contact_t.classList.remove("contact_active");
+                }
+              });
+
+              // Add active class to clicked tab
+              contact_tab.classList.add("contact_active");
+
+              // Hide all contents
+              Object.values(contact_contents).forEach((contact_content) => {
+                if (contact_content) {
+                  contact_content.classList.remove("contact_tab_visible");
+                }
+              });
+
+              // Show selected content
+              if (contact_contents[contact_tabName]) {
+                setTimeout(() => {
+                  contact_contents[contact_tabName].classList.add("contact_tab_visible");
+                }, 100);
+              }
+            } catch (error) {
+              console.error("حدث خطأ أثناء تبديل التبويب:", error);
+            }
+          });
+        }
+      });
+    } catch (error) {
+      console.error("حدث خطأ في إعداد تبويبات النموذج والخدمات:", error);
+    }
+
     // Form Submission
     try {
       document
@@ -734,6 +1082,85 @@
         });
     } catch (error) {
       console.error("حدث خطأ في إعداد مراقب الحركة:", error);
+    }
+
+    // Legal Pages Tabs Functionality
+    try {
+      const contact_legalSection = document.getElementById("contact_legal_section");
+      const contact_legalTabs = document.querySelectorAll(".contact_legal-tab");
+      const contact_legalIframes = {
+        privacy: document.getElementById("contact_legal_iframe_privacy"),
+        delete: document.getElementById("contact_legal_iframe_delete")
+      };
+      const contact_legalIframeContainer = document.getElementById("contact_legal_iframe_container");
+
+      contact_legalTabs.forEach((contact_tab) => {
+        contact_tab.addEventListener("click", () => {
+          try {
+            const contact_tabName = contact_tab.getAttribute("data-tab");
+            const contact_isActive = contact_tab.classList.contains("contact_active");
+
+            // If clicking the same active tab, collapse the section
+            if (contact_isActive && contact_legalSection && contact_legalSection.classList.contains("contact_expanded")) {
+              // Remove active class from clicked tab
+              contact_tab.classList.remove("contact_active");
+              
+              // Hide all iframes
+              Object.values(contact_legalIframes).forEach((contact_iframe) => {
+                if (contact_iframe) {
+                  contact_iframe.classList.remove("contact_visible");
+                  contact_iframe.classList.add("contact_hidden");
+                }
+              });
+              
+              // Collapse section
+              contact_legalSection.classList.remove("contact_expanded");
+              return;
+            }
+
+            // Expand section if not already expanded
+            if (contact_legalSection && !contact_legalSection.classList.contains("contact_expanded")) {
+              contact_legalSection.classList.add("contact_expanded");
+            }
+
+            // Remove active class from all tabs
+            contact_legalTabs.forEach((contact_t) => {
+              contact_t.classList.remove("contact_active");
+            });
+
+            // Add active class to clicked tab
+            contact_tab.classList.add("contact_active");
+
+            // Hide all iframes
+            Object.values(contact_legalIframes).forEach((contact_iframe) => {
+              if (contact_iframe) {
+                contact_iframe.classList.remove("contact_visible");
+                contact_iframe.classList.add("contact_hidden");
+              }
+            });
+
+            // Show selected iframe and load src if not already loaded
+            if (contact_legalIframes[contact_tabName]) {
+              const contact_selectedIframe = contact_legalIframes[contact_tabName];
+              
+              // Load src from data-src if not already set
+              if (!contact_selectedIframe.src && contact_selectedIframe.hasAttribute("data-src")) {
+                contact_selectedIframe.src = contact_selectedIframe.getAttribute("data-src");
+              }
+              
+              // Show iframe with slight delay for smooth animation
+              setTimeout(() => {
+                contact_selectedIframe.classList.remove("contact_hidden");
+                contact_selectedIframe.classList.add("contact_visible");
+              }, 200);
+            }
+          } catch (error) {
+            console.error("حدث خطأ أثناء تبديل التبويب:", error);
+          }
+        });
+      });
+    } catch (error) {
+      console.error("حدث خطأ في إعداد تبويبات الصفحات القانونية:", error);
     }
 
     insertUniqueSnapshot("../pages/header.html", "header-container101", 100);

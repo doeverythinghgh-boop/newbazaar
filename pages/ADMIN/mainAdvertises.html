@@ -1,0 +1,774 @@
+<style>
+    /* Scoped styles for the Advertisement Manager fragment */
+    #mainAdver_wrapper {
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.5;
+        padding: 20px;
+        width: 100%;
+        /* Previously min-height: 100vh caused layout issues in embedded view. 
+           Now letting it flow naturally or take full available height */
+        min-height: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Header */
+    #mainAdver_wrapper .mainAdver_header {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        padding: 25px 30px;
+        text-align: center;
+        border-radius: 8px;
+        /* Added border radius since it's inside a container now */
+        margin-bottom: 20px;
+    }
+
+    #mainAdver_wrapper .mainAdver_header h1 {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 0;
+    }
+
+    #mainAdver_wrapper .mainAdver_header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 0;
+    }
+
+    /* Main Content Area */
+    #mainAdver_wrapper .mainAdver_mainContent {
+        padding: 10px;
+        /* Reduced padding as wrapper has padding */
+    }
+
+    /* Image Uploader Area */
+    #mainAdver_wrapper .mainAdver_imageUploader {
+        background-color: #fff;
+        /* Changed to white for contrast */
+        border: 2px dashed #dee2e6;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        transition: background-color 0.3s;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+
+    #mainAdver_wrapper .mainAdver_dropzoneText {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+    }
+
+    #mainAdver_wrapper .mainAdver_hint {
+        color: #6c757d;
+        font-size: 0.95rem;
+        margin-top: 10px;
+    }
+
+    /* Uploader Actions */
+    #mainAdver_wrapper .mainAdver_uploaderActions {
+        margin-top: 1rem;
+        border-top: 1px solid #e9ecef;
+        padding-top: 1rem;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    /* Previews Grid */
+    #mainAdver_wrapper .mainAdver_previews {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 10px;
+        padding: 10px;
+        margin-top: 1rem;
+        width: 100%;
+        min-height: 150px;
+        /* Fixed min-height */
+        max-height: 400px;
+        overflow-y: auto;
+        background-color: #f0f2f5;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+
+    /* Preview Card */
+    #mainAdver_wrapper .mainAdver_preview {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Remove Button */
+    #mainAdver_wrapper .mainAdver_remove {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: rgba(220, 53, 69, 0.9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.2s;
+        z-index: 10;
+    }
+
+    #mainAdver_wrapper .mainAdver_preview:hover .mainAdver_remove,
+    #mainAdver_wrapper .mainAdver_preview.mainAdver_selected .mainAdver_remove {
+        opacity: 1;
+    }
+
+    /* Preview Image */
+    #mainAdver_wrapper .mainAdver_preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* Meta Info */
+    #mainAdver_wrapper .mainAdver_meta {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        font-size: 0.75rem;
+        padding: 4px;
+        text-align: center;
+    }
+
+    #mainAdver_wrapper .mainAdver_hiddenFile {
+        display: none;
+    }
+
+    /* Buttons */
+    .mainAdver_btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .mainAdver_btnPrimary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .mainAdver_btnGhost {
+        background: transparent;
+        color: #495057;
+        border: 1px solid #dee2e6;
+    }
+
+    .mainAdver_btnIcon {
+        padding: 10px;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+    }
+
+    /* Submit Container */
+    #mainAdver_wrapper .mainAdver_submitContainer {
+        margin-top: 30px;
+        text-align: center;
+        padding: 20px;
+        border-top: 1px solid #eee;
+    }
+
+    /* Info Box */
+    #mainAdver_wrapper .mainAdver_infoBox {
+        background-color: #e9f7fe;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        border-left: 4px solid #3498db;
+        border-right: none;
+        margin-bottom: 2rem;
+    }
+
+    #mainAdver_wrapper .mainAdver_infoBox h3 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 0;
+    }
+
+    #mainAdver_wrapper .mainAdver_infoBox ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #mainAdver_wrapper .mainAdver_infoBox li {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #mainAdver_wrapper .mainAdver_infoBox li i {
+        color: #3498db;
+        min-width: 20px;
+    }
+
+    /* Camera Modal - scoped to be robust */
+    #mainAdver_cameraModalContainer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+        /* Ensure it's on top of everything */
+    }
+
+    #mainAdver_cameraModalContainer .mainAdver_cameraModalContent {
+        background-color: white;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 700px;
+        padding: 20px;
+        position: relative;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+</style>
+
+<!-- Main Wrapper for the Fragment -->
+<div id="mainAdver_wrapper">
+    <div class="mainAdver_header">
+        <h1><i class="fas fa-bullhorn"></i> إدارة صور الإعلان</h1>
+        <p>أضف، نظم، واحذف صور الإعلانات بسهولة</p>
+    </div>
+
+    <div class="mainAdver_mainContent">
+        <!-- System Info -->
+        <div class="mainAdver_infoBox">
+            <h3><i class="fas fa-info-circle"></i> معلومات النظام</h3>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> الحد الأقصى للصور: 10 صور</li>
+                <li><i class="fas fa-check-circle"></i> التنسيقات المدعومة: جميع تنسيقات الصور</li>
+                <li><i class="fas fa-check-circle"></i> يتم ضغط الصور تلقائياً</li>
+            </ul>
+        </div>
+
+        <form id="mainAdver_form" novalidate onsubmit="return false;">
+            <!-- Upload Module -->
+            <section class="mainAdver_formGroup">
+                <div class="mainAdver_imageUploader" id="mainAdver_imageUploader">
+
+                    <div class="mainAdver_dropzoneContent">
+                        <i class="fas fa-cloud-upload-alt fa-3x" style="color: #007bff; margin-bottom: 15px;"></i>
+                        <p class="mainAdver_dropzoneText">اسحب وأفلت الملفات هنا أو انقر لاختيارها</p>
+                        <p class="mainAdver_hint">يمكنك إضافة صور جديدة أو حذف الصور الحالية.</p>
+                    </div>
+
+                    <input class="mainAdver_hiddenFile" id="mainAdver_fileInput" type="file" accept="image/*" multiple>
+
+                    <div class="mainAdver_uploaderActions">
+                        <button type="button" class="mainAdver_btn mainAdver_btnGhost mainAdver_btnIcon"
+                            id="mainAdver_pickFilesBtn" title="اختر صورًا">
+                            <i class="fas fa-folder-open"></i>
+                        </button>
+                        <button type="button" class="mainAdver_btn mainAdver_btnGhost mainAdver_btnIcon"
+                            id="mainAdver_takePhotoBtn" title="التقاط من الكاميرا">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                        <button type="button" class="mainAdver_btn mainAdver_btnGhost mainAdver_btnIcon"
+                            id="mainAdver_clearAllBtn" title="مسح الكل">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+
+                    <div class="mainAdver_previews" id="mainAdver_previews">
+                        <div id="mainAdver_imagesLoader"
+                            style="text-align:center; padding: 20px; display: none; color: #666;">
+                            <i class="fas fa-spinner fa-spin fa-2x"></i><br>جاري التحميل...
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Submit Button -->
+            <div class="mainAdver_submitContainer">
+                <button type="submit" class="mainAdver_btn mainAdver_btnPrimary"
+                    style="padding: 12px 40px; font-size: 1.1rem;">
+                    <i class="fas fa-paper-plane"></i> نشر الإعلان الآن
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Camera Modal Container -->
+<div id="mainAdver_cameraModalContainer"></div>
+
+<script>
+    // ضمان أن السكربت نظيف ومعزول (Isolated Scope) لتجنب تضارب المتغيرات
+    (function () {
+        /**
+         * ------------------------------------------------------------------
+         * التكوين والإعدادات (Configuration)
+         * ------------------------------------------------------------------
+         */
+        // أقصى أبعاد للصور (للحفاظ على الأداء وتقليل حجم التخزين)
+        const IMAGE_MAX_WIDTH = 1600;
+        const IMAGE_MAX_HEIGHT = 1600;
+        // جودة ضغط الصورة (0.75 تعني 75% جودة)
+        const IMAGE_QUALITY = 0.75;
+        // الحد الأقصى لعدد الصور المسموح برفعها
+        const MAX_FILES = 10;
+        // الرابط العام لخدمة Cloudflare R2
+        const R2_PUBLIC_URL = 'https://pub-e828389e2f1e484c89d8fb652c540c12.r2.dev';
+
+        /**
+         * ------------------------------------------------------------------
+         * حالة التطبيق (Application State)
+         * ------------------------------------------------------------------
+         */
+        // مصفوفة لتخزين كائنات الصور الحالية (سواء كانت جديدة أو موجودة مسبقاً)
+        let images = [];
+        // لتخزين أسماء الصور الأصلية عند التحميل
+        let originalImageNames = [];
+        // عداد لإنشاء معرفات فريدة مؤقتة للعناصر
+        let idCounter = 1;
+
+        /**
+         * ------------------------------------------------------------------
+         * عناصر واجهة المستخدم (UI Elements)
+         * ------------------------------------------------------------------
+         */
+        const els = {
+            fileInput: document.getElementById('mainAdver_fileInput'),
+            pickFilesBtn: document.getElementById('mainAdver_pickFilesBtn'),
+            takePhotoBtn: document.getElementById('mainAdver_takePhotoBtn'),
+            clearAllBtn: document.getElementById('mainAdver_clearAllBtn'),
+            previewsEl: document.getElementById('mainAdver_previews'),
+            uploaderEl: document.getElementById('mainAdver_imageUploader'),
+            form: document.getElementById('mainAdver_form'),
+            loader: document.getElementById('mainAdver_imagesLoader'),
+            cameraModal: document.getElementById('mainAdver_cameraModalContainer')
+        };
+
+        /**
+         * ------------------------------------------------------------------
+         * دوال مساعدة (Helper Functions)
+         * ------------------------------------------------------------------
+         */
+
+        /**
+         * يولد معرف فريد مؤقت للصورة.
+         * @returns {string} المعرف المولد
+         */
+        function genId() { return 'ad_img_' + (Date.now() + idCounter++); }
+
+        /**
+         * يتحقق من دعم المتصفح لتنسيق WebP وإنشاء Bitmap.
+         * هذا يساعد في تحديد آلية الضغط المناسبة.
+         * @returns {Promise<boolean>}
+         */
+        async function checkWebP() {
+            try {
+                if (!self.createImageBitmap) return false;
+                const blob = await fetch('data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==')
+                    .then(r => r.blob()).catch(() => null);
+                if (!blob) return false;
+                await createImageBitmap(blob);
+                return true;
+            } catch { return false; }
+        }
+        // تخزين نتيجة فحص WebP في وعد (Promise) للاستخدام لاحقاً
+        const webP_Promise = checkWebP();
+
+        /**
+         * ------------------------------------------------------------------
+         * الوظائف الأساسية (Core Functions)
+         * ------------------------------------------------------------------
+         */
+
+        /**
+         * يقوم بضغط الصورة وتغيير أبعادها لتناسب المعايير المحددة.
+         * يحاول التحويل إلى WebP إذا كان مدعوماً، وإلا يستخدم JPEG.
+         * @param {File} file - ملف الصورة الأصلي
+         * @returns {Promise<Blob|File>} - الصورة المضغوطة كـ Blob أو الملف الأصلي في حال الفشل
+         */
+        async function compressImage(file) {
+            try {
+                const bitmap = await createImageBitmap(file);
+                let { width, height } = bitmap;
+
+                // حساب نسبة التصغير للحفاظ على الأبعاد
+                const ratio = Math.min(1, IMAGE_MAX_WIDTH / width, IMAGE_MAX_HEIGHT / height);
+                const w = Math.round(width * ratio);
+                const h = Math.round(height * ratio);
+
+                // إنشاء Canvas للرسم عليها
+                const canvas = document.createElement('canvas');
+                canvas.width = w; canvas.height = h;
+                const ctx = canvas.getContext('2d');
+
+                // خلفية بيضاء لصور JPEG (لتجنب الخلفيات السوداء للصور الشفافة)
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, w, h);
+                ctx.drawImage(bitmap, 0, 0, w, h);
+
+                const isWebP = await webP_Promise;
+                // التحويل إلى WebP أو JPEG
+                const blob = await new Promise(r => canvas.toBlob(r, isWebP ? 'image/webp' : 'image/jpeg', IMAGE_QUALITY));
+
+                // تنظيف الذاكرة
+                try { bitmap.close(); } catch { }
+
+                return blob;
+            } catch (err) {
+                console.warn("Compression failed, using original.", err);
+                return file;
+            }
+        }
+
+        /**
+         * ينشئ عنصر المعاينة (Preview Card) للصورة في الواجهة.
+         * @param {Object} state - كائن حالة الصورة
+         * @param {string|null} existingUrl - رابط الصورة إذا كانت موجودة مسبقاً (اختياري)
+         */
+        function createPreview(state, existingUrl = null) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'mainAdver_preview';
+            wrapper.dataset.id = state.id;
+
+            // زر الحذف
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'mainAdver_remove';
+            removeBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+            removeBtn.type = 'button';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                removeImage(state.id);
+            };
+
+            // عنصر الصورة
+            const img = document.createElement('img');
+
+            // شريط المعلومات (مستطيل الحالة أسفل الصورة)
+            const meta = document.createElement('div');
+            meta.className = 'mainAdver_meta';
+
+            if (existingUrl) {
+                img.src = existingUrl;
+                meta.textContent = 'منشور'; // الصورة موجودة بالفعل على السيرفر
+            } else {
+                // قراءة الملف المحلي وعرضه
+                const r = new FileReader();
+                r.onload = e => img.src = e.target.result;
+                r.readAsDataURL(state.file);
+                meta.textContent = 'جديد'; // صورة جديدة قيد الإضافة
+            }
+
+            wrapper.append(removeBtn, img, meta);
+            els.previewsEl.appendChild(wrapper);
+
+            // ربط العنصر بالحالة لتسهيل التحديث
+            state._el = wrapper;
+            state._metaEl = meta;
+        }
+
+        /**
+         * يزيل الصورة من القائمة (محلياً فقط حتى يتم الحفظ).
+         * @param {string} id - معرف الصورة
+         */
+        function removeImage(id) {
+            Swal.fire({
+                title: 'حذف الصورة؟',
+                text: "لن يتم الحذف من الخادم حتى تضغط 'نشر'.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'نعم',
+                cancelButtonText: 'لا'
+            }).then(res => {
+                if (res.isConfirmed) {
+                    const idx = images.findIndex(x => x.id === id);
+                    if (idx > -1) {
+                        if (images[idx]._el) images[idx]._el.remove();
+                        images.splice(idx, 1);
+                    }
+                }
+            });
+        }
+
+        /**
+         * يعالج الملفات الجديدة المضافة (عبر السحب أو الاختيار).
+         * @param {FileList} fileList - قائمة الملفات المختارة
+         */
+        async function handleNewFiles(fileList) {
+            if (images.length + fileList.length > MAX_FILES) {
+                Swal.fire('تنبيه', `الحد الأقصى هو ${MAX_FILES} صور.`, 'warning');
+                return;
+            }
+
+            for (const file of fileList) {
+                if (!file.type.startsWith('image/')) continue; // تجاهل الملفات غير الصور
+
+                const id = genId();
+                const state = { id, file, compressedBlob: null, status: 'pending' };
+                images.push(state);
+                createPreview(state);
+
+                // البدء في الضغط
+                state.status = 'compressing';
+                state.compressedBlob = await compressImage(file);
+                state.status = 'ready';
+                if (state._metaEl) state._metaEl.textContent = 'جاهز'; // جاهز للرفع
+            }
+            els.fileInput.value = ''; // تصفير الإدخال للسماح باختيار نفس الملف مجدداً
+        }
+
+        /**
+         * ------------------------------------------------------------------
+         * التحميل الأولي (Initialization)
+         * ------------------------------------------------------------------
+         */
+
+        /**
+         * يقوم بتحميل الصور الحالية من السيرفر وعرضها.
+         * يستخدم ملف `advertisements.json` (المانيفست) كمرجع أساسي.
+         * في حال فشل المانيفست، يستخدم طريقة التخمين القديمة.
+         */
+        async function loadImages() {
+            els.previewsEl.innerHTML = '';
+            els.previewsEl.appendChild(els.loader);
+            els.loader.style.display = 'block';
+
+            images = [];
+            originalImageNames = [];
+
+            // 1. محاولة جلب ملف المانيفست (advertisements.json)
+            let manifest = [];
+            try {
+                // إضافة timestamp لتجنب الكاش
+                const res = await fetch(`${R2_PUBLIC_URL}/advertisements.json?t=${Date.now()}`);
+                if (res.ok) manifest = await res.json();
+            } catch { }
+
+            // 2. تحميل الصور بناءً على المانيفست
+            if (manifest && Array.isArray(manifest) && manifest.length > 0) {
+                manifest.forEach(name => {
+                    const id = genId();
+                    // الحالة uploaded تعني أن الصورة موجودة في الـ R2
+                    images.push({ id, status: 'uploaded', fileName: name });
+                    originalImageNames.push(name);
+                    createPreview(images[images.length - 1], `${R2_PUBLIC_URL}/${name}`);
+                });
+            } else {
+                // إذا لم يتم العثور على مانيفست أو كان فارغاً
+                // لا نقوم بالتخمين بعد الآن، نبدأ بقائمة فارغة.
+                console.warn("No manifest found or empty.");
+            }
+
+            els.loader.style.display = 'none';
+        }
+
+        /**
+         * ------------------------------------------------------------------
+         * معالجة الأحداث (Event Handlers)
+         * ------------------------------------------------------------------
+         */
+        els.pickFilesBtn.onclick = () => els.fileInput.click();
+        els.fileInput.onchange = (e) => handleNewFiles(e.target.files);
+        els.clearAllBtn.onclick = () => {
+            Swal.fire({
+                title: 'حذف الكل؟',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'نعم'
+            }).then(r => {
+                if (r.isConfirmed) {
+                    images = [];
+                    els.previewsEl.innerHTML = '';
+                    els.previewsEl.appendChild(els.loader);
+                }
+            });
+        };
+
+        // السحب والإفلات (Drag & Drop)
+        els.uploaderEl.ondragover = e => { e.preventDefault(); els.uploaderEl.style.backgroundColor = '#eef'; };
+        els.uploaderEl.ondragleave = () => els.uploaderEl.style.backgroundColor = '';
+        els.uploaderEl.ondrop = e => {
+            e.preventDefault();
+            els.uploaderEl.style.backgroundColor = '';
+            if (e.dataTransfer.files.length) handleNewFiles(e.dataTransfer.files);
+        };
+
+        // الكاميرا (Unified Logic)
+        els.takePhotoBtn.onclick = () => {
+            // للهواتف: استخدام واجهة الكاميرا الأصلية
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
+                els.fileInput.setAttribute('capture', 'environment');
+                els.fileInput.click();
+                return;
+            }
+            // للأجهزة المكتبية: فتح نافذة الكاميرا المخصصة
+            openDesktopCamera();
+        };
+
+        /**
+         * يفتح نافذة الكاميرا للأجهزة المكتبية باستخدام WebRTC.
+         */
+        async function openDesktopCamera() {
+            const html = `
+                <div class="mainAdver_cameraModalContent">
+                    <button id="camClose" style="position:absolute;top:10px;right:10px;border:none;background:none;font-size:20px;">&times;</button>
+                    <video id="camVideo" autoplay playsinline style="width:100%;border-radius:10px;background:#000;"></video>
+                    <div style="text-align:center;margin-top:10px;">
+                        <button id="camSnap" class="mainAdver_btn mainAdver_btnPrimary">التقاط</button>
+                    </div>
+                </div>
+             `;
+            els.cameraModal.innerHTML = html;
+            els.cameraModal.style.display = 'flex';
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const v = document.getElementById('camVideo');
+                v.srcObject = stream;
+
+                document.getElementById('camClose').onclick = () => {
+                    stream.getTracks().forEach(t => t.stop());
+                    els.cameraModal.style.display = 'none';
+                };
+
+                document.getElementById('camSnap').onclick = () => {
+                    const cvs = document.createElement('canvas');
+                    cvs.width = v.videoWidth; cvs.height = v.videoHeight;
+                    cvs.getContext('2d').drawImage(v, 0, 0);
+                    cvs.toBlob(blob => {
+                        const f = new File([blob], `cam_${Date.now()}.jpg`, { type: 'image/jpeg' });
+                        handleNewFiles([f]);
+                        document.getElementById('camClose').click();
+                    }, 'image/jpeg', 0.9);
+                };
+            } catch (e) {
+                Swal.fire('Error', 'Camera access denied', 'error');
+                els.cameraModal.style.display = 'none';
+            }
+        }
+
+        /**
+         * ------------------------------------------------------------------
+         * إرسال النموذج (Submission Logic)
+         * ------------------------------------------------------------------
+         */
+        els.form.onsubmit = async (e) => {
+            e.preventDefault();
+
+            // ترتيب الصور بناءً على ترتيبها في DOM
+            const domIds = Array.from(els.previewsEl.querySelectorAll('.mainAdver_preview')).map(x => x.dataset.id);
+            images.sort((a, b) => domIds.indexOf(a.id) - domIds.indexOf(b.id));
+
+            Swal.fire({
+                title: 'جاري النشر...',
+                didOpen: () => Swal.showLoading(),
+                allowOutsideClick: false
+            });
+
+            try {
+                // --- استراتيجية المزامنة الحديثة (Smart Sync) ---
+                // بدلاً من حذف كل شيء وإعادة الرفع، سنقوم بما يلي:
+                // 1. رفع الصور الجديدة فقط بأسماء فريدة.
+                // 2. تحديث ملف المانيفست بالترتيب الجديد.
+                // 3. حذف الصور التي لم تعد موجودة في القائمة فقط.
+
+                const newManifest = []; // لتخزين قائمة الأسماء النهائية
+                const uploads = []; // لتخزين عمليات الرفع الجديدة
+
+                // الخطوة 1: معالجة الصور (رفع الجديد + حفظ القديم)
+                for (const imgState of images) {
+                    if (imgState.status === 'uploaded') {
+                        // صورة موجودة مسبقاً: نحتفظ باسمها كما هو
+                        newManifest.push(imgState.fileName);
+                    } else if (imgState.status === 'ready' && imgState.compressedBlob) {
+                        // صورة جديدة: نولد لها اسماً فريداً
+                        // نستخدم Timestamp + Random لضمان عدم التكرار وتفادي مشاكل الكاش
+                        const ext = imgState.compressedBlob.type === 'image/webp' ? 'webp' : 'jpg';
+                        const uniqueName = `ad_${Date.now()}_${Math.floor(Math.random() * 1000)}.${ext}`;
+
+                        // إضافتها لقائمة الرفع
+                        uploads.push({ blob: imgState.compressedBlob, name: uniqueName });
+                        // إضافتها للمانيفست
+                        newManifest.push(uniqueName);
+
+                        // تحديث حالة العنصر محلياً (رغم أننا سنعيد التحميل)
+                        imgState.fileName = uniqueName;
+                        imgState.status = 'uploaded';
+                    }
+                }
+
+                // تنفيذ عمليات الرفع للصور الجديدة
+                if (uploads.length > 0) {
+                    for (const up of uploads) {
+                        await uploadFile2cf(up.blob, up.name);
+                    }
+                }
+
+                // الخطوة 2: تحديث المانيفست (advertisements.json)
+                const mBlob = new Blob([JSON.stringify(newManifest)], { type: 'application/json' });
+                await uploadFile2cf(mBlob, 'advertisements.json');
+
+                // الخطوة 3: تنظيف الملفات غير المستخدمة (Smart Delete)
+                // نحذف فقط الملفات التي كانت موجودة (originalImageNames) ولم تعد موجودة في القائمة الجديدة (newManifest)
+                const filesToDelete = originalImageNames.filter(oldName => !newManifest.includes(oldName));
+
+                if (filesToDelete.length > 0) {
+                    console.log("Deleting orphaned files:", filesToDelete);
+                    const deletePromises = filesToDelete.map(name => deleteFile2cf(name).catch(e => console.warn(e)));
+                    await Promise.all(deletePromises);
+                }
+
+                // الخطوة 4: الإشعارات والتحديث
+                if (window.addUpdate) await window.addUpdate("تحديث الإعلانات");
+
+                Swal.fire('تم!', 'تم تحديث الإعلانات بنجاح.', 'success');
+                loadImages(); // إعادة التحميل لتحديث الواجهة بالبيانات الجديدة
+
+            } catch (err) {
+                console.error(err);
+                Swal.fire('خطأ', 'حدث خطأ أثناء النشر: ' + err.message, 'error');
+            }
+        };
+
+        // --- بدء التشغيل ---
+        loadImages();
+
+    })();
+</script>

@@ -64,17 +64,42 @@ function setupModalLogic(modalId, closeBtnId, options = {}) {
  */
 function handleAdminPanelClick() {
     try {
+
         // [خطوة 1] تسجيل رسالة في الكونسول لتتبع الحدث.
         console.log("[Dashboard] تم النقر على زر لوحة تحكم المسؤول. جاري تحميل الصفحة...");
         // [خطوة 2] استخدام `mainLoader` لتحميل صفحة لوحة تحكم المسؤول في الحاوية المخصصة.
-        mainLoader(
-            "pages/ADMIN/adminPanel.html",
-            "index-user-container",
-            0,
-            undefined,
-            "showHomeIcon",
-            true
-        );
+
+
+
+        Swal.fire({
+            title: 'اختر وجهتك',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'مستخدمين',
+            denyButtonText: 'الاعلان',
+            cancelButtonText: 'إلغاء',
+            icon: 'question'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                mainLoader(
+                    "pages/ADMIN/adminPanel.html",
+                    "index-user-container",
+                    0,
+                    undefined,
+                    "showHomeIcon",
+                    true
+                );
+            } else if (result.isDenied) {
+                mainLoader(
+                    "pages/ADMIN/mainAdvertises.html",
+                    "index-user-container",
+                    0,
+                    undefined,
+                    "showHomeIcon",
+                    true
+                );
+            }
+        });
     } catch (error) {
         console.error("حدث خطأ أثناء محاولة تحميل لوحة تحكم المسؤول:", error);
     }

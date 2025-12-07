@@ -198,53 +198,45 @@
         }
         
         .contact_services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
+            /* ✅ تعديل: تغيير التخطيط من شبكة إلى عمود */
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* تقليل المسافة بين العناصر */
         }
         
         .contact_service-card {
+            /* ✅ تعديل: تغيير التخطيط الداخلي للبطاقة ليصبح صفًا */
+            display: flex;
+            align-items: center; /* محاذاة الأيقونة والنص عموديًا */
+            gap: 20px; /* مسافة بين الأيقونة والنص */
             background-color: var(--bg-color-white);
-            padding: 25px;
+            padding: 20px; /* تقليل الحشو قليلًا */
             border-radius: 10px;
             box-shadow: var(--shadow-soft);
-            text-align: center;
+            text-align: right; /* محاذاة النص لليمين */
             transition: transform 0.3s;
         }
         
         .contact_service-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px); /* تقليل تأثير الحركة */
         }
         
         .contact_service-icon {
             background-color: var(--primary-color-light);
-            width: 70px;
-            height: 70px;
+            width: 60px; /* تصغير حجم الأيقونة */
+            height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
+            flex-shrink: 0; /* منع الأيقونة من التقلص */
             color: var(--primary-color);
-            font-size: 1.8rem;
+            font-size: 1.6rem; /* تصغير حجم الخط داخل الأيقونة */
         }
         
         .contact_service-card h4 {
-            margin-bottom: 10px;
+            margin: 0 0 5px 0; /* تعديل الهوامش */
             color: var(--secondary-color);
-        }
-        
-        /* FAQ Section */
-        .contact_faq-section {
-            margin-bottom: 60px;
-        }
-        
-        .contact_faq-item {
-            background-color: var(--bg-color-white);
-            margin-bottom: 15px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow-soft);
         }
         
         .contact_faq-question {
@@ -511,34 +503,38 @@
         <div class="contact_services-section" id="contact_services_section">
             <h2 class="contact_section-title" id="contact_services_title">خدماتنا ومنتجاتنا</h2>
             <div class="contact_services-grid" id="contact_services_grid">
-                <div class="contact_service-card" id="contact_service_card_1">
+                <!-- ✅ تعديل: تم دمج العنوان والوصف داخل حاوية واحدة -->
+                <div class="contact_service-card" id="contact_service_card_digital">
                     <div class="contact_service-icon" id="contact_service_icon_1">
                         <i class="fas fa-bullhorn" id="contact_service_i_1"></i>
                     </div>
-                    <h4 id="contact_service_title_1">التسويق الرقمي</h4>
-                    <p id="contact_service_p_1">حلول تسويق رقمي متكاملة لزيادة وصول علامتك التجارية</p>
+                    <div id="contact_service_text_1">
+                        <h4 id="contact_service_title_1">التسويق الرقمي</h4>
+                        <p id="contact_service_p_1">حلول تسويق رقمي متكاملة لزيادة وصول علامتك التجارية</p>
+                    </div>
                 </div>
                 
-                <div class="contact_service-card" id="contact_service_card_2">
+                <div class="contact_service-card" id="contact_service_card_market">
                     <div class="contact_service-icon" id="contact_service_icon_2">
                         <i class="fas fa-chart-bar" id="contact_service_i_2"></i>
                     </div>
-                    <h4 id="contact_service_title_2">تحليل السوق</h4>
-                    <p id="contact_service_p_2">دراسات وتحليلات متعمقة لفهم السوق المستهدف</p>
+                    <div id="contact_service_text_2">
+                        <h4 id="contact_service_title_2">تحليل السوق</h4>
+                        <p id="contact_service_p_2">دراسات وتحليلات متعمقة لفهم السوق المستهدف</p>
+                    </div>
                 </div>
                 
-                <div class="contact_service-card" id="contact_service_card_3">
+                <div class="contact_service-card" id="contact_service_card_ads">
                     <div class="contact_service-icon" id="contact_service_icon_3">
                         <i class="fas fa-ad" id="contact_service_i_3"></i>
                     </div>
-                    <h4 id="contact_service_title_3">الإعلانات الممولة</h4>
-                    <p id="contact_service_p_3">إدارة حملات إعلانية فعالة عبر مختلف المنصات</p>
+                    <div id="contact_service_text_3">
+                        <h4 id="contact_service_title_3">الإعلانات</h4>
+                        <p id="contact_service_p_3">إدارة حملات إعلانية فعالة عبر suez bazaar</p>
+                    </div>
                 </div>
-                
             </div>
         </div>
-        
-        
     </div>
 
     <!-- Footer -->
